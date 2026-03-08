@@ -167,13 +167,13 @@ export function PullToRefresh({
       >
         {hasHeaderAndMain ? (
           <>
-            {/* 헤더와 메인 사이: 당길 때만 높이 생기고 인디케이터 표시 */}
+            {/* 헤더와 메인 사이: 당길 때만 높이 생기고 인디케이터 표시 (간격 1/3) */}
             <div
               className="shrink-0 overflow-hidden flex flex-col items-center justify-center bg-background"
-              style={{ minHeight: pullDistance, transition: "min-height 0.1s ease-out" }}
+              style={{ minHeight: pullDistance / 3, transition: "min-height 0.1s ease-out" }}
             >
               <motion.div
-                className="flex flex-col items-center justify-center py-2"
+                className="flex flex-col items-center justify-center py-1"
                 initial={false}
                 animate={{ opacity: indicatorOpacity, scale: indicatorScale }}
                 transition={{ type: "tween", duration: 0.1 }}
@@ -186,11 +186,11 @@ export function PullToRefresh({
                 </span>
               </motion.div>
             </div>
-            {/* 메인: 당길 때만 아래로 내려감 */}
+            {/* 메인: 당길 때만 아래로 내려감 (간격 1/3) */}
             <motion.div
               className="flex-1 min-h-0 flex flex-col"
               initial={false}
-              animate={{ y: pullDistance }}
+              animate={{ y: pullDistance / 3 }}
               transition={{ type: "tween", duration: 0.05 }}
             >
               {arr[1]}
@@ -215,7 +215,7 @@ export function PullToRefresh({
             <motion.div
               className="min-h-full"
               initial={false}
-              animate={{ y: pullDistance }}
+              animate={{ y: pullDistance / 3 }}
               transition={{ type: "tween", duration: 0.05 }}
             >
               {children}

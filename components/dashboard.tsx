@@ -165,14 +165,13 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
         {showSearch ? (
           <div className="flex items-center gap-2">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary-foreground/50" />
               <input
                 ref={searchInputRef}
                 type="text"
                 placeholder="미팅 검색..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-10 pl-9 pr-10 rounded-xl bg-primary-foreground/20 border-0 text-sm text-primary-foreground placeholder:text-primary-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary-foreground/30"
+                className="w-full h-10 pl-3 pr-10 rounded-xl bg-primary-foreground/20 border-0 text-sm text-primary-foreground placeholder:text-primary-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary-foreground/30"
               />
               <button
                 className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
