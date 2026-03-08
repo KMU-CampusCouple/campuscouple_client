@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { Children } from "react"
 import { motion } from "framer-motion"
-import { RefreshCw } from "lucide-react"
 
 const PULL_THRESHOLD = 80
 const MAX_PULL = 120
@@ -12,7 +11,8 @@ const PULL_CLAIM_THRESHOLD = 18
 interface PullToRefreshProps {
   /** 첫 번째 자식 = 헤더(고정), 두 번째 자식 = 메인(당길 때만 내려감). 인디케이터는 그 사이에 표시됨. */
   children: ReactNode
-  onRefresh: () => void
+  /** 동기 호출 시 800ms 후 인디케이터 해제. Promise 반환 시 resolve 후 해제. */
+  onRefresh: () => void | Promise<void>
   enabled?: boolean
   className?: string
 }
@@ -31,11 +31,32 @@ export function PullToRefresh({
   const pullDistanceRef = useRef(0)
   pullDistanceRef.current = pullDistance
 
-  const handleRefresh = useCallback(() => {
+  const handleRefresh = useCallback(async () => {
     if (!enabled) return
     setIsRefreshing(true)
-    onRefresh()
-    setTimeout(() => setIsRefreshing(false), 800)
+    const start = Date.now()
+    try {
+      const result = onRefresh()
+      if (result instanceof Promise) {
+        await Promise.race([
+          result,
+          new Promise<void>((_, reject) =>
+            setTimeout(() => reject(new Error("timeout")), 5000)
+          ),
+        ])
+      } else {
+        await new Promise((r) => setTimeout(r, 400))
+      }
+    } catch {
+      // timeout or reject: still hide indicator
+    } finally {
+      const minDisplay = 400
+      const elapsed = Date.now() - start
+      if (elapsed < minDisplay) {
+        await new Promise((r) => setTimeout(r, minDisplay - elapsed))
+      }
+      setIsRefreshing(false)
+    }
   }, [enabled, onRefresh])
 
   const atTop = useCallback(() => {
@@ -148,9 +169,6 @@ export function PullToRefresh({
 
   const arr = Children.toArray(children)
   const hasHeaderAndMain = arr.length >= 2
-  const indicatorOpacity = Math.min(1, pullDistance / PULL_THRESHOLD)
-  const indicatorScale = 0.5 + 0.5 * indicatorOpacity
-  const rotate = (pullDistance / MAX_PULL) * 360
 
   return (
     <div className={`relative flex flex-col flex-1 min-h-0 ${className}`}>
@@ -167,25 +185,6 @@ export function PullToRefresh({
       >
         {hasHeaderAndMain ? (
           <>
-            {/* 헤더와 메인 사이: 당길 때만 높이 생기고 인디케이터 표시 (간격 1/3) */}
-            <div
-              className="shrink-0 overflow-hidden flex flex-col items-center justify-center bg-background"
-              style={{ minHeight: pullDistance / 3, transition: "min-height 0.1s ease-out" }}
-            >
-              <motion.div
-                className="flex flex-col items-center justify-center py-1"
-                initial={false}
-                animate={{ opacity: indicatorOpacity, scale: indicatorScale }}
-                transition={{ type: "tween", duration: 0.1 }}
-              >
-                <motion.div animate={{ rotate }} transition={{ type: "tween", duration: 0.1 }}>
-                  <RefreshCw className="w-6 h-6 text-primary" strokeWidth={2} />
-                </motion.div>
-                <span className="text-[10px] text-muted-foreground mt-0.5 whitespace-nowrap">
-                  {isRefreshing ? "새로고침 중..." : "당겨서 새로고침"}
-                </span>
-              </motion.div>
-            </div>
             {/* 메인: 당길 때만 아래로 내려감 (간격 1/3) */}
             <motion.div
               className="flex-1 min-h-0 flex flex-col"
@@ -198,20 +197,6 @@ export function PullToRefresh({
           </>
         ) : (
           <>
-            <motion.div
-              className="absolute left-1/2 -translate-x-1/2 z-20 flex flex-col items-center pointer-events-none"
-              style={{ top: 12 }}
-              initial={false}
-              animate={{ opacity: indicatorOpacity, scale: indicatorScale }}
-              transition={{ type: "tween", duration: 0.1 }}
-            >
-              <motion.div animate={{ rotate }} transition={{ type: "tween", duration: 0.1 }}>
-                <RefreshCw className="w-6 h-6 text-primary" strokeWidth={2} />
-              </motion.div>
-              <span className="text-[10px] text-muted-foreground mt-0.5 whitespace-nowrap">
-                {isRefreshing ? "새로고침 중..." : "당겨서 새로고침"}
-              </span>
-            </motion.div>
             <motion.div
               className="min-h-full"
               initial={false}

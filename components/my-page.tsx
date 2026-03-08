@@ -341,7 +341,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
           </div>
         </header>
         <div className="flex flex-col min-h-full pb-20">
-        <main className="flex-1 px-4 py-2 flex flex-col gap-3">
+        <main className="flex-1 px-4 pt-6 py-2 flex flex-col gap-3">
           {list.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
               <FileText className="w-10 h-10 mb-2 opacity-30" />
