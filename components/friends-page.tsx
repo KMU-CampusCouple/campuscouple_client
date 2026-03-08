@@ -188,15 +188,18 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
   return (
     <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
       <div className="flex flex-col min-h-full pb-20">
-      <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-4 pb-3 shrink-0">
-        <p className="text-sm font-bold text-foreground mb-3">{"친구"}</p>
-        <div className="flex gap-1 bg-muted rounded-xl p-1">
+      <header className="sticky top-0 z-30 bg-primary/80 backdrop-blur-lg px-4 pt-4 pb-3 shrink-0">
+        <div className="flex items-center gap-2 mb-3">
+          <img src="/logo.jpg" alt="Campus Couple" className="w-7 h-7 rounded-lg object-cover" />
+          <span className="text-sm font-bold text-primary-foreground">{"캠퍼스커플"}</span>
+        </div>
+        <div className="flex gap-1 bg-primary-foreground/20 rounded-xl p-1">
           {(["friends", "requests", "search"] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
               className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                tab === t ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
+                tab === t ? "bg-primary-foreground text-primary shadow-sm" : "text-primary-foreground/70"
               }`}
             >
               {t === "friends" ? `내 친구 (${friendsList.length})` : t === "requests" ? `신청 (${requests.length})` : "검색"}

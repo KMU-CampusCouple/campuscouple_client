@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useRef, useState, type ReactNode } from "react"
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { motion, useMotionValue, useTransform } from "framer-motion"
 import { RefreshCw } from "lucide-react"
 
@@ -35,9 +35,32 @@ export function PullToRefresh({
     if (!enabled) return
     setIsRefreshing(true)
     onRefresh()
-    // 리프레시 시 상위에서 key 변경으로 리마운트될 수 있음. 그 전에 인디케이터 유지
     setTimeout(() => setIsRefreshing(false), 800)
   }, [enabled, onRefresh])
+
+  // passive: false로 등록해 당길 때 preventDefault 동작 보장 (모바일)
+  useEffect(() => {
+    if (!enabled) return
+    const el = scrollContainerRef.current
+    if (!el) return
+    let startY = 0
+    const touchStart = (e: TouchEvent) => {
+      if (el.scrollTop <= 0) {
+        startY = e.touches[0].clientY
+      }
+    }
+    const touchMove = (e: TouchEvent) => {
+      if (el.scrollTop > 0) return
+      const diff = e.touches[0].clientY - startY
+      if (diff > 15) e.preventDefault()
+    }
+    el.addEventListener("touchstart", touchStart, { passive: true })
+    el.addEventListener("touchmove", touchMove, { passive: false })
+    return () => {
+      el.removeEventListener("touchstart", touchStart)
+      el.removeEventListener("touchmove", touchMove)
+    }
+  }, [enabled])
 
   const onTouchStart = useCallback(
     (e: React.TouchEvent) => {
@@ -63,6 +86,7 @@ export function PullToRefresh({
       const y = e.touches[0].clientY
       const diff = y - startY.current
       if (diff > 0) {
+        e.preventDefault()
         const damped = Math.min(diff * 0.5, MAX_PULL)
         pullY.set(damped)
       } else {

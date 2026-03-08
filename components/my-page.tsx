@@ -367,8 +367,11 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
   return (
     <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
       <div className="flex flex-col min-h-full pb-20">
-      <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-4 pb-3 shrink-0">
-        <p className="text-sm font-bold text-foreground">{"마이"}</p>
+      <header className="sticky top-0 z-30 bg-primary/80 backdrop-blur-lg px-4 pt-4 pb-3 shrink-0">
+        <div className="flex items-center gap-2">
+          <img src="/logo.jpg" alt="Campus Couple" className="w-7 h-7 rounded-lg object-cover" />
+          <span className="text-sm font-bold text-primary-foreground">{"캠퍼스커플"}</span>
+        </div>
       </header>
       <main className="flex-1 px-4 pb-6 flex flex-col gap-4">
         <div className="bg-card rounded-2xl border border-border p-5">

@@ -120,7 +120,7 @@ export default function Page() {
   }
 
   return (
-    <AppShell className="bg-background flex flex-col">
+    <AppShell className="bg-background flex flex-col h-[100dvh] overflow-hidden max-h-screen">
       {/* User profile overlay - shown on top of any tab */}
       {subScreen === "user-profile" && selectedUser && (
         <UserProfile

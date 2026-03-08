@@ -19,8 +19,8 @@ export default function BottomNav({ activeTab, onTabChange, notificationCount = 
   ]
 
   return (
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-card border-t border-border z-40" role="navigation" aria-label="메인 네비게이션">
-      <div className="flex items-center justify-around py-2 pb-[env(safe-area-inset-bottom)]">
+    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] min-h-[72px] bg-card border-t border-border z-40" role="navigation" aria-label="메인 네비게이션">
+      <div className="flex items-center justify-around min-h-[72px] py-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
         {tabs.map((tab) => {
           const Icon = tab.icon
           const isActive = activeTab === tab.id
