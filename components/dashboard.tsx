@@ -156,7 +156,6 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
 
   return (
     <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
-      <div className="flex flex-col min-h-full pb-20">
       <header className="sticky top-0 z-30 bg-primary/80 backdrop-blur-lg px-4 pt-4 pb-3 shrink-0">
         {/* App logo bar */}
         <div className="flex items-center gap-2 mb-3">
@@ -236,7 +235,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
           </div>
         )}
       </header>
-
+      <div className="flex flex-col min-h-full pb-20">
       <main className="flex-1 px-4 py-4 flex flex-col gap-3">
         {filteredPosts.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
@@ -256,7 +255,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
       </main>
 
       {/* Floating Action Button - right aligned */}
-      <div className="fixed bottom-[74px] z-30 w-full max-w-[430px] left-1/2 -translate-x-1/2 flex justify-end px-4 pointer-events-none">
+      <div className="fixed bottom-[100px] z-30 w-full max-w-[430px] left-1/2 -translate-x-1/2 flex justify-end px-4 pointer-events-none">
         <button
           onClick={onCreatePost}
           className="h-10 px-5 rounded-full bg-primary/80 text-primary-foreground shadow-lg flex items-center justify-center transition-transform hover:scale-105 active:scale-95 font-medium text-xs pointer-events-auto"

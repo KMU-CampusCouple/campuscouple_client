@@ -1,22 +1,20 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
+import { Children } from "react"
 import { motion } from "framer-motion"
 import { RefreshCw } from "lucide-react"
 
 const PULL_THRESHOLD = 80
 const MAX_PULL = 120
-/** 이 거리 이상 당겼을 때만 preventDefault → 일반 스크롤은 정상 동작 */
 const PULL_CLAIM_THRESHOLD = 18
-const DEFAULT_HEADER_HEIGHT = 104
 
 interface PullToRefreshProps {
+  /** 첫 번째 자식 = 헤더(고정), 두 번째 자식 = 메인(당길 때만 내려감). 인디케이터는 그 사이에 표시됨. */
   children: ReactNode
   onRefresh: () => void
   enabled?: boolean
   className?: string
-  /** 헤더 높이(px). 인디케이터가 헤더와 메인 사이에 오도록 합니다. */
-  headerHeight?: number
 }
 
 export function PullToRefresh({
@@ -24,7 +22,6 @@ export function PullToRefresh({
   onRefresh,
   enabled = true,
   className = "",
-  headerHeight = DEFAULT_HEADER_HEIGHT,
 }: PullToRefreshProps) {
   const [pullDistance, setPullDistance] = useState(0)
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -49,7 +46,6 @@ export function PullToRefresh({
     return typeof window !== "undefined" ? window.scrollY <= 2 : true
   }, [])
 
-  // document에 터치 리스너 등록 → main 등 자식에서 터치해도 반드시 캡처 (버블링 의존 안 함)
   useEffect(() => {
     if (!enabled || typeof document === "undefined") return
 
@@ -94,9 +90,7 @@ export function PullToRefresh({
 
     const onTouchEnd = () => {
       const current = pullDistanceRef.current
-      if (current >= PULL_THRESHOLD) {
-        handleRefresh()
-      }
+      if (current >= PULL_THRESHOLD) handleRefresh()
       setPullDistance(0)
       isPullingRef.current = false
     }
@@ -111,7 +105,6 @@ export function PullToRefresh({
     }
   }, [enabled, atTop, handleRefresh])
 
-  // 마우스 (데스크톱)
   const onMouseDown = useCallback(
     (e: React.MouseEvent) => {
       if (!enabled || isRefreshing) return
@@ -132,19 +125,14 @@ export function PullToRefresh({
         return
       }
       const diff = e.clientY - startYRef.current
-      if (diff > 0) {
-        setPullDistance(Math.min(diff * 0.5, MAX_PULL))
-      } else {
-        setPullDistance(0)
-      }
+      if (diff > 0) setPullDistance(Math.min(diff * 0.5, MAX_PULL))
+      else setPullDistance(0)
     },
     [enabled, atTop]
   )
 
   const onMouseUp = useCallback(() => {
-    if (pullDistance >= PULL_THRESHOLD && !isRefreshing) {
-      handleRefresh()
-    }
+    if (pullDistance >= PULL_THRESHOLD && !isRefreshing) handleRefresh()
     setPullDistance(0)
     isPullingRef.current = false
   }, [enabled, pullDistance, isRefreshing, handleRefresh])
@@ -158,52 +146,82 @@ export function PullToRefresh({
     return <div className={className}>{children}</div>
   }
 
+  const arr = Children.toArray(children)
+  const hasHeaderAndMain = arr.length >= 2
   const indicatorOpacity = Math.min(1, pullDistance / PULL_THRESHOLD)
   const indicatorScale = 0.5 + 0.5 * indicatorOpacity
   const rotate = (pullDistance / MAX_PULL) * 360
-  const indicatorTop = headerHeight + pullDistance
 
   return (
     <div className={`relative flex flex-col flex-1 min-h-0 ${className}`}>
-      <motion.div
-        className="absolute z-20 flex flex-col items-center pointer-events-none"
-        style={{ top: indicatorTop, left: "50%" }}
-        initial={false}
-        animate={{
-          opacity: indicatorOpacity,
-          scale: indicatorScale,
-          x: "-50%",
-        }}
-        transition={{ type: "tween", duration: 0.1 }}
-      >
-        <motion.div
-          animate={{ rotate }}
-          transition={{ type: "tween", duration: 0.1 }}
-        >
-          <RefreshCw className="w-6 h-6 text-primary" strokeWidth={2} />
-        </motion.div>
-        <span className="text-[10px] text-muted-foreground mt-0.5 whitespace-nowrap">
-          {isRefreshing ? "새로고침 중..." : "당겨서 새로고침"}
-        </span>
-      </motion.div>
-
       <div
         ref={scrollContainerRef}
-        className="flex-1 min-h-0 overflow-auto overscroll-contain touch-manipulation"
+        className="flex-1 min-h-0 overflow-auto overscroll-contain touch-manipulation flex flex-col"
         style={{ WebkitOverflowScrolling: "touch" } as React.CSSProperties}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseLeave}
       >
-        <motion.div
-          className="min-h-full"
-          initial={false}
-          animate={{ y: pullDistance }}
-          transition={{ type: "tween", duration: 0.05 }}
-        >
-          {children}
-        </motion.div>
+        {hasHeaderAndMain ? (
+          <>
+            {/* 헤더: 고정, 움직이지 않음 */}
+            <div className="shrink-0">{arr[0]}</div>
+            {/* 헤더와 메인 사이: 당길 때만 높이 생기고 인디케이터 표시 */}
+            <div
+              className="shrink-0 overflow-hidden flex flex-col items-center justify-center bg-background"
+              style={{ minHeight: pullDistance, transition: "min-height 0.1s ease-out" }}
+            >
+              <motion.div
+                className="flex flex-col items-center justify-center py-2"
+                initial={false}
+                animate={{ opacity: indicatorOpacity, scale: indicatorScale }}
+                transition={{ type: "tween", duration: 0.1 }}
+              >
+                <motion.div animate={{ rotate }} transition={{ type: "tween", duration: 0.1 }}>
+                  <RefreshCw className="w-6 h-6 text-primary" strokeWidth={2} />
+                </motion.div>
+                <span className="text-[10px] text-muted-foreground mt-0.5 whitespace-nowrap">
+                  {isRefreshing ? "새로고침 중..." : "당겨서 새로고침"}
+                </span>
+              </motion.div>
+            </div>
+            {/* 메인: 당길 때만 아래로 내려감 */}
+            <motion.div
+              className="flex-1 min-h-0 flex flex-col"
+              initial={false}
+              animate={{ y: pullDistance }}
+              transition={{ type: "tween", duration: 0.05 }}
+            >
+              {arr[1]}
+            </motion.div>
+          </>
+        ) : (
+          <>
+            <motion.div
+              className="absolute left-1/2 -translate-x-1/2 z-20 flex flex-col items-center pointer-events-none"
+              style={{ top: 12 }}
+              initial={false}
+              animate={{ opacity: indicatorOpacity, scale: indicatorScale }}
+              transition={{ type: "tween", duration: 0.1 }}
+            >
+              <motion.div animate={{ rotate }} transition={{ type: "tween", duration: 0.1 }}>
+                <RefreshCw className="w-6 h-6 text-primary" strokeWidth={2} />
+              </motion.div>
+              <span className="text-[10px] text-muted-foreground mt-0.5 whitespace-nowrap">
+                {isRefreshing ? "새로고침 중..." : "당겨서 새로고침"}
+              </span>
+            </motion.div>
+            <motion.div
+              className="min-h-full"
+              initial={false}
+              animate={{ y: pullDistance }}
+              transition={{ type: "tween", duration: 0.05 }}
+            >
+              {children}
+            </motion.div>
+          </>
+        )}
       </div>
     </div>
   )
