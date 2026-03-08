@@ -185,7 +185,7 @@ export function PullToRefresh({
       >
         {/* 풀/리프레시 중일 때만 보이는 인디케이터 (스크롤 영역 상단 고정) */}
         <motion.div
-          className="absolute left-0 right-0 top-0 z-10 flex justify-center pt-2 pb-1 pointer-events-none"
+          className="absolute left-0 right-0 top-0 z-10 flex justify-center pt-5 pb-5 pointer-events-none"
           initial={false}
           animate={{
             height: pullDistance > 0 || isRefreshing ? "auto" : 0,
@@ -194,18 +194,18 @@ export function PullToRefresh({
           transition={{ type: "tween", duration: 0.15 }}
           style={{ overflow: "hidden" }}
         >
-          <div className="flex flex-col items-center gap-1 min-h-[36px] justify-center">
+          <div className="flex flex-col items-center gap-2 min-h-[64px] justify-center">
             {isRefreshing ? (
-              <span className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" aria-hidden />
+              <span className="inline-block h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" aria-hidden />
             ) : (
               <span
-                className="inline-block h-6 w-6 rounded-full border-2 border-primary border-t-transparent"
+                className="inline-block h-8 w-8 rounded-full border-2 border-primary border-t-transparent"
                 style={{
                   transform: `rotate(${Math.min((pullDistance / PULL_THRESHOLD) * 360, 360)}deg)`,
                 }}
               />
             )}
-            <span className="text-xs text-muted-foreground">
+            <span className="text-sm text-muted-foreground">
               {isRefreshing ? "새로고침 중..." : pullDistance >= PULL_THRESHOLD ? "놓으면 새로고침" : "당겨서 새로고침"}
             </span>
           </div>
