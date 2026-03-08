@@ -69,7 +69,7 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
   }, [photos.length])
 
   return (
-    <div className="flex flex-col min-h-screen pb-20">
+    <div className="flex flex-col flex-1 min-h-0 overflow-y-auto overscroll-contain pb-6">
       <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3">
         <div className="flex items-center gap-3">
           <button onClick={onBack} className="text-foreground">

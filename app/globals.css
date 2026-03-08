@@ -10,6 +10,8 @@
 
 @layer base {
   :root {
+    /* 하단 네비 높이: 스크롤 영역 pb와 동기화 (절대 겹치지 않도록) */
+    --bottom-nav-height: calc(100px + env(safe-area-inset-bottom, 0px));
     --background: 345 20% 97.5%;
     --foreground: 0 0% 12%;
     --card: 0 0% 100%;

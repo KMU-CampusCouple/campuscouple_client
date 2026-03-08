@@ -5,13 +5,13 @@ import { Children } from "react"
 import { motion } from "framer-motion"
 
 const PULL_THRESHOLD = 80
-const MAX_PULL = 120
+const MAX_PULL = 160
 const PULL_CLAIM_THRESHOLD = 18
 
 interface PullToRefreshProps {
-  /** 첫 번째 자식 = 헤더(고정), 두 번째 자식 = 메인(당길 때만 내려감). 인디케이터는 그 사이에 표시됨. */
+  /** 첫 번째 자식 = 헤더(고정), 두 번째 자식 = 메인(당길 때만 내려감). */
   children: ReactNode
-  /** 동기 호출 시 800ms 후 인디케이터 해제. Promise 반환 시 resolve 후 해제. */
+  /** 동기 호출 시 400ms 대기. Promise 반환 시 resolve 후 해제. */
   onRefresh: () => void | Promise<void>
   enabled?: boolean
   className?: string
@@ -176,47 +176,20 @@ export function PullToRefresh({
       {hasHeaderAndMain && <div className="shrink-0">{arr[0]}</div>}
       <div
         ref={scrollContainerRef}
-        className="flex-1 min-h-0 overflow-auto overscroll-contain touch-manipulation flex flex-col relative"
+        className="flex-1 min-h-0 overflow-auto overscroll-contain touch-manipulation flex flex-col pb-[var(--bottom-nav-height)]"
         style={{ WebkitOverflowScrolling: "touch" } as React.CSSProperties}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseLeave}
       >
-        {/* 풀/리프레시 중일 때만 보이는 인디케이터 (스크롤 영역 상단 고정) */}
-        <motion.div
-          className="absolute left-0 right-0 top-0 z-10 flex justify-center pt-5 pb-5 pointer-events-none"
-          initial={false}
-          animate={{
-            height: pullDistance > 0 || isRefreshing ? "auto" : 0,
-            opacity: pullDistance > 0 || isRefreshing ? 1 : 0,
-          }}
-          transition={{ type: "tween", duration: 0.15 }}
-          style={{ overflow: "hidden" }}
-        >
-          <div className="flex flex-col items-center gap-2 min-h-[64px] justify-center">
-            {isRefreshing ? (
-              <span className="inline-block h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" aria-hidden />
-            ) : (
-              <span
-                className="inline-block h-8 w-8 rounded-full border-2 border-primary border-t-transparent"
-                style={{
-                  transform: `rotate(${Math.min((pullDistance / PULL_THRESHOLD) * 360, 360)}deg)`,
-                }}
-              />
-            )}
-            <span className="text-sm text-muted-foreground">
-              {isRefreshing ? "새로고침 중..." : pullDistance >= PULL_THRESHOLD ? "놓으면 새로고침" : "당겨서 새로고침"}
-            </span>
-          </div>
-        </motion.div>
         {hasHeaderAndMain ? (
           <>
-            {/* 메인: 당길 때만 아래로 내려감 (간격 1/3) */}
+            {/* 메인: 당길 때만 아래로 내려감 (간격 1/2) */}
             <motion.div
               className="flex-1 min-h-0 flex flex-col"
               initial={false}
-              animate={{ y: pullDistance / 3 }}
+              animate={{ y: pullDistance / 2 }}
               transition={{ type: "tween", duration: 0.05 }}
             >
               {arr[1]}
@@ -227,7 +200,7 @@ export function PullToRefresh({
             <motion.div
               className="min-h-full"
               initial={false}
-              animate={{ y: pullDistance / 3 }}
+              animate={{ y: pullDistance / 2 }}
               transition={{ type: "tween", duration: 0.05 }}
             >
               {children}
