@@ -15,7 +15,7 @@ export default function PostDetailRoute() {
   const handleViewProfile = (user: UserProfile) => router.push(`/user/${user.id}`)
 
   return (
-    <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain flex flex-col pb-[var(--bottom-nav-height)]">
+    <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain flex flex-col">
       {!post ? (
         <div className="flex flex-col items-center justify-center min-h-[50vh] text-muted-foreground flex-1">
           <p className="text-sm">글을 찾을 수 없어요</p>

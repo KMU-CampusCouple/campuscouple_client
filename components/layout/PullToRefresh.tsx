@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react"
 const PULL_THRESHOLD = 80
 const MAX_PULL = 240
 const PULL_CLAIM_THRESHOLD = 18
-const INDICATOR_MIN_HEIGHT = 72
+const INDICATOR_MIN_HEIGHT = 48
 
 interface PullToRefreshProps {
   /** 첫 번째 자식 = 헤더(고정), 두 번째 자식 = 메인(당길 때만 내려감). */
@@ -201,13 +201,16 @@ export function PullToRefresh({
                 transition={{ type: "tween", duration: 0.05 }}
               >
                 {showIndicator && (
-                  <div className="flex items-center justify-center w-full h-full min-h-[56px]">
-                    <Loader2 className="w-7 h-7 animate-spin text-muted-foreground" />
+                  <div className="flex flex-col items-center justify-center gap-1 w-full h-full min-h-[40px]">
+                    <Loader2 className="w-5 h-5 shrink-0 animate-spin text-muted-foreground" />
+                    <span className="text-xs text-muted-foreground">
+                      {isRefreshing ? "새로고침 중..." : "당겨서 새로고침"}
+                    </span>
                   </div>
                 )}
               </motion.div>
               <motion.div
-                className="flex-1 min-h-0 flex flex-col"
+                className="min-h-full flex flex-col"
                 initial={false}
                 animate={{ y: 0 }}
                 transition={{ type: "tween", duration: 0.05 }}
@@ -224,8 +227,11 @@ export function PullToRefresh({
                 transition={{ type: "tween", duration: 0.05 }}
               >
                 {showIndicator && (
-                  <div className="flex items-center justify-center w-full h-full min-h-[56px]">
-                    <Loader2 className="w-7 h-7 animate-spin text-muted-foreground" />
+                  <div className="flex flex-col items-center justify-center gap-1 w-full h-full min-h-[40px]">
+                    <Loader2 className="w-5 h-5 shrink-0 animate-spin text-muted-foreground" />
+                    <span className="text-xs text-muted-foreground">
+                      {isRefreshing ? "새로고침 중..." : "당겨서 새로고침"}
+                    </span>
                   </div>
                 )}
               </motion.div>
