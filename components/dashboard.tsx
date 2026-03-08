@@ -155,6 +155,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
   const { triggerRefresh } = useRefresh()
 
   return (
+    <>
     <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
       <header className="sticky top-0 z-30 bg-primary/80 backdrop-blur-lg px-4 pt-2 pb-2 shrink-0">
         {/* App logo bar */}
@@ -252,17 +253,17 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
           ))
         )}
       </main>
-
-      {/* Floating Action Button - right aligned */}
-      <div className="fixed bottom-[100px] z-30 w-full max-w-[430px] left-1/2 -translate-x-1/2 flex justify-end px-4 pointer-events-none">
-        <button
-          onClick={onCreatePost}
-          className="h-10 px-5 rounded-full bg-primary/80 text-primary-foreground shadow-lg flex items-center justify-center transition-transform hover:scale-105 active:scale-95 font-medium text-xs pointer-events-auto"
-        >
-          {"글쓰기 +"}
-        </button>
-      </div>
       </div>
     </PullToRefresh>
+    {/* 플로팅 글쓰기 버튼: 풀리프레시/스크롤과 무관하게 뷰포트에 고정 */}
+    <div className="fixed bottom-[100px] z-30 w-full max-w-[430px] left-1/2 -translate-x-1/2 flex justify-end px-4 pointer-events-none">
+      <button
+        onClick={onCreatePost}
+        className="h-10 px-5 rounded-full bg-primary/80 text-primary-foreground shadow-lg flex items-center justify-center transition-transform hover:scale-105 active:scale-95 font-medium text-xs pointer-events-auto"
+      >
+        {"글쓰기 +"}
+      </button>
+    </div>
+    </>
   )
 }

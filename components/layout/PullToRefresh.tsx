@@ -176,13 +176,40 @@ export function PullToRefresh({
       {hasHeaderAndMain && <div className="shrink-0">{arr[0]}</div>}
       <div
         ref={scrollContainerRef}
-        className="flex-1 min-h-0 overflow-auto overscroll-contain touch-manipulation flex flex-col"
+        className="flex-1 min-h-0 overflow-auto overscroll-contain touch-manipulation flex flex-col relative"
         style={{ WebkitOverflowScrolling: "touch" } as React.CSSProperties}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseLeave}
       >
+        {/* 풀/리프레시 중일 때만 보이는 인디케이터 (스크롤 영역 상단 고정) */}
+        <motion.div
+          className="absolute left-0 right-0 top-0 z-10 flex justify-center pt-2 pb-1 pointer-events-none"
+          initial={false}
+          animate={{
+            height: pullDistance > 0 || isRefreshing ? "auto" : 0,
+            opacity: pullDistance > 0 || isRefreshing ? 1 : 0,
+          }}
+          transition={{ type: "tween", duration: 0.15 }}
+          style={{ overflow: "hidden" }}
+        >
+          <div className="flex flex-col items-center gap-1 min-h-[36px] justify-center">
+            {isRefreshing ? (
+              <span className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" aria-hidden />
+            ) : (
+              <span
+                className="inline-block h-6 w-6 rounded-full border-2 border-primary border-t-transparent"
+                style={{
+                  transform: `rotate(${Math.min((pullDistance / PULL_THRESHOLD) * 360, 360)}deg)`,
+                }}
+              />
+            )}
+            <span className="text-xs text-muted-foreground">
+              {isRefreshing ? "새로고침 중..." : pullDistance >= PULL_THRESHOLD ? "놓으면 새로고침" : "당겨서 새로고침"}
+            </span>
+          </div>
+        </motion.div>
         {hasHeaderAndMain ? (
           <>
             {/* 메인: 당길 때만 아래로 내려감 (간격 1/3) */}
