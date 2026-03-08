@@ -256,7 +256,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
       </div>
     </PullToRefresh>
     {/* 플로팅 글쓰기 버튼: 풀리프레시/스크롤과 무관하게 뷰포트에 고정 */}
-    <div className="fixed bottom-[120px] z-30 w-full max-w-[430px] left-1/2 -translate-x-1/2 flex justify-end px-4 pointer-events-none">
+    <div className="fixed bottom-[135px] z-30 w-full max-w-[430px] left-1/2 -translate-x-1/2 flex justify-end px-4 pointer-events-none">
       <button
         onClick={onCreatePost}
         className="h-10 px-5 rounded-full bg-primary/80 text-primary-foreground shadow-lg flex items-center justify-center transition-transform hover:scale-105 active:scale-95 font-medium text-xs pointer-events-auto"
