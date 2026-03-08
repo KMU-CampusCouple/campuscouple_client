@@ -206,8 +206,8 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
           ))}
         </div>
       </header>
-      <div className="flex flex-col min-h-full pb-5">
-        <main className="flex-1 px-4 pt-6 py-2 flex flex-col gap-3">
+      <div className="flex flex-col min-h-full">
+        <main className="flex-1 px-4 pt-6 py-2 pb-6 flex flex-col gap-3">
         {tab === "search" && (
           <>
             <div className="relative">

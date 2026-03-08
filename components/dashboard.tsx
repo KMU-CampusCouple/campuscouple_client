@@ -235,8 +235,8 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
           </div>
         )}
       </header>
-      <div className="flex flex-col min-h-full pb-5">
-      <main className="flex-1 px-4 pt-6 py-2 flex flex-col gap-3">
+      <div className="flex flex-col min-h-full">
+      <main className="flex-1 px-4 pt-6 py-2 pb-6 flex flex-col gap-3">
         {filteredPosts.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
             <Users className="w-12 h-12 mb-3 opacity-30" />
@@ -256,7 +256,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
       </div>
     </PullToRefresh>
     {/* 플로팅 글쓰기 버튼: 풀리프레시/스크롤과 무관하게 뷰포트에 고정 */}
-    <div className="fixed bottom-[100px] z-30 w-full max-w-[430px] left-1/2 -translate-x-1/2 flex justify-end px-4 pointer-events-none">
+    <div className="fixed bottom-[150px] z-30 w-full max-w-[430px] left-1/2 -translate-x-1/2 flex justify-end px-4 pointer-events-none">
       <button
         onClick={onCreatePost}
         className="h-10 px-5 rounded-full bg-primary/80 text-primary-foreground shadow-lg flex items-center justify-center transition-transform hover:scale-105 active:scale-95 font-medium text-xs pointer-events-auto"

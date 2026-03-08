@@ -307,7 +307,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
   const displayTime = post.time || "상의 후 결정"
 
   return (
-    <div className="flex flex-col min-h-full pb-5">
+    <div className="flex flex-col min-h-full">
       <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3 shrink-0">
         <div className="flex items-center gap-3">
           <button onClick={onBack} className="text-foreground">
@@ -320,7 +320,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
         </div>
       </header>
 
-      <main className="flex-1 px-4 py-4 flex flex-col gap-4">
+      <main className="flex-1 px-4 py-4 pb-6 flex flex-col gap-4">
         {/* Author */}
         <div className="flex items-center gap-3">
           <button

@@ -59,7 +59,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
 
   return (
     <div className="flex flex-col flex-1 min-h-0 overflow-y-auto overscroll-contain">
-      <div className="flex flex-col min-h-full pb-5">
+      <div className="flex flex-col min-h-full">
         <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3 shrink-0">
           <div className="flex items-center gap-3">
             <button onClick={onBack} className="text-foreground">
@@ -69,7 +69,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
           </div>
         </header>
 
-        <main className="flex-1 px-4 py-4 flex flex-col gap-5">
+        <main className="flex-1 px-4 py-4 pb-6 flex flex-col gap-5">
         {/* Title - required */}
         <div>
           <label className="text-sm font-medium mb-1.5 block">
