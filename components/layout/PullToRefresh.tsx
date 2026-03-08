@@ -3,10 +3,12 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { Children } from "react"
 import { motion } from "framer-motion"
+import { Loader2 } from "lucide-react"
 
 const PULL_THRESHOLD = 80
-const MAX_PULL = 160
+const MAX_PULL = 240
 const PULL_CLAIM_THRESHOLD = 18
+const INDICATOR_MIN_HEIGHT = 72
 
 interface PullToRefreshProps {
   /** 첫 번째 자식 = 헤더(고정), 두 번째 자식 = 메인(당길 때만 내려감). */
@@ -176,37 +178,68 @@ export function PullToRefresh({
       {hasHeaderAndMain && <div className="shrink-0">{arr[0]}</div>}
       <div
         ref={scrollContainerRef}
-        className="flex-1 min-h-0 overflow-auto overscroll-contain touch-manipulation flex flex-col pb-[var(--bottom-nav-height)]"
+        className="flex-1 min-h-0 overflow-auto overscroll-contain touch-manipulation flex flex-col"
         style={{ WebkitOverflowScrolling: "touch" } as React.CSSProperties}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseLeave}
       >
-        {hasHeaderAndMain ? (
-          <>
-            {/* 메인: 당길 때만 아래로 내려감 (간격 1/2) */}
-            <motion.div
-              className="flex-1 min-h-0 flex flex-col"
-              initial={false}
-              animate={{ y: pullDistance / 2 }}
-              transition={{ type: "tween", duration: 0.05 }}
-            >
-              {arr[1]}
-            </motion.div>
-          </>
-        ) : (
-          <>
-            <motion.div
-              className="min-h-full"
-              initial={false}
-              animate={{ y: pullDistance / 2 }}
-              transition={{ type: "tween", duration: 0.05 }}
-            >
-              {children}
-            </motion.div>
-          </>
-        )}
+        {(() => {
+          const indicatorHeight = Math.max(
+            isRefreshing ? INDICATOR_MIN_HEIGHT : 0,
+            pullDistance / 2
+          )
+          const showIndicator = indicatorHeight >= PULL_CLAIM_THRESHOLD / 2 || isRefreshing
+          return hasHeaderAndMain ? (
+            <>
+              {/* 풀 영역: 넓힌 구간 안에 인디케이터 표시 */}
+              <motion.div
+                className="shrink-0 flex items-center justify-center overflow-hidden bg-transparent"
+                initial={false}
+                animate={{ height: indicatorHeight }}
+                transition={{ type: "tween", duration: 0.05 }}
+              >
+                {showIndicator && (
+                  <div className="flex items-center justify-center w-full h-full min-h-[56px]">
+                    <Loader2 className="w-7 h-7 animate-spin text-muted-foreground" />
+                  </div>
+                )}
+              </motion.div>
+              <motion.div
+                className="flex-1 min-h-0 flex flex-col"
+                initial={false}
+                animate={{ y: 0 }}
+                transition={{ type: "tween", duration: 0.05 }}
+              >
+                {arr[1]}
+              </motion.div>
+            </>
+          ) : (
+            <>
+              <motion.div
+                className="shrink-0 flex items-center justify-center overflow-hidden bg-transparent"
+                initial={false}
+                animate={{ height: indicatorHeight }}
+                transition={{ type: "tween", duration: 0.05 }}
+              >
+                {showIndicator && (
+                  <div className="flex items-center justify-center w-full h-full min-h-[56px]">
+                    <Loader2 className="w-7 h-7 animate-spin text-muted-foreground" />
+                  </div>
+                )}
+              </motion.div>
+              <motion.div
+                className="min-h-full"
+                initial={false}
+                animate={{ y: 0 }}
+                transition={{ type: "tween", duration: 0.05 }}
+              >
+                {children}
+              </motion.div>
+            </>
+          )
+        })()}
       </div>
     </div>
   )
