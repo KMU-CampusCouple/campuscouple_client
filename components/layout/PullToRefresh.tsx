@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
-import { motion, useMotionValue, useTransform } from "framer-motion"
+import { motion } from "framer-motion"
 import { RefreshCw } from "lucide-react"
 
 const PULL_THRESHOLD = 80
@@ -20,16 +20,13 @@ export function PullToRefresh({
   enabled = true,
   className = "",
 }: PullToRefreshProps) {
+  const [pullDistance, setPullDistance] = useState(0)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
-  const startY = useRef(0)
-  const startScrollTop = useRef(0)
-  const isPulling = useRef(false)
-
-  const pullY = useMotionValue(0)
-  const indicatorOpacity = useTransform(pullY, [0, PULL_THRESHOLD], [0, 1])
-  const indicatorScale = useTransform(pullY, [0, PULL_THRESHOLD], [0.5, 1])
-  const rotate = useTransform(pullY, [0, PULL_THRESHOLD, MAX_PULL], [0, 180, 360])
+  const startYRef = useRef(0)
+  const isPullingRef = useRef(false)
+  const pullDistanceRef = useRef(0)
+  pullDistanceRef.current = pullDistance
 
   const handleRefresh = useCallback(() => {
     if (!enabled) return
@@ -38,140 +35,134 @@ export function PullToRefresh({
     setTimeout(() => setIsRefreshing(false), 800)
   }, [enabled, onRefresh])
 
-  // passive: false로 등록해 당길 때 preventDefault 동작 보장 (모바일)
+  const atTop = useCallback(() => {
+    const el = scrollContainerRef.current
+    const containerAtTop = el ? el.scrollTop <= 2 : true
+    const windowAtTop = typeof window !== "undefined" ? window.scrollY <= 2 : true
+    return containerAtTop && windowAtTop
+  }, [])
+
+  // 네이티브 터치 리스너 (passive: false로 당길 때 preventDefault 보장)
   useEffect(() => {
     if (!enabled) return
     const el = scrollContainerRef.current
     if (!el) return
-    let startY = 0
-    const touchStart = (e: TouchEvent) => {
-      if (el.scrollTop <= 0) {
-        startY = e.touches[0].clientY
+
+    const onTouchStart = (e: TouchEvent) => {
+      if (atTop()) {
+        startYRef.current = e.touches[0].clientY
+        isPullingRef.current = true
       }
     }
-    const touchMove = (e: TouchEvent) => {
-      if (el.scrollTop > 0) return
-      const diff = e.touches[0].clientY - startY
-      if (diff > 15) e.preventDefault()
-    }
-    el.addEventListener("touchstart", touchStart, { passive: true })
-    el.addEventListener("touchmove", touchMove, { passive: false })
-    return () => {
-      el.removeEventListener("touchstart", touchStart)
-      el.removeEventListener("touchmove", touchMove)
-    }
-  }, [enabled])
 
-  const onTouchStart = useCallback(
-    (e: React.TouchEvent) => {
-      if (!enabled || isRefreshing) return
-      const el = scrollContainerRef.current
-      if (!el || el.scrollTop > 0) return
-      startY.current = e.touches[0].clientY
-      startScrollTop.current = el.scrollTop
-      isPulling.current = true
-    },
-    [enabled, isRefreshing]
-  )
-
-  const onTouchMove = useCallback(
-    (e: React.TouchEvent) => {
-      if (!enabled || !isPulling.current) return
-      const el = scrollContainerRef.current
-      if (!el || el.scrollTop > 0) {
-        isPulling.current = false
-        pullY.set(0)
+    const onTouchMove = (e: TouchEvent) => {
+      if (!isPullingRef.current) return
+      if (!atTop()) {
+        isPullingRef.current = false
+        setPullDistance(0)
         return
       }
       const y = e.touches[0].clientY
-      const diff = y - startY.current
+      const diff = y - startYRef.current
       if (diff > 0) {
         e.preventDefault()
         const damped = Math.min(diff * 0.5, MAX_PULL)
-        pullY.set(damped)
+        setPullDistance(damped)
       } else {
-        pullY.set(0)
+        setPullDistance(0)
       }
-    },
-    [enabled, pullY]
-  )
-
-  const onTouchEnd = useCallback(() => {
-    if (!enabled) return
-    const current = pullY.get()
-    if (current >= PULL_THRESHOLD && !isRefreshing) {
-      handleRefresh()
     }
-    pullY.set(0)
-    isPulling.current = false
-  }, [enabled, isRefreshing, handleRefresh, pullY])
 
+    const onTouchEnd = () => {
+      const current = pullDistanceRef.current
+      if (current >= PULL_THRESHOLD) {
+        handleRefresh()
+      }
+      setPullDistance(0)
+      isPullingRef.current = false
+    }
+
+    el.addEventListener("touchstart", onTouchStart, { passive: true })
+    el.addEventListener("touchmove", onTouchMove, { passive: false })
+    el.addEventListener("touchend", onTouchEnd, { passive: true })
+    return () => {
+      el.removeEventListener("touchstart", onTouchStart)
+      el.removeEventListener("touchmove", onTouchMove)
+      el.removeEventListener("touchend", onTouchEnd)
+    }
+  }, [enabled, atTop, handleRefresh])
+
+  // 마우스 (데스크톱)
   const onMouseDown = useCallback(
     (e: React.MouseEvent) => {
       if (!enabled || isRefreshing) return
-      const el = scrollContainerRef.current
-      if (!el || el.scrollTop > 0) return
-      startY.current = e.clientY
-      startScrollTop.current = el.scrollTop
-      isPulling.current = true
+      if (atTop()) {
+        startYRef.current = e.clientY
+        isPullingRef.current = true
+      }
     },
-    [enabled, isRefreshing]
+    [enabled, isRefreshing, atTop]
   )
 
   const onMouseMove = useCallback(
     (e: React.MouseEvent) => {
-      if (!enabled || !isPulling.current) return
-      const el = scrollContainerRef.current
-      if (!el || el.scrollTop > 0) {
-        isPulling.current = false
-        pullY.set(0)
+      if (!enabled || !isPullingRef.current) return
+      if (!atTop()) {
+        isPullingRef.current = false
+        setPullDistance(0)
         return
       }
-      const diff = e.clientY - startY.current
+      const diff = e.clientY - startYRef.current
       if (diff > 0) {
-        const damped = Math.min(diff * 0.5, MAX_PULL)
-        pullY.set(damped)
+        setPullDistance(Math.min(diff * 0.5, MAX_PULL))
       } else {
-        pullY.set(0)
+        setPullDistance(0)
       }
     },
-    [enabled, pullY]
+    [enabled, atTop]
   )
 
   const onMouseUp = useCallback(() => {
-    if (!enabled) return
-    const current = pullY.get()
-    if (current >= PULL_THRESHOLD && !isRefreshing) {
+    if (pullDistance >= PULL_THRESHOLD && !isRefreshing) {
       handleRefresh()
     }
-    pullY.set(0)
-    isPulling.current = false
-  }, [enabled, isRefreshing, handleRefresh, pullY])
+    setPullDistance(0)
+    isPullingRef.current = false
+  }, [enabled, pullDistance, isRefreshing, handleRefresh])
 
   const onMouseLeave = useCallback(() => {
-    pullY.set(0)
-    isPulling.current = false
-  }, [pullY])
+    setPullDistance(0)
+    isPullingRef.current = false
+  }, [])
 
   if (!enabled) {
     return <div className={className}>{children}</div>
   }
 
+  const indicatorOpacity = Math.min(1, pullDistance / PULL_THRESHOLD)
+  const indicatorScale = 0.5 + 0.5 * indicatorOpacity
+  const rotate = (pullDistance / MAX_PULL) * 360
+
   return (
     <div className={`relative flex flex-col flex-1 min-h-0 ${className}`}>
-      {/* Pull indicator above content */}
+      {/* 인디케이터: motion.div + animate로 문서 권장 방식 */}
       <motion.div
         className="absolute left-1/2 -translate-x-1/2 z-20 flex flex-col items-center pointer-events-none"
-        style={{
-          top: 12,
+        style={{ top: 12 }}
+        initial={false}
+        animate={{
           opacity: indicatorOpacity,
           scale: indicatorScale,
         }}
+        transition={{ type: "tween", duration: 0.1 }}
       >
-        <motion.div style={{ rotate }}>
+        <motion.div
+          animate={{ rotate }}
+          transition={{ type: "tween", duration: 0.1 }}
+        >
           <RefreshCw className="w-6 h-6 text-primary" strokeWidth={2} />
         </motion.div>
-        <span className="text-[10px] text-muted-foreground mt-0.5">
+        <span className="text-[10px] text-muted-foreground mt-0.5 whitespace-nowrap">
           {isRefreshing ? "새로고침 중..." : "당겨서 새로고침"}
         </span>
       </motion.div>
@@ -179,15 +170,20 @@ export function PullToRefresh({
       <div
         ref={scrollContainerRef}
         className="flex-1 min-h-0 overflow-auto overscroll-contain"
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseLeave}
       >
-        {children}
+        {/* 콘텐츠를 motion.div로 감싸 당길 때 시각적 피드백 */}
+        <motion.div
+          className="min-h-full"
+          initial={false}
+          animate={{ y: pullDistance }}
+          transition={{ type: "tween", duration: 0.05 }}
+        >
+          {children}
+        </motion.div>
       </div>
     </div>
   )
