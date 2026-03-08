@@ -7,7 +7,7 @@ import { AppProviders } from '@/components/layout/AppProviders'
 const notoSansKR = Noto_Sans_KR({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
 export const metadata: Metadata = {
-  title: 'Campus Couple',
+  title: '캠퍼스커플',
   description: '대학생 미팅 & 과팅 매칭 서비스',
   manifest: '/manifest.json',
 }
