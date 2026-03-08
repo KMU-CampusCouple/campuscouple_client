@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button"
 import UserAvatar from "@/components/user-avatar"
 import { friends as initialFriends, allUsers, friendRequests as initialRequests } from "@/lib/store"
 import type { UserProfile, FriendRequest } from "@/lib/store"
+import { useRefresh } from "@/contexts/RefreshContext"
+import { PullToRefresh } from "@/components/layout/PullToRefresh"
 
 interface FriendsPageProps {
   onViewProfile: (user: UserProfile) => void
@@ -181,9 +183,12 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
     setShowConfirmDialog(null)
   }
 
+  const { triggerRefresh } = useRefresh()
+
   return (
-    <div className="flex flex-col min-h-screen pb-20">
-      <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-4 pb-3">
+    <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
+      <div className="flex flex-col min-h-full pb-20">
+      <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-4 pb-3 shrink-0">
         <p className="text-sm font-bold text-foreground mb-3">{"친구"}</p>
         <div className="flex gap-1 bg-muted rounded-xl p-1">
           {(["friends", "requests", "search"] as const).map((t) => (
@@ -381,6 +386,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </PullToRefresh>
   )
 }

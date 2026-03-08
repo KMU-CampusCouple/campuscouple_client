@@ -1,10 +1,12 @@
 "use client"
 
-import { MapPin, Calendar, Clock, Users, ChevronDown, Search, X } from "lucide-react"
+import { MapPin, Calendar, Clock, Users, ChevronDown, Search } from "lucide-react"
 import UserAvatar from "@/components/user-avatar"
 import type { MeetingPost, UserProfile } from "@/lib/store"
 import { mockPosts } from "@/lib/store"
 import { useState, useRef, useEffect } from "react"
+import { useRefresh } from "@/contexts/RefreshContext"
+import { PullToRefresh } from "@/components/layout/PullToRefresh"
 
 interface DashboardProps {
   onCreatePost: () => void
@@ -150,9 +152,12 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
       return a.location.localeCompare(b.location)
     })
 
+  const { triggerRefresh } = useRefresh()
+
   return (
-    <div className="flex flex-col min-h-screen pb-20">
-      <header className="sticky top-0 z-30 bg-primary/80 backdrop-blur-lg px-4 pt-4 pb-3">
+    <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
+      <div className="flex flex-col min-h-full pb-20">
+      <header className="sticky top-0 z-30 bg-primary/80 backdrop-blur-lg px-4 pt-4 pb-3 shrink-0">
         {/* App logo bar */}
         <div className="flex items-center gap-2 mb-3">
           <img src="/logo.jpg" alt="Campus Couple" className="w-7 h-7 rounded-lg object-cover" />
@@ -259,6 +264,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
           {"글쓰기 +"}
         </button>
       </div>
-    </div>
+      </div>
+    </PullToRefresh>
   )
 }

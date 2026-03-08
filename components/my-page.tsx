@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input"
 import UserAvatar from "@/components/user-avatar"
 import { currentUser, mockPosts, formatMeetingType } from "@/lib/store"
 import type { MeetingPost, UserProfile } from "@/lib/store"
+import { useRefresh } from "@/contexts/RefreshContext"
+import { PullToRefresh } from "@/components/layout/PullToRefresh"
 
 type SubPage = "main" | "edit" | "my-posts" | "my-applications" | "my-matches"
 
@@ -126,6 +128,7 @@ const MBTI_TYPES = [
 ]
 
 export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPageProps) {
+  const { triggerRefresh } = useRefresh()
   const [subPage, setSubPage] = useState<SubPage>("main")
   const [editPhotos, setEditPhotos] = useState<string[]>([])
   const [showAccountDialog, setShowAccountDialog] = useState<"logout" | "withdraw" | null>(null)
@@ -328,8 +331,9 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
       subPage === "my-posts" ? myPosts : subPage === "my-applications" ? myApplications : myMatches
 
     return (
-      <div className="flex flex-col min-h-screen pb-20">
-        <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3">
+      <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
+      <div className="flex flex-col min-h-full pb-20">
+        <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3 shrink-0">
           <div className="flex items-center gap-3">
             <button onClick={() => setSubPage("main")} className="text-foreground">
               <ArrowLeft className="w-5 h-5" />
@@ -355,13 +359,15 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
           )}
         </main>
       </div>
+      </PullToRefresh>
     )
   }
 
   // Main
   return (
-    <div className="flex flex-col min-h-screen pb-20">
-      <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-4 pb-3">
+    <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
+      <div className="flex flex-col min-h-full pb-20">
+      <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-4 pb-3 shrink-0">
         <p className="text-sm font-bold text-foreground">{"마이"}</p>
       </header>
       <main className="flex-1 px-4 pb-6 flex flex-col gap-4">
@@ -472,6 +478,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </PullToRefresh>
   )
 }

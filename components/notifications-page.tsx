@@ -5,6 +5,8 @@ import { Bell, UserPlus, MessageCircle, Heart, ChevronRight } from "lucide-react
 import UserAvatar from "@/components/user-avatar"
 import { mockNotifications } from "@/lib/store"
 import type { Notification } from "@/lib/store"
+import { useRefresh } from "@/contexts/RefreshContext"
+import { PullToRefresh } from "@/components/layout/PullToRefresh"
 
 interface NotificationsPageProps {
   onNavigate?: (notification: Notification) => void
@@ -57,10 +59,12 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
 
   const unread = notifications.filter((n) => !n.read)
   const read = notifications.filter((n) => n.read)
+  const { triggerRefresh } = useRefresh()
 
   return (
-    <div className="flex flex-col min-h-screen pb-20">
-      <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-4 pb-3">
+    <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
+      <div className="flex flex-col min-h-full pb-20">
+      <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-4 pb-3 shrink-0">
         <p className="text-sm font-bold text-foreground">{"알림"}</p>
       </header>
 
@@ -138,6 +142,7 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
           </>
         )}
       </main>
-    </div>
+      </div>
+    </PullToRefresh>
   )
 }

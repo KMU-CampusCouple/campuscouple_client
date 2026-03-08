@@ -13,6 +13,7 @@ import MyPage from "@/components/my-page"
 import UserProfile from "@/components/user-profile"
 import BottomNav from "@/components/bottom-nav"
 import { AppShell } from "@/components/layout/AppShell"
+import { useRefresh } from "@/contexts/RefreshContext"
 import type { MeetingPost, UserProfile as UserProfileType, Notification } from "@/lib/store"
 import { mockPosts, isUserMatchedInPost } from "@/lib/store"
 
@@ -21,6 +22,7 @@ type Tab = "home" | "friends" | "notifications" | "mypage"
 type SubScreen = "dashboard" | "post-detail" | "create-post" | "user-profile"
 
 export default function Page() {
+  const { refreshKey } = useRefresh()
   const [screen, setScreen] = useState<AppScreen>("splash")
   const [activeTab, setActiveTab] = useState<Tab>("home")
   const [subScreen, setSubScreen] = useState<SubScreen>("dashboard")
@@ -118,7 +120,7 @@ export default function Page() {
   }
 
   return (
-    <AppShell className="bg-background">
+    <AppShell className="bg-background flex flex-col">
       {/* User profile overlay - shown on top of any tab */}
       {subScreen === "user-profile" && selectedUser && (
         <UserProfile
@@ -128,9 +130,12 @@ export default function Page() {
         />
       )}
 
+      {/* 풀리프레시 허용: Dashboard, Friends, Notifications, MyPage만 key로 리마운트 */}
+      <div className="flex flex-col flex-1 min-h-0">
       {/* Home tab */}
       {subScreen !== "user-profile" && activeTab === "home" && subScreen === "dashboard" && (
         <Dashboard
+          key={`dashboard-${refreshKey}`}
           onCreatePost={() => setSubScreen("create-post")}
           onViewPost={handleViewPost}
           onViewProfile={handleViewProfile}
@@ -154,13 +159,14 @@ export default function Page() {
       )}
 
       {subScreen !== "user-profile" && activeTab === "friends" && (
-        <FriendsPage onViewProfile={handleViewProfile} />
+        <FriendsPage key={`friends-${refreshKey}`} onViewProfile={handleViewProfile} />
       )}
       {subScreen !== "user-profile" && activeTab === "notifications" && (
-        <NotificationsPage onNavigate={handleNotificationNavigate} />
+        <NotificationsPage key={`notifications-${refreshKey}`} onNavigate={handleNotificationNavigate} />
       )}
       {subScreen !== "user-profile" && activeTab === "mypage" && (
         <MyPage
+          key={`mypage-${refreshKey}`}
           onViewPost={handleViewPost}
           onViewProfile={handleViewProfile}
           onLogout={() => {
@@ -170,6 +176,7 @@ export default function Page() {
           }}
         />
       )}
+      </div>
 
       <BottomNav
         activeTab={activeTab}
