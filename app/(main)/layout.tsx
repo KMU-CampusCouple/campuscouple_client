@@ -25,7 +25,10 @@ export default function MainLayout({
 
   return (
     <AppShell className="bg-background flex flex-col h-[100dvh] overflow-hidden max-h-screen">
-      <div className="flex flex-col flex-1 min-h-0">
+      <div
+        className="flex flex-col flex-1 min-h-0"
+        style={!isUserProfile ? { maxHeight: "calc(100dvh - var(--bottom-nav-height))" } : undefined}
+      >
         {children}
       </div>
       {!isUserProfile && <BottomNav activeTab={activeTab} notificationCount={2} />}
