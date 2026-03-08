@@ -1,0 +1,136 @@
+"use client"
+
+import { useState } from "react"
+import { GraduationCap, Mail, CheckCircle2, ArrowRight, Loader2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+
+interface VerifyPageProps {
+  onComplete: () => void
+}
+
+export default function VerifyPage({ onComplete }: VerifyPageProps) {
+  const [step, setStep] = useState<"email" | "code" | "done">("email")
+  const [email, setEmail] = useState("")
+  const [code, setCode] = useState("")
+  const [loading, setLoading] = useState(false)
+
+  const handleSendCode = () => {
+    if (!email.includes("@") || !email.includes("ac.kr")) return
+    setLoading(true)
+    setTimeout(() => {
+      setLoading(false)
+      setStep("code")
+    }, 1500)
+  }
+
+  const handleVerify = () => {
+    if (code.length < 4) return
+    setLoading(true)
+    setTimeout(() => {
+      setLoading(false)
+      setStep("done")
+    }, 1500)
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 bg-background">
+      <div className="w-full max-w-sm">
+        {step === "email" && (
+          <div className="flex flex-col items-center gap-6 animate-in fade-in duration-500">
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-primary">
+              <GraduationCap className="w-8 h-8 text-primary-foreground" />
+            </div>
+            <div className="text-center">
+              <h1 className="text-xl font-bold mb-2">{"대학교 인증"}</h1>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                {"재학 중인 대학교 이메일을 입력해주세요."}
+              </p>
+            </div>
+            <div className="w-full flex flex-col gap-3">
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  type="email"
+                  placeholder="example@university.ac.kr"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="pl-10 h-12 rounded-xl bg-card border-border"
+                />
+              </div>
+              <Button
+                onClick={handleSendCode}
+                disabled={!email.includes("@") || loading}
+                className="h-12 rounded-xl bg-primary text-primary-foreground font-semibold"
+              >
+                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "인증 코드 보내기"}
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground text-center">
+              {"ac.kr 도메인의 이메일만 인증 가능합니다"}
+            </p>
+          </div>
+        )}
+
+        {step === "code" && (
+          <div className="flex flex-col items-center gap-6 animate-in fade-in duration-500">
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-primary">
+              <Mail className="w-8 h-8 text-primary-foreground" />
+            </div>
+            <div className="text-center">
+              <h1 className="text-xl font-bold mb-2">{"인증 코드 입력"}</h1>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                <span className="font-medium text-foreground">{email}</span>
+                {"(으)로 인증 코드를 보냈어요"}
+              </p>
+            </div>
+            <div className="w-full flex flex-col gap-3">
+              <Input
+                type="text"
+                placeholder="6자리 코드 입력"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                className="h-12 rounded-xl text-center text-lg tracking-widest bg-card border-border"
+                maxLength={6}
+              />
+              <Button
+                onClick={handleVerify}
+                disabled={code.length < 4 || loading}
+                className="h-12 rounded-xl bg-primary text-primary-foreground font-semibold"
+              >
+                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "인증하기"}
+              </Button>
+            </div>
+            <button
+              onClick={() => setStep("email")}
+              className="text-xs text-muted-foreground underline"
+            >
+              {"코드 재전송 또는 이메일 변경"}
+            </button>
+          </div>
+        )}
+
+        {step === "done" && (
+          <div className="flex flex-col items-center gap-6 animate-in fade-in duration-500">
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-primary">
+              <CheckCircle2 className="w-8 h-8 text-primary-foreground" />
+            </div>
+            <div className="text-center">
+              <h1 className="text-xl font-bold mb-2">{"인증 완료!"}</h1>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                {"대학생 인증이 완료되었어요."}
+              </p>
+            </div>
+            <Button
+              onClick={onComplete}
+              className="h-12 rounded-xl bg-primary text-primary-foreground font-semibold w-full gap-2"
+            >
+              {"프로필 설정하기"}
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
