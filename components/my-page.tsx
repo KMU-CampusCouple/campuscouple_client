@@ -341,7 +341,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
           </div>
         </header>
         <div className="flex flex-col min-h-full pb-20">
-        <main className="flex-1 px-4 py-4 flex flex-col gap-3">
+        <main className="flex-1 px-4 py-2 flex flex-col gap-3">
           {list.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
               <FileText className="w-10 h-10 mb-2 opacity-30" />
@@ -366,7 +366,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
   // Main
   return (
     <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
-      <header className="sticky top-0 z-30 bg-primary/80 backdrop-blur-lg px-4 pt-4 pb-3 shrink-0">
+      <header className="sticky top-0 z-30 bg-primary/80 backdrop-blur-lg px-4 pt-2 pb-2 shrink-0">
         <div className="flex items-center gap-2">
           <img src="/logo.jpg" alt="캠퍼스커플" className="w-7 h-7 rounded-lg object-cover" />
           <span className="text-sm font-bold text-primary-foreground">{"캠퍼스커플"}</span>

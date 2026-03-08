@@ -492,3 +492,11 @@ export const friendRequests: FriendRequest[] = [
     createdAt: "2026-02-12T20:00:00",
   },
 ]
+
+export function getPostById(id: string): MeetingPost | undefined {
+  return mockPosts.find((p) => p.id === id)
+}
+
+export function getUserById(id: string): UserProfile | undefined {
+  return allUsers.find((u) => u.id === id)
+}

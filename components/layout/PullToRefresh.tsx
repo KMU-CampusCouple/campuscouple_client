@@ -154,6 +154,8 @@ export function PullToRefresh({
 
   return (
     <div className={`relative flex flex-col flex-1 min-h-0 ${className}`}>
+      {/* 헤더: 스크롤 영역 밖에 두어 풀 시 움직이지 않음 */}
+      {hasHeaderAndMain && <div className="shrink-0">{arr[0]}</div>}
       <div
         ref={scrollContainerRef}
         className="flex-1 min-h-0 overflow-auto overscroll-contain touch-manipulation flex flex-col"
@@ -165,8 +167,6 @@ export function PullToRefresh({
       >
         {hasHeaderAndMain ? (
           <>
-            {/* 헤더: 고정, 움직이지 않음 */}
-            <div className="shrink-0">{arr[0]}</div>
             {/* 헤더와 메인 사이: 당길 때만 높이 생기고 인디케이터 표시 */}
             <div
               className="shrink-0 overflow-hidden flex flex-col items-center justify-center bg-background"

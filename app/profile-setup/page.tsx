@@ -1,19 +1,19 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import SplashScreen from "@/components/splash-screen"
+import ProfileSetup from "@/components/profile-setup"
 import { AppShell } from "@/components/layout/AppShell"
 
-export default function HomePage() {
+export default function ProfileSetupRoute() {
   const router = useRouter()
 
   const handleComplete = () => {
-    router.push("/verify")
+    router.push("/home")
   }
 
   return (
     <AppShell>
-      <SplashScreen onComplete={handleComplete} />
+      <ProfileSetup onComplete={handleComplete} />
     </AppShell>
   )
 }
