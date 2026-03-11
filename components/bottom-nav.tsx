@@ -21,11 +21,11 @@ export default function BottomNav({ activeTab, notificationCount = 0 }: BottomNa
 
   return (
     <nav
-      className="w-full min-h-[88px] bg-card border-t border-border flex items-center"
+      className="w-full h-full min-h-[88px] bg-card border-t border-border flex flex-col justify-end"
       role="navigation"
       aria-label="메인 네비게이션"
     >
-      <div className="flex items-center justify-around w-full min-h-[88px] pt-6 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+      <div className="flex items-center justify-around w-full min-h-[88px] pt-4 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
         {TAB_CONFIG.map((tab) => {
           const Icon = tab.icon
           const isActive = activeTab === tab.id
