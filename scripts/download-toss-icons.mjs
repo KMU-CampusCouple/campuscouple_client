@@ -28,6 +28,8 @@ const ICON_NAMES = [
   "icon-arrow-down-mono",
   "icon-plus-small-mono",
   "icon-close-mono",
+  "icon-chip-x-mono",
+  "icon-user-two-mono",
   "icon-check-mono",
   "icon-message-mono",
   "icon-send-mono",

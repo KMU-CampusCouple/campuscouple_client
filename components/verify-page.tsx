@@ -63,7 +63,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
                 disabled={!email.includes("@") || loading}
                 className="h-12 rounded-xl bg-primary text-primary-foreground font-semibold"
               >
-                {loading ? <span className="animate-spin inline-flex"><TossIcon name="icon-loader-mono" size={24} onPrimary /></span> : "인증 코드 보내기"}
+                {loading ? <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center"><span className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" /></span> : "인증 코드 보내기"}
               </Button>
             </div>
             <p className="text-xs text-muted-foreground text-center">
@@ -98,7 +98,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
                 disabled={code.length < 4 || loading}
                 className="h-12 rounded-xl bg-primary text-primary-foreground font-semibold"
               >
-                {loading ? <span className="animate-spin inline-flex"><TossIcon name="icon-loader-mono" size={24} onPrimary /></span> : "인증하기"}
+                {loading ? <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center"><span className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" /></span> : "인증하기"}
               </Button>
             </div>
             <button

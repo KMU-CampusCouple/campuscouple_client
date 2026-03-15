@@ -288,7 +288,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
                       className="w-10 h-10 rounded-full bg-muted text-foreground flex items-center justify-center shrink-0"
                       aria-label="거절"
                     >
-                      <TossIcon name="icon-close-mono" size={24} background="white" />
+                      <TossIcon name="icon-chip-x-mono" size={24} background="white" />
                     </button>
                   </div>
                 </div>

@@ -103,7 +103,7 @@ function ApplicationCard({
           variant="outline"
           className="w-full h-10 rounded-xl font-medium gap-2 text-destructive border-destructive/30 hover:bg-destructive/5"
         >
-          <TossIcon name="icon-close-mono" size={24} background="white" />
+          <TossIcon name="icon-chip-x-mono" size={24} background="white" />
           {"신청 취소"}
         </Button>
       )}
@@ -144,7 +144,7 @@ function SlotPicker({
                 onClick={() => onRemoveSlot(i)}
                 className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center z-10"
               >
-                <TossIcon name="icon-close-mono" size={24} background="white" />
+                <TossIcon name="icon-chip-x-mono" size={24} background="white" />
               </button>
             )}
             <button onClick={() => onViewProfile(user)}>
@@ -379,23 +379,6 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
           </div>
         </div>
 
-        {/* Location map */}
-        {post.location && (
-          <div className="bg-card rounded-xl border border-border overflow-hidden">
-            <div className="relative w-full aspect-square bg-muted">
-              <iframe
-                title="위치 지도"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                src={`https://www.google.com/maps?q=${encodeURIComponent(post.location)}&output=embed`}
-              />
-            </div>
-          </div>
-        )}
-        
         {/* Applications section */}
         <div className="flex flex-col gap-3">
           <h3 className="text-sm font-semibold flex items-center gap-2">

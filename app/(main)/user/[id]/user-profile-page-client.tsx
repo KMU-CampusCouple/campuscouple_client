@@ -2,11 +2,14 @@
 
 import { useRouter } from "next/navigation"
 import UserProfile from "@/components/user-profile"
-import { getUserById, mockPosts, isUserMatchedInPost } from "@/lib/store"
+import { getUserById, mockPosts, isUserMatchedInPost, currentUser } from "@/lib/store"
+import { useFriends } from "@/contexts/FriendsContext"
 
 export default function UserProfilePageClient({ id }: { id: string }) {
   const router = useRouter()
   const user = getUserById(id)
+  const { friendIds, sentRequestIds, sendRequest, removeFriend } = useFriends()
+  const isOwnProfile = user?.id === currentUser.id
 
   if (!user) {
     return (
@@ -30,11 +33,22 @@ export default function UserProfilePageClient({ id }: { id: string }) {
       isUserMatchedInPost(p, user.id)
   )
 
+  const friendStatus = isOwnProfile
+    ? undefined
+    : friendIds.has(user.id)
+      ? "friend"
+      : sentRequestIds.has(user.id)
+        ? "pending"
+        : "none"
+
   return (
     <UserProfile
       user={user}
       isMatched={isMatched}
       onBack={() => router.back()}
+      friendStatus={friendStatus}
+      onAddFriend={friendStatus === "none" ? () => sendRequest(user.id) : undefined}
+      onRemoveFriend={friendStatus === "friend" ? () => removeFriend(user.id) : undefined}
     />
   )
 }
