@@ -52,7 +52,7 @@ function ApplicationCard({
   const isAccepted = application.status === "accepted"
 
   return (
-    <div className="bg-card rounded-xl border border-border p-4">
+    <div className="bg-card rounded-lg border border-border p-4">
       <div className="flex items-center justify-end gap-2 mb-3">
         <span
           className={`text-xs font-medium px-2 py-0.5 rounded-full ${
@@ -90,7 +90,7 @@ function ApplicationCard({
       {isAuthor && application.status === "pending" && (
         <Button
           onClick={onAccept}
-          className="w-full h-10 rounded-xl bg-primary text-primary-foreground font-medium gap-2"
+          className="w-full h-10 rounded-lg bg-primary text-primary-foreground font-medium gap-2"
         >
           <TossIcon name="icon-check-mono" size={24} onPrimary />
           {"수락하기"}
@@ -101,7 +101,7 @@ function ApplicationCard({
         <Button
           onClick={onCancel}
           variant="outline"
-          className="w-full h-10 rounded-xl font-medium gap-2 text-destructive border-destructive/30 hover:bg-destructive/5"
+          className="w-full h-10 rounded-lg font-medium gap-2 text-destructive border-destructive/30 hover:bg-destructive/5"
         >
           <TossIcon name="icon-chip-x-mono" size={24} background="white" />
           {"신청 취소"}
@@ -109,7 +109,7 @@ function ApplicationCard({
       )}
 
       {isAccepted && (
-        <div className="flex items-center gap-2 p-3 bg-primary/5 rounded-xl border border-primary/20 mt-2">
+        <div className="flex items-center gap-2 p-3 bg-primary/5 rounded-lg border border-primary/20 mt-2">
           <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
             <TossIcon name="icon-phone-mono" size={24} onPrimary />
           </div>
@@ -138,7 +138,7 @@ function SlotPicker({
     <div className="grid grid-cols-5 gap-2">
       {slots.map((user, i) =>
         user ? (
-          <div key={i} className="relative flex flex-col items-center gap-1 p-1.5 rounded-xl bg-primary/10 ring-1 ring-primary">
+          <div key={i} className="relative flex flex-col items-center gap-1 p-1.5 rounded-lg bg-primary/10 ring-1 ring-primary">
             {i > 0 && (
               <button
                 onClick={() => onRemoveSlot(i)}
@@ -156,7 +156,7 @@ function SlotPicker({
           <button
             key={i}
             onClick={() => onAddSlot(i)}
-            className="flex flex-col items-center gap-1 p-1.5 rounded-xl border-2 border-dashed border-primary/40 transition-colors hover:border-primary hover:bg-primary/5"
+            className="flex flex-col items-center gap-1 p-1.5 rounded-lg border-2 border-dashed border-primary/40 transition-colors hover:border-primary hover:bg-primary/5"
           >
             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
               <TossIcon name="icon-plus-small-mono" size={24} background="white" />
@@ -191,7 +191,7 @@ function ParticipantSwiper({
   }
 
   return (
-    <div className="bg-card rounded-xl border border-border p-4">
+    <div className="bg-card rounded-lg border border-border p-4">
       <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
         <TossIcon name="icon-users-mono" size={24} background="white" />
         {"참여자 ("}{participants.length}/{total}{")"}
@@ -208,7 +208,7 @@ function ParticipantSwiper({
           <button
             key={p.id}
             onClick={() => onViewProfile(p)}
-            className="shrink-0 w-[42%] snap-start bg-muted rounded-2xl p-4 flex flex-col items-center gap-2.5 hover:bg-accent transition-colors"
+            className="shrink-0 w-[42%] snap-start bg-muted rounded-lg p-4 flex flex-col items-center gap-2.5 hover:bg-accent transition-colors"
           >
             <UserAvatar user={p} size="lg" />
             <div className="text-center w-full">
@@ -221,7 +221,7 @@ function ParticipantSwiper({
         {Array.from({ length: openSlots }).map((_, i) => (
           <div
             key={`empty-${i}`}
-            className="shrink-0 w-[42%] snap-start bg-muted/50 rounded-2xl p-4 flex flex-col items-center gap-2.5 border-2 border-dashed border-border"
+            className="shrink-0 w-[42%] snap-start bg-muted/50 rounded-lg p-4 flex flex-col items-center gap-2.5 border-2 border-dashed border-border"
           >
             <div className="w-12 h-12 rounded-full border-2 border-dashed border-muted-foreground/30 flex items-center justify-center">
               <TossIcon name="icon-plus-small-mono" size={24} background="white" className="opacity-40" />
@@ -346,7 +346,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                 <TossIcon name="icon-more-vertical-mono" size={24} background="white" className="opacity-70" />
               </button>
               {showPostMenu && (
-                <div className="absolute right-0 top-full mt-1 bg-card rounded-xl border border-border shadow-lg z-20 min-w-[120px] py-1">
+                <div className="absolute right-0 top-full mt-1 bg-card rounded-lg border border-border shadow-lg z-20 min-w-[120px] py-1">
                   <button
                     onClick={() => { setShowPostMenu(false); setShowDeleteConfirm(true) }}
                     className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-destructive hover:bg-muted transition-colors"
@@ -369,7 +369,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
         />
 
         {/* Info (가이드: 한 번에 하나의 아이콘만 사용) */}
-        <div className="bg-card rounded-xl border border-border p-4 flex flex-col gap-3">
+        <div className="bg-card rounded-lg border border-border p-4 flex flex-col gap-3">
           <div className="flex items-center gap-2 text-sm">
             <TossIcon name="icon-calendar-mono" size={24} background="white" className="shrink-0" />
             <span>{displayLocation} · {post.date} {displayTime}</span>
@@ -380,7 +380,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
         </div>
 
         {/* Applications section */}
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 mt-6">
           <h3 className="text-sm font-semibold flex items-center gap-2">
             <TossIcon name="icon-message-mono" size={24} background="white" />
             {"미팅 신청"}
@@ -404,7 +404,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                 />
               ))
             ) : (
-              <div className="bg-card rounded-xl border border-border p-8 flex flex-col items-center text-muted-foreground">
+              <div className="bg-card rounded-lg border border-border p-8 flex flex-col items-center text-muted-foreground">
                 <TossIcon name="icon-users-mono" size={32} background="white" className="mb-2 opacity-30" />
                 <p className="text-sm">{"신청이 오면 여기서 확인할 수 있어요"}</p>
               </div>
@@ -427,7 +427,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                   />
                 ))
               }
-              <div className="bg-card rounded-xl border border-border p-4 flex items-center gap-3">
+              <div className="bg-card rounded-lg border border-border p-4 flex items-center gap-3">
                 <TossIcon name="icon-lock-mono" size={24} background="white" className="opacity-70" />
                 <div>
                   <p className="text-sm font-medium">
@@ -446,16 +446,16 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
         {!isAuthor && !showApplyForm && openSlots > 0 && post.status === "open" && (
           <Button
             onClick={() => setShowApplyForm(true)}
-            className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-semibold gap-2"
+            className="w-full h-12 rounded-lg bg-primary text-primary-foreground font-semibold gap-2"
           >
-            <TossIcon name="icon-send-mono" size={24} background="white" />
+            <TossIcon name="icon-send-mono" size={24} onPrimary />
             {"미팅 신청하기"}
           </Button>
         )}
 
         {/* Apply form */}
         {showApplyForm && (
-          <div className="bg-card rounded-xl border border-border p-4 flex flex-col gap-4">
+          <div className="bg-card rounded-lg border border-border p-4 flex flex-col gap-4">
             <h3 className="text-sm font-semibold">{"우리 그룹으로 신청하기"}</h3>
 
             <div>
@@ -476,7 +476,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                 value={applyMessage}
                 onChange={(e) => setApplyMessage(e.target.value)}
                 placeholder="우리 그룹을 소개해주세요..."
-                className="w-full h-20 rounded-xl bg-muted border-0 p-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+                className="w-full h-20 rounded-lg bg-muted border-0 p-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
               />
             </div>
 
@@ -487,14 +487,14 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                   setApplySlots([currentUser, ...Array(openSlots - 1).fill(null)])
                 }}
                 variant="outline"
-                className="flex-1 h-10 rounded-xl"
+                className="flex-1 h-10 rounded-lg"
               >
                 {"닫기"}
               </Button>
               <Button
                 onClick={handleApply}
                 disabled={!applyMessage.trim()}
-                className="flex-1 h-10 rounded-xl bg-primary text-primary-foreground font-medium"
+                className="flex-1 h-10 rounded-lg bg-primary text-primary-foreground font-medium"
               >
                 {"신청하기"}
               </Button>
@@ -507,7 +507,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-foreground/30" onClick={() => setShowDeleteConfirm(false)} />
-          <div className="relative bg-card rounded-2xl p-6 w-full max-w-xs shadow-xl">
+          <div className="relative bg-card rounded-lg p-6 w-full max-w-xs shadow-xl">
             <h3 className="text-lg font-bold mb-2">{"글 삭제"}</h3>
             <p className="text-sm text-muted-foreground mb-5">
               {"이 글을 삭제할까요? 삭제하면 복구할 수 없어요."}
@@ -516,13 +516,13 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
               <Button
                 onClick={() => setShowDeleteConfirm(false)}
                 variant="outline"
-                className="flex-1 h-10 rounded-xl"
+                className="flex-1 h-10 rounded-lg"
               >
                 {"닫기"}
               </Button>
               <Button
                 onClick={() => { setShowDeleteConfirm(false); onBack() }}
-                className="flex-1 h-10 rounded-xl bg-destructive text-destructive-foreground"
+                className="flex-1 h-10 rounded-lg bg-destructive text-destructive-foreground"
               >
                 {"삭제"}
               </Button>
@@ -535,7 +535,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
       {showAppDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-foreground/30" onClick={() => setShowAppDeleteConfirm(null)} />
-          <div className="relative bg-card rounded-2xl p-6 w-full max-w-xs shadow-xl">
+          <div className="relative bg-card rounded-lg p-6 w-full max-w-xs shadow-xl">
             <h3 className="text-lg font-bold mb-2">{"신청 삭제"}</h3>
             <p className="text-sm text-muted-foreground mb-5">
               {"이 신청을 삭제할까요?"}
@@ -544,7 +544,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
               <Button
                 onClick={() => setShowAppDeleteConfirm(null)}
                 variant="outline"
-                className="flex-1 h-10 rounded-xl"
+                className="flex-1 h-10 rounded-lg"
               >
                 {"닫기"}
               </Button>
@@ -553,7 +553,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                   setApplications((prev) => prev.filter((a) => a.id !== showAppDeleteConfirm))
                   setShowAppDeleteConfirm(null)
                 }}
-                className="flex-1 h-10 rounded-xl bg-destructive text-destructive-foreground"
+                className="flex-1 h-10 rounded-lg bg-destructive text-destructive-foreground"
               >
                 {"삭제"}
               </Button>
@@ -572,7 +572,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
               setActiveSlotIndex(null)
             }}
           />
-          <div className="relative w-full max-w-[430px] bg-card rounded-t-3xl p-6 pb-10 animate-in slide-in-from-bottom duration-300">
+          <div className="relative w-full max-w-[430px] bg-card rounded-t-2xl p-6 pb-10 animate-in slide-in-from-bottom duration-300">
             <div className="w-10 h-1 bg-muted rounded-full mx-auto mb-4" />
             <h3 className="text-lg font-bold mb-1">{"친구 선택"}</h3>
             <p className="text-xs text-muted-foreground mb-4">
@@ -583,7 +583,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                 <button
                   key={f.id}
                   onClick={() => handleSelectFriendForSlot(f)}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-muted transition-colors hover:bg-primary/10"
+                  className="flex items-center gap-3 p-3 rounded-lg bg-muted transition-colors hover:bg-primary/10"
                 >
                   <UserAvatar user={f} size="sm" />
                   <div className="flex-1 text-left">
@@ -604,7 +604,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                 setShowFriendPicker(false)
                 setActiveSlotIndex(null)
               }}
-              className="w-full h-10 rounded-xl mt-4"
+              className="w-full h-10 rounded-lg mt-4"
             >
               {"닫기"}
             </Button>

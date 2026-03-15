@@ -16,6 +16,8 @@ interface PullToRefreshProps {
   onRefresh: () => void | Promise<void>
   enabled?: boolean
   className?: string
+  /** 실제 스크롤이 일어나는 div에 붙일 ref (스크롤 이벤트 감지용) */
+  scrollContainerRef?: React.RefObject<HTMLDivElement | null>
 }
 
 export function PullToRefresh({
@@ -23,6 +25,7 @@ export function PullToRefresh({
   onRefresh,
   enabled = true,
   className = "",
+  scrollContainerRef: scrollContainerRefProp,
 }: PullToRefreshProps) {
   const [pullDistance, setPullDistance] = useState(0)
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -176,7 +179,11 @@ export function PullToRefresh({
       {/* 헤더: 스크롤 영역 밖에 두어 풀 시 움직이지 않음 */}
       {hasHeaderAndMain && <div className="shrink-0">{arr[0]}</div>}
       <div
-        ref={scrollContainerRef}
+        ref={(el) => {
+          (scrollContainerRef as React.MutableRefObject<HTMLDivElement | null>).current = el
+          if (scrollContainerRefProp)
+            (scrollContainerRefProp as React.MutableRefObject<HTMLDivElement | null>).current = el
+        }}
         className="flex-1 min-h-0 overflow-auto overscroll-contain touch-manipulation flex flex-col"
         style={{ WebkitOverflowScrolling: "touch" } as React.CSSProperties}
         onMouseDown={onMouseDown}
