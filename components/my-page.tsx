@@ -17,6 +17,8 @@ interface MyPageProps {
   onViewPost: (post: MeetingPost) => void
   onViewProfile: (user: UserProfile) => void
   onLogout?: () => void
+  /** 내가 쓴 글 / 내가 신청한 글 / 매칭된 글에서 뒤로가기 시 마이페이지로 이동 */
+  onBackToMypage?: () => void
 }
 
 function SwipeablePostItem({
@@ -128,11 +130,12 @@ const MBTI_TYPES = [
   "미공개",
 ]
 
-export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPageProps) {
+export default function MyPage({ onViewPost, onViewProfile, onLogout, onBackToMypage }: MyPageProps) {
   const { triggerRefresh } = useRefresh()
   const [subPage, setSubPage] = useState<SubPage>("main")
   const [editPhotos, setEditPhotos] = useState<string[]>([])
   const [showAccountDialog, setShowAccountDialog] = useState<"logout" | "withdraw" | null>(null)
+  const editFileInputRef = useRef<HTMLInputElement>(null)
   const [editForm, setEditForm] = useState({
     name: currentUser.name,
     department: currentUser.department,
@@ -165,8 +168,15 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
 
   const handleAddPhoto = () => {
     if (editPhotos.length >= 6) return
-    const colors = ["hsl(345,45%,82%)", "hsl(15,50%,82%)", "hsl(200,40%,82%)", "hsl(120,35%,82%)", "hsl(270,35%,82%)", "hsl(40,50%,82%)"]
-    setEditPhotos([...editPhotos, colors[editPhotos.length % colors.length]])
+    editFileInputRef.current?.click()
+  }
+
+  const handleEditFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file || !file.type.startsWith("image/")) return
+    const url = URL.createObjectURL(file)
+    setEditPhotos((prev) => [...prev, url])
+    e.target.value = ""
   }
 
   const handleRemovePhoto = (index: number) => {
@@ -194,18 +204,24 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
         <main className="flex-1 px-4 py-6 flex flex-col gap-5">
           {/* Photo grid - 3:4 ratio, 2 cols for bigger display */}
           <div>
+            <input
+              ref={editFileInputRef}
+              type="file"
+              accept="image/*"
+              className="sr-only"
+              aria-hidden
+              onChange={handleEditFileChange}
+            />
             <label className="text-sm font-medium mb-2 block">{"프로필 사진 (최대 6장)"}</label>
             <div className="grid grid-cols-2 gap-3">
-              {editPhotos.map((color, i) => (
+              {editPhotos.map((url, i) => (
                 <div key={i} className="relative aspect-square rounded-2xl overflow-hidden">
-                  <div className="w-full h-full flex items-center justify-center" style={{ background: color }}>
-                    <TossIcon name="icon-camera-mono" size={32} background="white" className="opacity-50" />
-                  </div>
+                  <img src={url} alt="" className="w-full h-full object-cover" />
                   <button
                     onClick={() => handleRemovePhoto(i)}
                     className="absolute top-2 right-2 w-6 h-6 rounded-full bg-foreground/50 text-background flex items-center justify-center"
                   >
-                    <TossIcon name="icon-close-mono" size={24} background="white" />
+                    <TossIcon name="icon-close-mono" size={24} onPrimary />
                   </button>
                   {i === 0 && (
                     <span className="absolute bottom-2 left-2 text-[10px] bg-primary text-primary-foreground px-2 py-0.5 rounded-md font-medium">
@@ -216,10 +232,11 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
               ))}
               {editPhotos.length < 6 && (
                 <button
+                  type="button"
                   onClick={handleAddPhoto}
-                  className="aspect-square rounded-2xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-3 transition-colors hover:border-primary hover:bg-primary/5"
+                  className="aspect-square rounded-2xl border-2 border-dashed border-primary/40 flex flex-col items-center justify-center gap-3 transition-colors hover:border-primary hover:bg-primary/10 bg-primary/5"
                 >
-                  <TossIcon name="icon-plus-small-mono" size={24} background="white" className="opacity-70" />
+                  <TossIcon name="icon-plus-small-mono" size={24} onPrimary className="opacity-90" />
                   <span className="text-xs text-muted-foreground">{"추가"}</span>
                 </button>
               )}
@@ -331,11 +348,19 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
     const list =
       subPage === "my-posts" ? myPosts : subPage === "my-applications" ? myApplications : myMatches
 
+    const handleBack = () => {
+      if (onBackToMypage) {
+        onBackToMypage()
+      } else {
+        setSubPage("main")
+      }
+    }
+
     return (
       <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
         <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3 shrink-0">
           <div className="flex items-center gap-3">
-            <button onClick={() => setSubPage("main")} className="text-foreground">
+            <button onClick={handleBack} className="text-foreground">
               <TossIcon name="icon-arrow-left-mono" size={24} background="white" />
             </button>
             <h1 className="text-lg font-bold text-foreground">{title}</h1>
@@ -386,7 +411,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
             variant="outline"
             className="w-full mt-4 h-11 rounded-xl text-sm gap-2.5"
           >
-            <TossIcon name="icon-setting-mono" size={24} background="white" />
+            <TossIcon name="icon-setting-mono" size={24} background="white" className="opacity-80" />
             {"프로필 수정"}
           </Button>
         </div>
@@ -404,11 +429,11 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
                 className="flex items-center gap-4 bg-card rounded-xl border border-border p-4"
               >
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                  <TossIcon name={item.icon} size={24} background="white" />
+                  <TossIcon name={item.icon} size={24} background="white" className="opacity-80" />
                 </div>
                 <span className="flex-1 text-sm font-medium text-left">{item.label}</span>
                 <span className="text-sm text-muted-foreground mr-1">{item.count}</span>
-                <TossIcon name="icon-arrow-right-small-mono" size={24} background="white" className="opacity-70 shrink-0" />
+                <TossIcon name="icon-arrow-right-small-mono" size={24} background="white" className="opacity-80 shrink-0" />
               </button>
             ))}
         </div>
@@ -420,7 +445,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
             className="flex items-center gap-4 bg-card rounded-xl border border-border p-4"
           >
             <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center shrink-0">
-              <TossIcon name="icon-logout-mono" size={24} background="white" className="opacity-70" />
+              <TossIcon name="icon-logout-mono" size={24} background="white" className="opacity-80" />
             </div>
             <span className="flex-1 text-sm font-medium text-left text-muted-foreground">{"로그아웃"}</span>
           </button>
@@ -429,7 +454,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
             className="flex items-center gap-4 bg-card rounded-xl border border-border p-4"
           >
             <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center shrink-0">
-              <TossIcon name="icon-ban-mono" size={24} background="white" className="opacity-90" />
+              <TossIcon name="icon-ban-mono" size={24} background="white" className="opacity-80" />
             </div>
             <span className="flex-1 text-sm font-medium text-left text-destructive">{"탈퇴하기"}</span>
           </button>

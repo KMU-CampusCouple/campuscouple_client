@@ -92,7 +92,7 @@ function ApplicationCard({
           onClick={onAccept}
           className="w-full h-10 rounded-xl bg-primary text-primary-foreground font-medium gap-2"
         >
-          <TossIcon name="icon-check-mono" size={24} background="white" />
+          <TossIcon name="icon-check-mono" size={24} onPrimary />
           {"수락하기"}
         </Button>
       )}
@@ -110,7 +110,9 @@ function ApplicationCard({
 
       {isAccepted && (
         <div className="flex items-center gap-2 p-3 bg-primary/5 rounded-xl border border-primary/20 mt-2">
-          <TossIcon name="icon-phone-mono" size={24} background="white" />
+          <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
+            <TossIcon name="icon-phone-mono" size={24} onPrimary />
+          </div>
           <div>
             <p className="text-xs text-muted-foreground">{"대표자 연락처"}</p>
             <p className="text-sm font-semibold text-primary">{application.contactInfo || application.applicants[0]?.contactInfo || "010-0000-0000"}</p>
@@ -309,11 +311,11 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
   return (
     <div className="flex flex-col min-h-full">
       <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3 shrink-0">
-        <div className="flex items-center gap-3">
-          <button onClick={onBack} className="text-foreground">
+        <div className="flex items-center gap-3 min-h-[2rem]">
+          <button onClick={onBack} className="text-foreground flex items-center justify-center p-1 -m-1">
             <TossIcon name="icon-arrow-left-mono" size={24} background="white" />
           </button>
-          <h1 className="text-lg font-bold truncate flex-1 text-foreground">{post.title}</h1>
+          <h1 className="text-lg font-bold truncate flex-1 text-foreground leading-tight">{post.title}</h1>
           <span className="text-xs font-semibold px-2 py-1 rounded-full bg-primary/10 text-primary">
             {formatMeetingType(post.perSide)}
           </span>

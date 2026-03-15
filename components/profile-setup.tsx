@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { TossIcon } from "@/components/toss-icon"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -20,6 +20,7 @@ const MBTI_TYPES = [
 export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
   const [step, setStep] = useState(0)
   const [photos, setPhotos] = useState<string[]>([])
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [form, setForm] = useState({
     name: "",
     gender: "",
@@ -50,8 +51,15 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
 
   const handleAddPhoto = () => {
     if (photos.length >= 6) return
-    const colors = ["hsl(345,45%,82%)", "hsl(15,50%,82%)", "hsl(200,40%,82%)", "hsl(120,35%,82%)", "hsl(270,35%,82%)", "hsl(40,50%,82%)"]
-    setPhotos([...photos, colors[photos.length % colors.length]])
+    fileInputRef.current?.click()
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file || !file.type.startsWith("image/")) return
+    const url = URL.createObjectURL(file)
+    setPhotos((prev) => [...prev, url])
+    e.target.value = ""
   }
 
   const handleRemovePhoto = (index: number) => {
@@ -85,18 +93,24 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
         {/* Step 0: Photos - 세로4 가로3, bigger size */}
         {step === 0 && (
           <div className="flex flex-col gap-4 animate-in fade-in duration-300">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="sr-only"
+              aria-hidden
+              onChange={handleFileChange}
+            />
             <p className="text-sm text-muted-foreground">{"최대 6장까지 업로드 가능해요"}</p>
             <div className="grid grid-cols-2 gap-3">
-              {photos.map((color, i) => (
+              {photos.map((url, i) => (
                 <div key={i} className="relative aspect-square rounded-2xl overflow-hidden">
-                  <div className="w-full h-full flex items-center justify-center" style={{ background: color }}>
-                    <TossIcon name="icon-camera-mono" size={32} background="white" className="opacity-50" />
-                  </div>
+                  <img src={url} alt="" className="w-full h-full object-cover" />
                   <button
                     onClick={() => handleRemovePhoto(i)}
                     className="absolute top-2 right-2 w-6 h-6 rounded-full bg-foreground/50 text-background flex items-center justify-center"
                   >
-                    <TossIcon name="icon-close-mono" size={24} background="white" />
+                    <TossIcon name="icon-close-mono" size={24} onPrimary />
                   </button>
                   {i === 0 && (
                     <span className="absolute bottom-2 left-2 text-[10px] bg-primary text-primary-foreground px-2 py-0.5 rounded-md font-medium">
@@ -108,9 +122,9 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
               {photos.length < 6 && (
                 <button
                   onClick={handleAddPhoto}
-                  className="aspect-square rounded-2xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-3 transition-colors hover:border-primary hover:bg-primary/5"
+                  className="aspect-square rounded-2xl border-2 border-dashed border-primary/40 flex flex-col items-center justify-center gap-3 transition-colors hover:border-primary hover:bg-primary/10 bg-primary/5"
                 >
-                  <TossIcon name="icon-plus-small-mono" size={24} background="white" className="opacity-70" />
+                  <TossIcon name="icon-plus-small-mono" size={24} onPrimary className="opacity-90" />
                   <span className="text-xs text-muted-foreground">{"추가"}</span>
                 </button>
               )}

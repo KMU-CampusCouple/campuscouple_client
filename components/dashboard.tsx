@@ -162,10 +162,10 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
                 className="w-full h-10 pl-3 pr-10 rounded-xl bg-primary-foreground/20 border-0 text-sm text-primary-foreground placeholder:text-primary-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary-foreground/30"
               />
               <button
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-lg bg-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
                 aria-label="검색"
               >
-                <TossIcon name="icon-search-bold-mono" size={24} className="opacity-90" />
+                <TossIcon name="icon-search-bold-mono" size={24} onPrimary />
               </button>
             </div>
             <button
@@ -186,7 +186,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
                 className="flex items-center gap-1 text-sm font-semibold text-primary-foreground"
               >
                 {sortLabels[sortBy]}
-                <TossIcon name="icon-arrow-down-mono" size={24} className={`shrink-0 transition-transform ${showSortDropdown ? "rotate-180" : ""}`} />
+                <TossIcon name="icon-arrow-down-mono" size={24} onPrimary className={`shrink-0 transition-transform ${showSortDropdown ? "rotate-180" : ""}`} />
               </button>
               {showSortDropdown && (
                 <div className="absolute top-full left-0 mt-1 bg-card rounded-xl border border-border shadow-lg z-10 min-w-[120px] py-1">
@@ -211,10 +211,10 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
             </div>
             <button
               onClick={() => setShowSearch(true)}
-              className="w-9 h-9 rounded-full flex items-center justify-center text-primary-foreground hover:bg-primary-foreground/10 transition-colors"
+              className="w-8 h-8 rounded-full flex items-center justify-center text-primary-foreground hover:bg-primary-foreground/10 transition-colors"
               aria-label="검색"
             >
-              <TossIcon name="icon-search-bold-mono" size={24} className="opacity-90" />
+              <TossIcon name="icon-search-bold-mono" size={24} onPrimary />
             </button>
           </div>
         )}

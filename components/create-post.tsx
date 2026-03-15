@@ -61,11 +61,11 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
     <div className="flex flex-col flex-1 min-h-0 overflow-y-auto overscroll-contain">
       <div className="flex flex-col min-h-full">
         <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3 shrink-0">
-          <div className="flex items-center gap-3">
-            <button onClick={onBack} className="text-foreground">
+          <div className="flex items-center gap-3 min-h-[2rem]">
+            <button onClick={onBack} className="text-foreground flex items-center justify-center p-1 -m-1">
               <TossIcon name="icon-arrow-left-mono" size={24} background="white" />
             </button>
-            <h1 className="text-lg font-bold flex-1 text-foreground">{"미팅 모집글 작성"}</h1>
+            <h1 className="text-lg font-bold flex-1 text-foreground leading-tight">{"미팅 모집글 작성"}</h1>
           </div>
         </header>
 
@@ -120,22 +120,22 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
           </div>
 
           <div
-            className="flex gap-3 overflow-x-auto py-2 pl-4 pr-4 snap-x snap-mandatory"
+            className="flex gap-3 overflow-x-auto py-2 pl-1 pr-4 snap-x snap-mandatory"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {/* Me */}
-            <div className="shrink-0 snap-start flex flex-col items-center gap-1.5 p-2.5 rounded-xl bg-primary/10 ring-2 ring-primary w-[72px]">
+            <div className="shrink-0 snap-start flex flex-col items-center gap-1.5 p-2.5 rounded-xl bg-primary/10 ring-2 ring-primary w-[72px] min-w-[72px]">
               <UserAvatar user={currentUser} size="md" />
               <span className="text-[11px] font-medium">{"나"}</span>
             </div>
             {/* Selected friends */}
             {selectedFriends.map((f) => (
-              <div key={f.id} className="shrink-0 snap-start relative flex flex-col items-center gap-1.5 p-2.5 rounded-xl bg-muted w-[72px]">
+              <div key={f.id} className="shrink-0 snap-start relative flex flex-col items-center gap-1.5 p-2.5 rounded-xl bg-muted w-[72px] min-w-[72px]">
                 <button
                   onClick={() => toggleFriend(f)}
-                  className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center z-10"
+                  className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center z-10"
                 >
-                  <TossIcon name="icon-close-mono" size={24} background="white" />
+                  <TossIcon name="icon-close-mono" size={24} onPrimary />
                 </button>
                 <UserAvatar user={f} size="md" />
                 <span className="text-[11px] font-medium truncate w-full text-center">{f.name}</span>
@@ -146,7 +146,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
               <button
                 key={`slot-${i}`}
                 onClick={() => setShowFriendPicker(true)}
-                className="shrink-0 snap-start flex flex-col items-center gap-1.5 p-2.5 rounded-xl border-2 border-dashed border-border w-[72px]"
+                className="shrink-0 snap-start flex flex-col items-center gap-1.5 p-2.5 rounded-xl border-2 border-dashed border-border w-[72px] min-w-[72px]"
               >
                 <div className="w-10 aspect-square rounded-md bg-muted flex items-center justify-center">
                   <TossIcon name="icon-plus-small-mono" size={24} background="white" className="opacity-70" />
@@ -178,7 +178,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
               onClick={() => setShowLocationField(true)}
               className="w-full h-12 rounded-xl bg-card border border-dashed border-border flex items-center justify-center gap-2 text-muted-foreground transition-colors hover:border-primary hover:text-primary"
             >
-              <TossIcon name="icon-location-mono" size={24} background="white" />
+              <TossIcon name="icon-location-mono" size={24} background="white" className="shrink-0 opacity-70" />
               <span className="text-sm font-medium">{"장소 추가"}</span>
             </button>
           ) : (
@@ -228,7 +228,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
               onClick={() => setShowTimeField(true)}
               className="w-full h-12 rounded-xl bg-card border border-dashed border-border flex items-center justify-center gap-2 text-muted-foreground transition-colors hover:border-primary hover:text-primary"
             >
-              <TossIcon name="icon-time-mono" size={24} background="white" />
+              <TossIcon name="icon-time-mono" size={24} background="white" className="shrink-0 opacity-70" />
               <span className="text-sm font-medium">{"시간 추가"}</span>
             </button>
           ) : (
@@ -286,14 +286,14 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
             className="absolute inset-0 bg-foreground/30"
             onClick={() => { setShowFriendPicker(false); setFriendSearch("") }}
           />
-          <div className="relative w-full max-w-[430px] bg-card rounded-t-3xl p-6 pb-10 animate-in slide-in-from-bottom duration-300">
-            <div className="w-10 h-1 bg-muted rounded-full mx-auto mb-4" />
-            <h3 className="text-lg font-bold mb-1">{"친구 선택"}</h3>
-            <p className="text-xs text-muted-foreground mb-4">
+          <div className="relative w-full max-w-[430px] bg-card rounded-t-3xl p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] max-h-[85vh] flex flex-col animate-in slide-in-from-bottom duration-300">
+            <div className="w-10 h-1 bg-muted rounded-full mx-auto mb-4 shrink-0" />
+            <h3 className="text-lg font-bold mb-1 shrink-0">{"친구 선택"}</h3>
+            <p className="text-xs text-muted-foreground mb-4 shrink-0">
               {"최대 "}{maxFriends}{"명까지 고를 수 있어요 (지금 "}{selectedFriends.length}{"명 선택했어요)"}
             </p>
             {/* Friend search */}
-            <div className="relative mb-3">
+            <div className="relative mb-3 shrink-0">
               <TossIcon name="icon-search-bold-mono" size={24} background="white" className="absolute left-3.5 top-1/2 -translate-y-1/2 opacity-70" />
               <input
                 type="text"
@@ -303,7 +303,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                 className="w-full h-11 pl-11 pr-4 rounded-xl bg-muted border-0 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
             </div>
-            <div className="flex flex-col gap-2 max-h-60 overflow-y-auto">
+            <div className="flex flex-col gap-2 min-h-0 flex-1 overflow-y-auto">
               {filteredFriends.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
                   <TossIcon name="icon-search-bold-mono" size={32} background="white" className="mb-2 opacity-30" />
@@ -341,7 +341,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                 })
               )}
             </div>
-            <div className="flex gap-2 mt-4">
+            <div className="flex gap-2 mt-4 shrink-0">
               <Button
                 variant="outline"
                 onClick={() => { setShowFriendPicker(false); setFriendSearch("") }}
