@@ -32,7 +32,7 @@ export default function BottomNav({ activeTab, notificationCount = 0 }: BottomNa
             <Link
               key={tab.id}
               href={tab.href}
-              className={`relative flex flex-col items-center gap-0.5 px-3 py-2.5 rounded-xl transition-colors ${
+              className={`relative flex flex-col items-center gap-0.5 px-3 pt-0 pb-2.5 rounded-xl transition-colors ${
                 isActive ? "text-primary" : "text-muted-foreground"
               }`}
               aria-label={tab.label}
