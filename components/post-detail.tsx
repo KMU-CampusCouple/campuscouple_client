@@ -71,7 +71,7 @@ function ApplicationCard({
         </span>
         {isAuthor && (
           <button onClick={onDelete} className="text-muted-foreground hover:text-destructive transition-colors">
-            <TossIcon name="icon-trash-mono" size={24} />
+            <TossIcon name="icon-trash-mono" size={24} background="white" />
           </button>
         )}
       </div>
@@ -92,7 +92,7 @@ function ApplicationCard({
           onClick={onAccept}
           className="w-full h-10 rounded-xl bg-primary text-primary-foreground font-medium gap-2"
         >
-          <TossIcon name="icon-check-mono" size={24} />
+          <TossIcon name="icon-check-mono" size={24} background="white" />
           {"수락하기"}
         </Button>
       )}
@@ -103,14 +103,14 @@ function ApplicationCard({
           variant="outline"
           className="w-full h-10 rounded-xl font-medium gap-2 text-destructive border-destructive/30 hover:bg-destructive/5"
         >
-          <TossIcon name="icon-close-mono" size={24} />
+          <TossIcon name="icon-close-mono" size={24} background="white" />
           {"신청 취소"}
         </Button>
       )}
 
       {isAccepted && (
         <div className="flex items-center gap-2 p-3 bg-primary/5 rounded-xl border border-primary/20 mt-2">
-          <TossIcon name="icon-phone-mono" size={24} />
+          <TossIcon name="icon-phone-mono" size={24} background="white" />
           <div>
             <p className="text-xs text-muted-foreground">{"대표자 연락처"}</p>
             <p className="text-sm font-semibold text-primary">{application.contactInfo || application.applicants[0]?.contactInfo || "010-0000-0000"}</p>
@@ -142,7 +142,7 @@ function SlotPicker({
                 onClick={() => onRemoveSlot(i)}
                 className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center z-10"
               >
-                <TossIcon name="icon-close-mono" size={24} />
+                <TossIcon name="icon-close-mono" size={24} background="white" />
               </button>
             )}
             <button onClick={() => onViewProfile(user)}>
@@ -157,7 +157,7 @@ function SlotPicker({
             className="flex flex-col items-center gap-1 p-1.5 rounded-xl border-2 border-dashed border-primary/40 transition-colors hover:border-primary hover:bg-primary/5"
           >
             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <TossIcon name="icon-plus-small-mono" size={24} />
+              <TossIcon name="icon-plus-small-mono" size={24} background="white" />
             </div>
             <span className="text-[10px] text-primary font-medium">{"추가"}</span>
           </button>
@@ -191,7 +191,7 @@ function ParticipantSwiper({
   return (
     <div className="bg-card rounded-xl border border-border p-4">
       <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-        <TossIcon name="icon-users-mono" size={24} />
+        <TossIcon name="icon-users-mono" size={24} background="white" />
         {"참여자 ("}{participants.length}/{total}{")"}
       </h3>
       <div
@@ -222,7 +222,7 @@ function ParticipantSwiper({
             className="shrink-0 w-[42%] snap-start bg-muted/50 rounded-2xl p-4 flex flex-col items-center gap-2.5 border-2 border-dashed border-border"
           >
             <div className="w-12 h-12 rounded-full border-2 border-dashed border-muted-foreground/30 flex items-center justify-center">
-              <TossIcon name="icon-plus-small-mono" size={24} className="opacity-40" />
+              <TossIcon name="icon-plus-small-mono" size={24} background="white" className="opacity-40" />
             </div>
             <p className="text-xs text-muted-foreground">{"모집중"}</p>
           </div>
@@ -311,7 +311,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
       <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3 shrink-0">
         <div className="flex items-center gap-3">
           <button onClick={onBack} className="text-foreground">
-            <TossIcon name="icon-arrow-left-mono" size={24} />
+            <TossIcon name="icon-arrow-left-mono" size={24} background="white" />
           </button>
           <h1 className="text-lg font-bold truncate flex-1 text-foreground">{post.title}</h1>
           <span className="text-xs font-semibold px-2 py-1 rounded-full bg-primary/10 text-primary">
@@ -341,7 +341,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                 onClick={() => setShowPostMenu(!showPostMenu)}
                 className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-muted transition-colors"
               >
-                <TossIcon name="icon-more-vertical-mono" size={24} className="opacity-70" />
+                <TossIcon name="icon-more-vertical-mono" size={24} background="white" className="opacity-70" />
               </button>
               {showPostMenu && (
                 <div className="absolute right-0 top-full mt-1 bg-card rounded-xl border border-border shadow-lg z-20 min-w-[120px] py-1">
@@ -349,7 +349,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                     onClick={() => { setShowPostMenu(false); setShowDeleteConfirm(true) }}
                     className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-destructive hover:bg-muted transition-colors"
                   >
-                    <TossIcon name="icon-trash-mono" size={24} />
+                    <TossIcon name="icon-trash-mono" size={24} background="white" />
                     {"삭제"}
                   </button>
                 </div>
@@ -369,7 +369,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
         {/* Info (가이드: 한 번에 하나의 아이콘만 사용) */}
         <div className="bg-card rounded-xl border border-border p-4 flex flex-col gap-3">
           <div className="flex items-center gap-2 text-sm">
-            <TossIcon name="icon-calendar-mono" size={24} className="shrink-0" />
+            <TossIcon name="icon-calendar-mono" size={24} background="white" className="shrink-0" />
             <span>{displayLocation} · {post.date} {displayTime}</span>
           </div>
           <div className="border-t border-border pt-3">
@@ -397,7 +397,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
         {/* Applications section */}
         <div className="flex flex-col gap-3">
           <h3 className="text-sm font-semibold flex items-center gap-2">
-            <TossIcon name="icon-message-mono" size={24} />
+            <TossIcon name="icon-message-mono" size={24} background="white" />
             {"미팅 신청"}
             <span className="ml-auto text-xs text-muted-foreground">
               {applications.length}{"개 신청"}
@@ -420,7 +420,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
               ))
             ) : (
               <div className="bg-card rounded-xl border border-border p-8 flex flex-col items-center text-muted-foreground">
-                <TossIcon name="icon-users-mono" size={32} className="mb-2 opacity-30" />
+                <TossIcon name="icon-users-mono" size={32} background="white" className="mb-2 opacity-30" />
                 <p className="text-sm">{"신청이 오면 여기서 확인할 수 있어요"}</p>
               </div>
             )
@@ -443,7 +443,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                 ))
               }
               <div className="bg-card rounded-xl border border-border p-4 flex items-center gap-3">
-                <TossIcon name="icon-lock-mono" size={24} className="opacity-70" />
+                <TossIcon name="icon-lock-mono" size={24} background="white" className="opacity-70" />
                 <div>
                   <p className="text-sm font-medium">
                     {applications.length}{"개 그룹이 신청했어요"}
@@ -463,7 +463,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
             onClick={() => setShowApplyForm(true)}
             className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-semibold gap-2"
           >
-            <TossIcon name="icon-send-mono" size={24} />
+            <TossIcon name="icon-send-mono" size={24} background="white" />
             {"미팅 신청하기"}
           </Button>
         )}

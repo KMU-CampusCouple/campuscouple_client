@@ -63,7 +63,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
         <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3 shrink-0">
           <div className="flex items-center gap-3">
             <button onClick={onBack} className="text-foreground">
-              <TossIcon name="icon-arrow-left-mono" size={24} />
+              <TossIcon name="icon-arrow-left-mono" size={24} background="white" />
             </button>
             <h1 className="text-lg font-bold flex-1 text-foreground">{"미팅 모집글 작성"}</h1>
           </div>
@@ -94,7 +94,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                 disabled={perSide <= 1}
                 className="w-11 h-11 rounded-full bg-muted flex items-center justify-center transition-colors disabled:opacity-30"
               >
-                <TossIcon name="icon-minus-mono" size={24} />
+                <TossIcon name="icon-minus-mono" size={24} background="white" />
               </button>
               <div className="text-center">
                 <span className="text-3xl font-bold text-primary">{formatMeetingType(perSide)}</span>
@@ -105,7 +105,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                 disabled={perSide >= 10}
                 className="w-11 h-11 rounded-full bg-muted flex items-center justify-center transition-colors disabled:opacity-30"
               >
-                <TossIcon name="icon-plus-small-mono" size={24} />
+                <TossIcon name="icon-plus-small-mono" size={24} background="white" />
               </button>
             </div>
           </div>
@@ -135,7 +135,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                   onClick={() => toggleFriend(f)}
                   className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center z-10"
                 >
-                  <TossIcon name="icon-close-mono" size={24} />
+                  <TossIcon name="icon-close-mono" size={24} background="white" />
                 </button>
                 <UserAvatar user={f} size="md" />
                 <span className="text-[11px] font-medium truncate w-full text-center">{f.name}</span>
@@ -149,7 +149,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                 className="shrink-0 snap-start flex flex-col items-center gap-1.5 p-2.5 rounded-xl border-2 border-dashed border-border w-[72px]"
               >
                 <div className="w-10 aspect-square rounded-md bg-muted flex items-center justify-center">
-                  <TossIcon name="icon-plus-small-mono" size={24} className="opacity-70" />
+                  <TossIcon name="icon-plus-small-mono" size={24} background="white" className="opacity-70" />
                 </div>
                 <span className="text-[11px] text-muted-foreground">{"추가"}</span>
               </button>
@@ -178,7 +178,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
               onClick={() => setShowLocationField(true)}
               className="w-full h-12 rounded-xl bg-card border border-dashed border-border flex items-center justify-center gap-2 text-muted-foreground transition-colors hover:border-primary hover:text-primary"
             >
-              <TossIcon name="icon-location-mono" size={24} />
+              <TossIcon name="icon-location-mono" size={24} background="white" />
               <span className="text-sm font-medium">{"장소 추가"}</span>
             </button>
           ) : (
@@ -192,7 +192,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                   onClick={() => { setShowLocationField(false); setLocation("") }}
                   className="text-muted-foreground hover:text-destructive transition-colors"
                 >
-                  <TossIcon name="icon-close-mono" size={24} />
+                  <TossIcon name="icon-close-mono" size={24} background="white" />
                 </button>
               </div>
               <div className="rounded-xl overflow-hidden border border-border mb-2">
@@ -228,7 +228,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
               onClick={() => setShowTimeField(true)}
               className="w-full h-12 rounded-xl bg-card border border-dashed border-border flex items-center justify-center gap-2 text-muted-foreground transition-colors hover:border-primary hover:text-primary"
             >
-              <TossIcon name="icon-time-mono" size={24} />
+              <TossIcon name="icon-time-mono" size={24} background="white" />
               <span className="text-sm font-medium">{"시간 추가"}</span>
             </button>
           ) : (
@@ -242,7 +242,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                   onClick={() => { setShowTimeField(false); setDate(""); setTime("") }}
                   className="text-muted-foreground hover:text-destructive transition-colors"
                 >
-                  <TossIcon name="icon-close-mono" size={24} />
+                  <TossIcon name="icon-close-mono" size={24} background="white" />
                 </button>
               </div>
               <div className="flex gap-3">
@@ -294,7 +294,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
             </p>
             {/* Friend search */}
             <div className="relative mb-3">
-              <TossIcon name="icon-search-bold-mono" size={24} className="absolute left-3.5 top-1/2 -translate-y-1/2 opacity-70" />
+              <TossIcon name="icon-search-bold-mono" size={24} background="white" className="absolute left-3.5 top-1/2 -translate-y-1/2 opacity-70" />
               <input
                 type="text"
                 placeholder="친구 이름으로 검색해보세요"
@@ -306,7 +306,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
             <div className="flex flex-col gap-2 max-h-60 overflow-y-auto">
               {filteredFriends.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
-                  <TossIcon name="icon-search-bold-mono" size={32} className="mb-2 opacity-30" />
+                  <TossIcon name="icon-search-bold-mono" size={32} background="white" className="mb-2 opacity-30" />
                   <p className="text-sm">{"검색 결과가 나오면 여기서 볼 수 있어요"}</p>
                 </div>
               ) : (

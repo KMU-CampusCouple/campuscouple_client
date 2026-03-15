@@ -4,10 +4,10 @@
  * 토스 그래픽 리소스(아이콘) 사용 컴포넌트.
  * @see https://developers-apps-in-toss.toss.im/design/resources.md
  * - 아이콘은 화면에서 24~40px 크기로만 사용 (가이드 준수)
- * - static.toss.im/icons/svg/ URL 사용
- * - background: 밝은 배경이면 회색, 어두운 배경이면 흰색으로 표시
+ * - 외부 CDN(static.toss.im)은 배포 환경에서 403/ORB로 차단되므로, 로컬 public/icons/svg 사용
+ * - background="white": 배경이 흰색일 때만 회색 아이콘. 생략 시 흰색 아이콘.
  */
-const TOSS_ICON_BASE = "https://static.toss.im/icons/svg"
+const TOSS_ICON_BASE = "/icons/svg"
 const MIN_ICON_SIZE = 24
 const MAX_ICON_SIZE = 40
 
@@ -56,12 +56,9 @@ interface TossIconProps {
   size?: number
   className?: string
   /**
-   * 아이콘이 있는 배경: 'light'면 회색, 'dark'면 흰색으로 표시.
-   * @default 'light'
+   * 배경이 흰색일 때만 true. 회색 아이콘으로 표시. 생략 시 흰색 아이콘.
    */
-  background?: "light" | "dark"
-  /** @deprecated background="dark" 사용 권장. true면 어두운 배경용(흰색 아이콘) */
-  invert?: boolean
+  background?: "white"
   "aria-hidden"?: boolean
 }
 
@@ -70,10 +67,9 @@ export function TossIcon({
   size = 24,
   className = "",
   background,
-  invert = false,
   "aria-hidden": ariaHidden = true,
 }: TossIconProps) {
-  const bg: "light" | "dark" = background ?? (invert ? "dark" : "light")
+  const bg: "default" | "white" = background === "white" ? "white" : "default"
   const src = `${TOSS_ICON_BASE}/${name}.svg`
   const clampedSize = Math.min(MAX_ICON_SIZE, Math.max(MIN_ICON_SIZE, size))
   return (

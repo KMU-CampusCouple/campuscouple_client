@@ -7,6 +7,7 @@ import { mockNotifications } from "@/lib/store"
 import type { Notification } from "@/lib/store"
 import { useRefresh } from "@/contexts/RefreshContext"
 import { PullToRefresh } from "@/components/layout/PullToRefresh"
+import { MainHeader } from "@/components/layout/MainHeader"
 
 interface NotificationsPageProps {
   onNavigate?: (notification: Notification) => void
@@ -27,11 +28,11 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
   const getIcon = (type: Notification["type"]) => {
     switch (type) {
       case "friend_request":
-        return <TossIcon name="icon-user-plus-mono" size={24} />
+        return <TossIcon name="icon-user-plus-mono" size={24} background="white" />
       case "application":
-        return <TossIcon name="icon-message-mono" size={24} />
+        return <TossIcon name="icon-message-mono" size={24} background="white" />
       case "matched":
-        return <TossIcon name="icon-heart-mono" size={24} />
+        return <TossIcon name="icon-heart-mono" size={24} background="white" />
     }
   }
 
@@ -63,17 +64,12 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
 
   return (
     <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
-      <header className="sticky top-0 z-30 bg-primary/80 backdrop-blur-lg px-4 pt-2 pb-2 shrink-0">
-        <div className="flex items-center gap-2">
-          <img src="/logo.jpg" alt="캠퍼스커플" className="w-7 h-7 rounded-lg object-cover" />
-          <span className="text-sm font-bold text-primary-foreground">{"캠퍼스커플"}</span>
-        </div>
-      </header>
-      <div className="flex flex-col min-h-full gap-6">
-      <main className="flex-1 px-4 pt-6 py-2 pb-6 flex flex-col gap-2">
+      <MainHeader />
+      <div className="flex flex-col min-h-full">
+      <main className="flex-1 px-4 pt-6 pb-6 flex flex-col gap-2">
         {notifications.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
-            <TossIcon name="icon-alarm-mono" size={40} className="mb-4 opacity-30" />
+            <TossIcon name="icon-alarm-mono" size={40} background="white" className="mb-4 opacity-30" />
             <p className="text-base">{"알림이 오면 여기서 확인할 수 있어요"}</p>
           </div>
         ) : (
@@ -113,7 +109,7 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
                   <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed truncate">{notif.message}</p>
                   <p className="text-[10px] text-muted-foreground mt-1">{getTimeAgo(notif.createdAt)}</p>
                 </div>
-                <TossIcon name="icon-arrow-right-small-mono" size={24} className="opacity-70 shrink-0" />
+                <TossIcon name="icon-arrow-right-small-mono" size={24} background="white" className="opacity-70 shrink-0" />
               </button>
             ))}
 
@@ -138,7 +134,7 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
                   <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed truncate">{notif.message}</p>
                   <p className="text-[10px] text-muted-foreground mt-1">{getTimeAgo(notif.createdAt)}</p>
                 </div>
-                <TossIcon name="icon-arrow-right-small-mono" size={24} className="opacity-50 shrink-0" />
+                <TossIcon name="icon-arrow-right-small-mono" size={24} background="white" className="opacity-50 shrink-0" />
               </button>
             ))}
           </>
