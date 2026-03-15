@@ -345,7 +345,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
           {list.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
               <FileText className="w-10 h-10 mb-2 opacity-30" />
-              <p className="text-sm">{"글이 ��어요"}</p>
+              <p className="text-sm">{"글이 없어요"}</p>
             </div>
           ) : (
             list.map((post) => (
