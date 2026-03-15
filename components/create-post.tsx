@@ -195,19 +195,6 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                   <TossIcon name="icon-close-mono" size={24} background="white" />
                 </button>
               </div>
-              <div className="rounded-xl overflow-hidden border border-border mb-2">
-                <div className="relative w-full aspect-video bg-muted">
-                  <iframe
-                    title="내 위치 지도"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    src="https://www.google.com/maps?q=서울&z=13&output=embed"
-                  />
-                </div>
-              </div>
               <Input
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}

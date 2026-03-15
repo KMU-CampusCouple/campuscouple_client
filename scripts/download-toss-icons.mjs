@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
- * toss_icons.json 의 URL에서 토스 아이콘을 public/icons/svg 에 내려받습니다.
+ * 토스 그래픽 리소스(SVG)를 static.toss.im 링크에서 받아 public/icons/svg 에 저장합니다.
+ * @see https://developers-apps-in-toss.toss.im/design/resources.md
+ * 이름은 앱에서 쓰는 그대로 유지하고, 항상 .svg 로 저장합니다.
  * 사용: pnpm run icons:download
- *      또는 node scripts/download-toss-icons.mjs [toss_icons.json 경로]
  */
 import fs from "fs"
 import path from "path"
@@ -11,6 +12,7 @@ import { fileURLToPath } from "url"
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(__dirname, "..")
 const OUT_DIR = path.join(ROOT, "public", "icons", "svg")
+const TOSS_SVG_BASE = "https://static.toss.im/icons/svg"
 
 const ICON_NAMES = [
   "icon-home-mono",
@@ -52,7 +54,7 @@ const ICON_NAMES = [
   "icon-loader-mono",
 ]
 
-/** 앱에서 쓰는 이름 → toss_icons.json 에 있는 이름 (JSON에 없을 때만 사용) */
+/** 앱 이름 → 토스 SVG에 있는 이름 (SVG 403/404 시 대체 시도용) */
 const NAME_TO_JSON = {
   "icon-users-mono": "icon-group-each",
   "icon-location-mono": "icon-map-mono",
@@ -67,7 +69,7 @@ const NAME_TO_JSON = {
   "icon-graduation-mono": "icon-school-mono",
   "icon-ban-mono": "icon-user-blocked-mono",
   "icon-logout-mono": "icon-exit-mono",
-  "icon-arrow-right-small-mono": "icon-arrow-right-black-small",
+  "icon-arrow-right-small-mono": "icon-arrow-right-mono",
   "icon-book-mono": "icon-book-opened-mono",
   "icon-hash-mono": "icon-hashtag-mono",
   "icon-dumbbell-mono": "icon-dumbbell",
@@ -75,48 +77,40 @@ const NAME_TO_JSON = {
   "icon-loader-mono": "icon-loading-blue500",
 }
 
-const jsonPath = process.argv[2] || path.join(ROOT, "toss_icons.json")
-
-if (!fs.existsSync(jsonPath)) {
-  console.error(`toss_icons.json을 찾을 수 없습니다: ${jsonPath}`)
-  console.error("사용: node scripts/download-toss-icons.mjs [toss_icons.json 경로]")
-  process.exit(1)
-}
-
-const json = JSON.parse(fs.readFileSync(jsonPath, "utf8"))
-const urlByName = new Map(json.items.map((item) => [item.name, item.src]).filter(([, src]) => typeof src === "string" && src.startsWith("http")))
+const PLACEHOLDER_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>`
 
 if (!fs.existsSync(OUT_DIR)) {
   fs.mkdirSync(OUT_DIR, { recursive: true })
 }
 
 let ok = 0
-let fail = 0
+let fallback = 0
 
 for (const name of ICON_NAMES) {
-  const jsonName = NAME_TO_JSON[name] ?? name
-  const url = urlByName.get(jsonName)
-  const ext = url && url.toLowerCase().endsWith(".png") ? "png" : "svg"
-  const outPath = path.join(OUT_DIR, `${name}.${ext}`)
-  if (!url) {
-    console.warn(`건너뜀 (JSON에 없음): ${name}${jsonName !== name ? ` (매핑: ${jsonName})` : ""}`)
-    fail++
-    continue
+  const outPath = path.join(OUT_DIR, `${name}.svg`)
+  const candidates = [name]
+  if (NAME_TO_JSON[name]) candidates.push(NAME_TO_JSON[name])
+
+  let saved = false
+  for (const tryName of candidates) {
+    const url = `${TOSS_SVG_BASE}/${tryName}.svg`
+    try {
+      const res = await fetch(url)
+      if (res.ok) {
+        const text = await res.text()
+        if (text.trim().startsWith("<") && text.includes("svg")) {
+          fs.writeFileSync(outPath, text, "utf8")
+          ok++
+          saved = true
+          break
+        }
+      }
+    } catch (_) {}
   }
-  try {
-    const res = await fetch(url)
-    if (res.ok) {
-      const buf = await res.arrayBuffer()
-      fs.writeFileSync(outPath, Buffer.from(buf))
-      ok++
-    } else {
-      console.warn(`실패 ${res.status}: ${name} <- ${url}`)
-      fail++
-    }
-  } catch (e) {
-    console.warn(`실패: ${name}`, e.message)
-    fail++
+  if (!saved) {
+    fs.writeFileSync(outPath, PLACEHOLDER_SVG, "utf8")
+    fallback++
   }
 }
 
-console.log(`아이콘: ${ok}개 다운로드 완료 (${fail}개 실패) → public/icons/svg`)
+console.log(`아이콘: ${ok}개 SVG 다운로드, ${fallback}개 플레이스홀더 → public/icons/svg`)
