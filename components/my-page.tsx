@@ -192,7 +192,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
       <div className="flex flex-col min-h-screen pb-20">
         <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3">
           <div className="flex items-center gap-3">
-            <button onClick={() => setSubPage("main")} className="text-foreground">
+            <button onClick={() => setSubPage("main")} className="text-foreground flex items-center">
               <TossIcon name="icon-arrow-left-mono" size={24} background="white" />
             </button>
             <h1 className="text-lg font-bold flex-1 text-foreground">{"프로필 수정"}</h1>
@@ -415,7 +415,6 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
             variant="outline"
             className="w-full mt-4 h-11 rounded-xl text-sm gap-2.5"
           >
-            <TossIcon name="icon-setting-mono" size={24} background="white" className="opacity-80" />
             {"프로필 수정"}
           </Button>
         </div>
