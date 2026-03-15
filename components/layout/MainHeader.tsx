@@ -8,6 +8,8 @@ interface MainHeaderProps {
   children?: ReactNode
   /** 스크롤 시 검색만 숨김: false면 children(검색) 영역만 접힘, 로고 행은 유지 */
   searchVisible?: boolean
+  /** 레이아웃에서 로고를 이미 보여줄 때 true. false면 로고 행 없이 children만 렌더 */
+  logoVisible?: boolean
 }
 
 const HEADER_PADDING = "px-4 pt-5 pb-3.5"

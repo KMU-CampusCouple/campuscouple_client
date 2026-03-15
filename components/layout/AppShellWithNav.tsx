@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation"
 import { useRef } from "react"
 import { AppShell } from "@/components/layout/AppShell"
+import { MainHeader } from "@/components/layout/MainHeader"
 import BottomNav from "@/components/bottom-nav"
 import { ScrollContainerProvider } from "@/contexts/ScrollContainerContext"
 
@@ -32,6 +33,11 @@ export function AppShellWithNav({ children }: { children: React.ReactNode }) {
   return (
     <AppShell className="bg-background flex flex-col h-[100dvh] overflow-hidden max-h-screen pt-[var(--safe-area-inset-top)]">
       <ScrollContainerProvider scrollContainerRef={scrollContainerRef}>
+        {showNav && (
+          <div className="shrink-0">
+            <MainHeader />
+          </div>
+        )}
         <div
           ref={scrollContainerRef}
           className="flex flex-col flex-1 min-h-0 overflow-y-auto overscroll-none"
