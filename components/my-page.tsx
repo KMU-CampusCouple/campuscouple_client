@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useRef, useCallback } from "react"
-import heic2any from "heic2any"
 import { TossIcon, type TossIconName } from "@/components/toss-icon"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -189,6 +188,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
     let blob: Blob = file
     if (isHeic(file)) {
       try {
+        const heic2any = (await import("heic2any")).default
         const converted = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.92 })
         blob = Array.isArray(converted) ? converted[0] : converted
       } catch {

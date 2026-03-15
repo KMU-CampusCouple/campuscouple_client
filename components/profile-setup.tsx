@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useRef } from "react"
-import heic2any from "heic2any"
 import { TossIcon } from "@/components/toss-icon"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -72,6 +71,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
     let blob: Blob = file
     if (isHeic(file)) {
       try {
+        const heic2any = (await import("heic2any")).default
         const converted = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.92 })
         blob = Array.isArray(converted) ? converted[0] : converted
       } catch {
