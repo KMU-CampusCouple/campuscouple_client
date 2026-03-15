@@ -388,14 +388,14 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
           <Button
             onClick={() => setSubPage("edit")}
             variant="outline"
-            className="w-full mt-4 h-9 rounded-xl text-sm gap-2"
+            className="w-full mt-4 h-11 rounded-xl text-sm gap-2.5"
           >
             <TossIcon name="icon-setting-mono" size={24} />
             {"프로필 수정"}
           </Button>
         </div>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2.5">
           <h3 className="text-sm font-semibold text-muted-foreground px-1">{"기록"}</h3>
           {[
             { label: "내가 쓴 글", icon: "icon-document-mono" as TossIconName, sub: "my-posts" as SubPage, count: myPosts.length },
@@ -405,34 +405,34 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
               <button
                 key={item.sub}
                 onClick={() => setSubPage(item.sub)}
-                className="flex items-center gap-3 bg-card rounded-xl border border-border p-3.5"
+                className="flex items-center gap-4 bg-card rounded-xl border border-border p-4"
               >
-                <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                   <TossIcon name={item.icon} size={24} />
                 </div>
                 <span className="flex-1 text-sm font-medium text-left">{item.label}</span>
-                <span className="text-xs text-muted-foreground mr-1">{item.count}</span>
-                <TossIcon name="icon-arrow-right-small-mono" size={24} className="opacity-70" />
+                <span className="text-sm text-muted-foreground mr-1">{item.count}</span>
+                <TossIcon name="icon-arrow-right-small-mono" size={24} className="opacity-70 shrink-0" />
               </button>
             ))}
         </div>
 
         {/* Account actions */}
-        <div className="flex flex-col gap-2 mt-2">
+        <div className="flex flex-col gap-2.5 mt-2">
           <button
             onClick={() => setShowAccountDialog("logout")}
-            className="flex items-center gap-3 bg-card rounded-xl border border-border p-3.5"
+            className="flex items-center gap-4 bg-card rounded-xl border border-border p-4"
           >
-            <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
+            <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center shrink-0">
               <TossIcon name="icon-logout-mono" size={24} className="opacity-70" />
             </div>
             <span className="flex-1 text-sm font-medium text-left text-muted-foreground">{"로그아웃"}</span>
           </button>
           <button
             onClick={() => setShowAccountDialog("withdraw")}
-            className="flex items-center gap-3 bg-card rounded-xl border border-border p-3.5"
+            className="flex items-center gap-4 bg-card rounded-xl border border-border p-4"
           >
-            <div className="w-9 h-9 rounded-full bg-destructive/10 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center shrink-0">
               <TossIcon name="icon-ban-mono" size={24} className="opacity-90" />
             </div>
             <span className="flex-1 text-sm font-medium text-left text-destructive">{"탈퇴하기"}</span>

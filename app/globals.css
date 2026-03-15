@@ -8,6 +8,15 @@
   }
 }
 
+/* TossIcon: 배경에 따른 아이콘 색 (밝은 배경=회색, 어두운 배경=흰색) */
+[data-toss-icon-bg="light"] img {
+  filter: brightness(0) saturate(100%);
+  opacity: 0.6;
+}
+[data-toss-icon-bg="dark"] img {
+  filter: invert(1);
+}
+
 @layer base {
   :root {
     /* 앱인토스 해상도 가이드: 논리 해상도 하나 기준(세로형 360×640~420×740), 스케일링으로 기기 대응 */
@@ -18,7 +27,7 @@
     --safe-area-inset-top: env(safe-area-inset-top, 0px);
     --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
     /* 하단 네비 높이: 스크롤 영역 pb와 동기화 (절대 겹치지 않도록) */
-    --bottom-nav-height: calc(72px + max(0.5rem, env(safe-area-inset-bottom, 0px)));
+    --bottom-nav-height: calc(76px + max(0.5rem, env(safe-area-inset-bottom, 0px)));
     --background: 345 20% 97.5%;
     --foreground: 0 0% 12%;
     --card: 0 0% 100%;
