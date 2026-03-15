@@ -1,8 +1,11 @@
 "use client"
 
 import { usePathname } from "next/navigation"
+import { useRef } from "react"
 import { AppShell } from "@/components/layout/AppShell"
+import { MainHeader } from "@/components/layout/MainHeader"
 import BottomNav from "@/components/bottom-nav"
+import { ScrollContainerProvider } from "@/contexts/ScrollContainerContext"
 
 type Tab = "home" | "friends" | "notifications" | "mypage"
 
@@ -25,15 +28,26 @@ export function AppShellWithNav({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const activeTab = getActiveTab(pathname)
   const showNav = shouldShowNav(pathname)
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null)
 
   return (
     <AppShell className="bg-background flex flex-col h-[100dvh] overflow-hidden max-h-screen pt-[var(--safe-area-inset-top)]">
-      <div className="flex flex-col flex-1 min-h-0 overflow-y-auto overscroll-none">
-        {children}
-      </div>
+      <ScrollContainerProvider scrollContainerRef={scrollContainerRef}>
+        {showNav && (
+          <div className="shrink-0">
+            <MainHeader />
+          </div>
+        )}
+        <div
+          ref={scrollContainerRef}
+          className="flex flex-col flex-1 min-h-0 overflow-y-auto overscroll-none"
+        >
+          {children}
+        </div>
+      </ScrollContainerProvider>
       {showNav && (
         <div
-          className="shrink-0 w-full min-w-0 flex flex-col justify-end pb-1 bg-card"
+          className="shrink-0 w-full min-w-0 flex flex-col"
           style={{ height: "var(--bottom-nav-height)" }}
         >
           <BottomNav activeTab={activeTab} notificationCount={2} />

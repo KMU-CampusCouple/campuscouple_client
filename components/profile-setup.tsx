@@ -54,15 +54,36 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
     fileInputRef.current?.click()
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const isImageFile = (file: File) => {
+    if (file.type.startsWith("image/")) return true
+    const ext = file.name.split(".").pop()?.toLowerCase()
+    return ["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg", "heic", "avif"].includes(ext ?? "")
+  }
+
+  const isHeic = (file: File) =>
+    file.type === "image/heic" ||
+    file.type === "image/heif" ||
+    /\.(heic|heif)$/i.test(file.name)
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (!file || !file.type.startsWith("image/")) return
+    if (!file || !isImageFile(file)) return
+    let blob: Blob = file
+    if (isHeic(file)) {
+      try {
+        const heic2any = (await import("heic2any")).default
+        const converted = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.92 })
+        blob = Array.isArray(converted) ? converted[0] : converted
+      } catch {
+        return
+      }
+    }
     const reader = new FileReader()
     reader.onload = () => {
       const dataUrl = reader.result as string
       if (dataUrl) setPhotos((prev) => [...prev, dataUrl])
     }
-    reader.readAsDataURL(file)
+    reader.readAsDataURL(blob)
     e.target.value = ""
   }
 
@@ -100,7 +121,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/*"
+              accept="image/jpeg,image/png,image/gif,image/webp,image/bmp,image/svg+xml,image/heic,image/avif,.jpg,.jpeg,.png,.gif,.webp,.bmp,.svg,.heic,.avif"
               className="sr-only"
               aria-hidden
               onChange={handleFileChange}
@@ -108,7 +129,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
             <p className="text-sm text-muted-foreground">{"최대 6장까지 업로드 가능해요"}</p>
             <div className="grid grid-cols-2 gap-3">
               {photos.map((url, i) => (
-                <div key={i} className="relative aspect-square rounded-2xl overflow-hidden bg-muted min-h-0">
+                <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-muted min-h-0">
                   <img src={url} alt="" className="w-full h-full object-cover block" referrerPolicy="no-referrer" />
                   <button
                     onClick={() => handleRemovePhoto(i)}
@@ -126,7 +147,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
               {photos.length < 6 && (
                 <button
                   onClick={handleAddPhoto}
-                  className="aspect-square rounded-2xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-3 transition-colors hover:border-primary hover:bg-primary/5"
+                  className="aspect-square rounded-lg border-2 border-dashed border-border flex flex-col items-center justify-center gap-3 transition-colors hover:border-primary hover:bg-primary/5"
                 >
                   <TossIcon name="icon-plus-small-mono" size={24} background="white" className="opacity-70" />
                   <span className="text-xs text-muted-foreground">{"추가"}</span>
@@ -145,7 +166,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder="이름을 써주세요"
-                className="h-12 rounded-xl bg-card"
+                className="h-12 rounded-lg bg-card"
               />
             </div>
             <div>
@@ -155,7 +176,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                   <button
                     key={g}
                     onClick={() => setForm({ ...form, gender: g })}
-                    className={`flex-1 h-12 rounded-xl border text-sm font-medium transition-colors ${
+                    className={`flex-1 h-12 rounded-lg border text-sm font-medium transition-colors ${
                       form.gender === g
                         ? "bg-primary text-primary-foreground border-primary"
                         : "bg-card text-foreground border-border"
@@ -178,7 +199,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                 value={form.university}
                 onChange={(e) => setForm({ ...form, university: e.target.value })}
                 placeholder="예) 서울대학교"
-                className="h-12 rounded-xl bg-card"
+                className="h-12 rounded-lg bg-card"
               />
             </div>
             <div>
@@ -187,7 +208,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                 value={form.department}
                 onChange={(e) => setForm({ ...form, department: e.target.value })}
                 placeholder="예) 컴퓨터공학과"
-                className="h-12 rounded-xl bg-card"
+                className="h-12 rounded-lg bg-card"
               />
             </div>
             <div>
@@ -196,7 +217,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                 value={form.studentYear}
                 onChange={(e) => setForm({ ...form, studentYear: e.target.value })}
                 placeholder="예) 22"
-                className="h-12 rounded-xl bg-card"
+                className="h-12 rounded-lg bg-card"
                 maxLength={2}
               />
             </div>
@@ -212,7 +233,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                 value={form.specs}
                 onChange={(e) => setForm({ ...form, specs: e.target.value })}
                 placeholder="예) 180cm / 대학생"
-                className="h-12 rounded-xl bg-card"
+                className="h-12 rounded-lg bg-card"
               />
               <p className="text-xs text-muted-foreground mt-1">{"키, 직업 등 자유롭게 써주세요"}</p>
             </div>
@@ -222,7 +243,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                 value={form.idealType}
                 onChange={(e) => setForm({ ...form, idealType: e.target.value })}
                 placeholder="어떤 사람이 이상형인지 자유롭게 써주세요"
-                className="w-full h-24 rounded-xl bg-card border border-border p-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+                className="w-full h-24 rounded-lg bg-card border border-border p-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
               />
             </div>
           </div>
@@ -265,7 +286,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                 value={form.bio}
                 onChange={(e) => setForm({ ...form, bio: e.target.value })}
                 placeholder="나를 한 줄로 소개해요"
-                className="h-12 rounded-xl bg-card"
+                className="h-12 rounded-lg bg-card"
               />
             </div>
             <div>
@@ -286,7 +307,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                       value={form[sns.key as keyof typeof form]}
                       onChange={(e) => setForm({ ...form, [sns.key]: e.target.value })}
                       placeholder={sns.placeholder}
-                      className="h-10 rounded-xl bg-card flex-1"
+                      className="h-10 rounded-lg bg-card flex-1"
                     />
                   </div>
                 ))}
@@ -302,7 +323,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
             if (step < steps.length - 1) setStep(step + 1)
             else onComplete()
           }}
-          className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-semibold"
+          className="w-full h-12 rounded-lg bg-primary text-primary-foreground font-semibold"
         >
           {step < steps.length - 1 ? "다음" : "완료하고 메인으로"}
         </Button>

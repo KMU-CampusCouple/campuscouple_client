@@ -15,13 +15,6 @@ interface DashboardProps {
   onViewProfile: (user: UserProfile) => void
 }
 
-type SortOption = "latest" | "popular"
-
-const sortLabels: Record<SortOption, string> = {
-  latest: "최신순",
-  popular: "인기순",
-}
-
 function PostCard({
   post,
   onClick,
@@ -38,7 +31,7 @@ function PostCard({
   return (
     <button
       onClick={onClick}
-      className={`w-full bg-card rounded-2xl p-5 border border-border text-left transition-shadow hover:shadow-sm ${
+      className={`w-full bg-card rounded-lg p-5 border border-border text-left transition-shadow hover:shadow-sm ${
         isClosed ? "opacity-50" : ""
       }`}
     >
@@ -101,29 +94,29 @@ function PostCard({
   )
 }
 
+const SCROLL_THRESHOLD = 60
+
 export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: DashboardProps) {
-  const [sortBy, setSortBy] = useState<SortOption>("latest")
-  const [showSortDropdown, setShowSortDropdown] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
-  const [showSearch, setShowSearch] = useState(false)
-  const dropdownRef = useRef<HTMLDivElement>(null)
-  const searchInputRef = useRef<HTMLInputElement>(null)
+  const [headerVisible, setHeaderVisible] = useState(true)
+  const lastScrollY = useRef(0)
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setShowSortDropdown(false)
+    const el = scrollContainerRef.current
+    if (!el) return
+    const handleScroll = () => {
+      const y = el.scrollTop
+      if (y > lastScrollY.current && y > SCROLL_THRESHOLD) {
+        setHeaderVisible(false)
+      } else if (y <= SCROLL_THRESHOLD || y < lastScrollY.current) {
+        setHeaderVisible(true)
       }
+      lastScrollY.current = y
     }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
+    el.addEventListener("scroll", handleScroll, { passive: true })
+    return () => el.removeEventListener("scroll", handleScroll)
   }, [])
-
-  useEffect(() => {
-    if (showSearch && searchInputRef.current) {
-      searchInputRef.current.focus()
-    }
-  }, [showSearch])
 
   const filteredPosts = mockPosts
     .filter((post) => {
@@ -133,90 +126,34 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
         post.location.toLowerCase().includes(searchQuery.toLowerCase())
       )
     })
-    .sort((a, b) => {
-      if (sortBy === "latest") {
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      }
-      if (sortBy === "popular") {
-        return (b.views || 0) - (a.views || 0)
-      }
-      return 0
-    })
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
   const { triggerRefresh } = useRefresh()
 
   return (
     <>
-    <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
-      <MainHeader>
-        {showSearch ? (
-          <div className="flex items-center gap-2">
-            <div className="relative flex-1">
-              <input
-                ref={searchInputRef}
-                type="text"
-                placeholder="미팅 검색해보세요"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-10 pl-3 pr-10 rounded-xl bg-primary-foreground/20 border-0 text-sm text-primary-foreground placeholder:text-primary-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary-foreground/30"
-              />
-              <button
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-lg bg-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
-                aria-label="검색"
-              >
-                <TossIcon name="icon-search-bold-mono" size={24} onPrimary />
-              </button>
-            </div>
-            <button
-              onClick={() => {
-                setShowSearch(false)
-                setSearchQuery("")
-              }}
-              className="text-sm text-primary-foreground font-medium px-2"
-            >
-              {"닫기"}
-            </button>
-          </div>
-        ) : (
-          <div className="flex items-center justify-between">
-            <div className="relative" ref={dropdownRef}>
-              <button
-                onClick={() => setShowSortDropdown(!showSortDropdown)}
-                className="flex items-center gap-1 text-sm font-semibold text-primary-foreground"
-              >
-                {sortLabels[sortBy]}
-                <TossIcon name="icon-arrow-down-mono" size={24} onPrimary className={`shrink-0 transition-transform ${showSortDropdown ? "rotate-180" : ""}`} />
-              </button>
-              {showSortDropdown && (
-                <div className="absolute top-full left-0 mt-1 bg-card rounded-xl border border-border shadow-lg z-10 min-w-[120px] py-1">
-                  {(Object.keys(sortLabels) as SortOption[]).map((option) => (
-                    <button
-                      key={option}
-                      onClick={() => {
-                        setSortBy(option)
-                        setShowSortDropdown(false)
-                      }}
-                      className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
-                        sortBy === option
-                          ? "text-primary font-semibold bg-primary/5"
-                          : "text-foreground hover:bg-muted"
-                      }`}
-                    >
-                      {sortLabels[option]}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-            <button
-              onClick={() => setShowSearch(true)}
-              className="w-8 h-8 rounded-full flex items-center justify-center text-primary-foreground hover:bg-primary-foreground/10 transition-colors"
-              aria-label="검색"
-            >
-              <TossIcon name="icon-search-bold-mono" size={24} onPrimary />
-            </button>
-          </div>
-        )}
+    <PullToRefresh
+        onRefresh={triggerRefresh}
+        enabled
+        className="flex flex-col flex-1 min-h-0"
+        scrollContainerRef={scrollContainerRef}
+      >
+      <MainHeader logoVisible={false} searchVisible={headerVisible}>
+        <div className="relative w-full">
+          <input
+            type="text"
+            placeholder="미팅을 검색해보세요"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full h-10 pl-3 pr-10 rounded-lg bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+          />
+          <span
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center pointer-events-none text-muted-foreground"
+            aria-hidden
+          >
+            <TossIcon name="icon-search-bold-mono" size={24} background="white" />
+          </span>
+        </div>
       </MainHeader>
       <div className="flex flex-col min-h-full">
       <main className="flex-1 px-4 pt-6 pb-6 flex flex-col gap-3">

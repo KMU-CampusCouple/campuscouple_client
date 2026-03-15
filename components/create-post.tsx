@@ -80,14 +80,14 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="예) 금요일 강남 미팅 같이해요!"
-            className="h-12 rounded-xl bg-card"
+            className="h-12 rounded-lg bg-card"
           />
         </div>
 
         {/* Meeting size */}
         <div>
           <label className="text-sm font-medium mb-2 block">{"미팅 인원"}</label>
-          <div className="bg-card rounded-xl border border-border p-4">
+          <div className="bg-card rounded-lg border border-border p-4">
             <div className="flex items-center justify-center gap-5">
               <button
                 onClick={() => adjustPerSide(-1)}
@@ -167,7 +167,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="우리 그룹을 소개해요!"
-            className="w-full h-28 rounded-xl bg-card border border-border p-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+            className="w-full h-28 rounded-lg bg-card border border-border p-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
           />
         </div>
 
@@ -176,7 +176,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
           {!showLocationField ? (
             <button
               onClick={() => setShowLocationField(true)}
-              className="w-full h-12 rounded-xl bg-card border border-dashed border-border flex items-center justify-center gap-2 text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+              className="w-full h-12 rounded-lg bg-card border border-dashed border-border flex items-center justify-center gap-2 text-muted-foreground transition-colors hover:border-primary hover:text-primary"
             >
               <TossIcon name="icon-location-mono" size={24} background="white" className="shrink-0 opacity-70" />
               <span className="text-sm font-medium">{"장소 추가"}</span>
@@ -199,7 +199,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="예) 강남역 2번 출구 앞, 홍대 걷고싶은거리"
-                className="h-12 rounded-xl bg-card"
+                className="h-12 rounded-lg bg-card"
               />
               <p className="text-xs text-muted-foreground mt-1.5">
                 {"안 쓰면 "}<span className="font-medium text-foreground">{"상의 후 결정"}</span>{"으로 표기돼요"}
@@ -213,7 +213,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
           {!showTimeField ? (
             <button
               onClick={() => setShowTimeField(true)}
-              className="w-full h-12 rounded-xl bg-card border border-dashed border-border flex items-center justify-center gap-2 text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+              className="w-full h-12 rounded-lg bg-card border border-dashed border-border flex items-center justify-center gap-2 text-muted-foreground transition-colors hover:border-primary hover:text-primary"
             >
               <TossIcon name="icon-time-mono" size={24} background="white" className="shrink-0 opacity-70" />
               <span className="text-sm font-medium">{"시간 추가"}</span>
@@ -260,7 +260,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
         <Button
           onClick={onSubmit}
           disabled={!canSubmit}
-          className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-semibold mt-2"
+          className="w-full h-12 rounded-lg bg-primary text-primary-foreground font-semibold mt-2"
         >
           {"게시하기"}
         </Button>
@@ -273,7 +273,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
             className="absolute inset-0 bg-foreground/30"
             onClick={() => { setShowFriendPicker(false); setFriendSearch("") }}
           />
-          <div className="relative w-full max-w-[430px] bg-card rounded-t-3xl p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] max-h-[85vh] flex flex-col animate-in slide-in-from-bottom duration-300">
+          <div className="relative w-full max-w-[430px] bg-card rounded-t-2xl p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] max-h-[85vh] flex flex-col animate-in slide-in-from-bottom duration-300">
             <div className="w-10 h-1 bg-muted rounded-full mx-auto mb-4 shrink-0" />
             <h3 className="text-lg font-bold mb-1 shrink-0">{"친구 선택"}</h3>
             <p className="text-xs text-muted-foreground mb-4 shrink-0">
@@ -287,7 +287,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                 placeholder="친구 이름으로 검색해보세요"
                 value={friendSearch}
                 onChange={(e) => setFriendSearch(e.target.value)}
-                className="w-full h-11 pl-11 pr-4 rounded-xl bg-muted border-0 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="w-full h-11 pl-11 pr-4 rounded-lg bg-muted border-0 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
             </div>
             <div className="flex flex-col gap-2 min-h-0 flex-1 overflow-y-auto overflow-x-visible py-2 px-1">
@@ -304,7 +304,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                     <button
                       key={f.id}
                       onClick={() => !isDisabled && toggleFriend(f)}
-                      className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${
+                      className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${
                         isSelected
                           ? "bg-primary/10 ring-1 ring-primary"
                           : isDisabled
@@ -332,13 +332,13 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
               <Button
                 variant="outline"
                 onClick={() => { setShowFriendPicker(false); setFriendSearch("") }}
-                className="flex-1 h-11 rounded-xl"
+                className="flex-1 h-11 rounded-lg"
               >
                 {"닫기"}
               </Button>
               <Button
                 onClick={() => { setShowFriendPicker(false); setFriendSearch("") }}
-                className="flex-1 h-11 rounded-xl bg-primary text-primary-foreground font-medium"
+                className="flex-1 h-11 rounded-lg bg-primary text-primary-foreground font-medium"
               >
                 {"완료"}
               </Button>

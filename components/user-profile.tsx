@@ -112,7 +112,7 @@ export default function UserProfile({ user, isMatched, onBack, friendStatus, onA
 
       <main className="flex-1 px-4 py-6 flex flex-col gap-4">
         {/* Photo carousel or avatar */}
-        <div className="bg-card rounded-2xl border border-border overflow-hidden">
+        <div className="bg-card rounded-lg border border-border overflow-hidden">
           <div
             className="relative w-full aspect-square flex items-center justify-center overflow-hidden select-none"
             style={{ background: hasPhotos ? undefined : `hsl(345, 40%, 90%)` }}
@@ -169,7 +169,7 @@ export default function UserProfile({ user, isMatched, onBack, friendStatus, onA
         </div>
 
         {/* Info */}
-        <div className="bg-card rounded-2xl border border-border overflow-hidden">
+        <div className="bg-card rounded-lg border border-border overflow-hidden">
           <div className="flex items-center gap-3.5 px-4 py-4 border-b border-border">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
               <TossIcon name="icon-graduation-mono" size={24} background="white" className="opacity-80" />
@@ -277,7 +277,7 @@ export default function UserProfile({ user, isMatched, onBack, friendStatus, onA
         </div>
 
         {!isMatched && (
-          <div className="bg-muted rounded-xl p-4 flex items-start gap-3.5">
+          <div className="bg-muted rounded-lg p-4 flex items-start gap-3.5">
             <TossIcon name="icon-lock-mono" size={24} background="white" className="mt-0.5 shrink-0 opacity-80" />
             <p className="text-sm text-muted-foreground leading-relaxed">
               {"SNS 아이디는 미팅 매칭 이후에 열람할 수 있어요."}
