@@ -61,8 +61,7 @@ function PostCard({
       </div>
 
       {/* Info row (가이드: 한 번에 하나의 아이콘만 사용) */}
-      <div className="flex items-center gap-2.5 text-sm text-muted-foreground mb-4">
-        <TossIcon name="icon-calendar-mono" size={24} background="white" className="shrink-0" />
+      <div className="flex items-center gap-2.5 text-xs text-muted-foreground mb-4">
         <span>
           {post.location || "미정"} · {post.date} · {post.time || "미정"}
         </span>
