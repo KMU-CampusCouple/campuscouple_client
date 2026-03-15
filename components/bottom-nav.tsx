@@ -20,7 +20,7 @@ interface BottomNavProps {
 
 export default function BottomNav({ activeTab, notificationCount = 0 }: BottomNavProps) {
   return (
-    <div className="w-full px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] flex justify-center">
+    <div className="w-full h-full px-3 flex flex-col justify-end pb-[max(0.5rem,env(safe-area-inset-bottom))]">
       <nav
         className="w-full max-w-[400px] min-h-[64px] bg-card rounded-2xl shadow-lg border border-border flex items-center justify-around"
         role="navigation"

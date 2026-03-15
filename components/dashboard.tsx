@@ -14,12 +14,11 @@ interface DashboardProps {
   onViewProfile: (user: UserProfile) => void
 }
 
-type SortOption = "latest" | "popular" | "distance"
+type SortOption = "latest" | "popular"
 
 const sortLabels: Record<SortOption, string> = {
   latest: "최신순",
   popular: "인기순",
-  distance: "거리순",
 }
 
 function PostCard({
@@ -149,7 +148,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
       if (sortBy === "popular") {
         return (b.views || 0) - (a.views || 0)
       }
-      return a.location.localeCompare(b.location)
+      return 0
     })
 
   const { triggerRefresh } = useRefresh()
