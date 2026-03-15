@@ -105,12 +105,10 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
                     {getIcon(notif.type)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <p className="text-sm font-semibold">{notif.title}</p>
-                        <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                      </div>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <p className="text-sm font-semibold">{notif.title}</p>
                       <p className="text-[10px] text-muted-foreground shrink-0">{getTimeAgo(notif.createdAt)}</p>
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
                     </div>
                     <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed truncate">{notif.message}</p>
                   </div>
@@ -160,7 +158,7 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
                   {getIcon(notif.type)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
                     <p className="text-sm font-medium text-muted-foreground">{notif.title}</p>
                     <p className="text-[10px] text-muted-foreground shrink-0">{getTimeAgo(notif.createdAt)}</p>
                   </div>
