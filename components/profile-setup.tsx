@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Camera, ArrowLeft, Plus, X, MapPin } from "lucide-react"
+import { Camera, ArrowLeft, Plus, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -15,13 +15,6 @@ const MBTI_TYPES = [
   "ISTJ", "ISFJ", "ESTJ", "ESFJ",
   "ISTP", "ISFP", "ESTP", "ESFP",
   "미공개",
-]
-
-const LOCATIONS = [
-  "서울 강남/서초", "서울 강북", "서울 마포/서대문/은평",
-  "서울 성동/광진/동대문", "서울 영등포/구로/금천",
-  "경기 수원/용인", "경기 성남/분당", "경기 고양/파주",
-  "인천", "부산", "대구", "대전", "광주", "기타",
 ]
 
 export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
@@ -45,16 +38,13 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
     telegram: "",
     specs: "",
     idealType: "",
-    location: "",
   })
-  const [showLocationPicker, setShowLocationPicker] = useState(false)
 
   const steps = [
     { title: "프로필 사진", subtitle: "본인 사진을 올려주세요" },
     { title: "기본 정보", subtitle: "본인 정보를 입력해주세요" },
     { title: "학교 정보", subtitle: "다니는 학교 정보를 입력해주세요" },
     { title: "스펙 & 이상형", subtitle: "나를 더 잘 알릴 수 있는 정보예요" },
-    { title: "거주 위치", subtitle: "거주 지역을 골라주세요" },
     { title: "소개 정보", subtitle: "마지막으로 자기소개를 써주세요" },
   ]
 
@@ -220,73 +210,8 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
           </div>
         )}
 
-        {/* Step 4: Location - map style selector */}
+        {/* Step 4: Bio & SNS */}
         {step === 4 && (
-          <div className="flex flex-col gap-4 animate-in fade-in duration-300">
-            {/* Map placeholder */}
-            <div className="relative w-full aspect-square rounded-2xl bg-muted overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center">
-                {/* Simplified map grid */}
-                <svg viewBox="0 0 400 300" className="w-full h-full opacity-20">
-                  {Array.from({ length: 8 }).map((_, i) => (
-                    <line key={`h${i}`} x1="0" y1={i * 42} x2="400" y2={i * 42} stroke="currentColor" strokeWidth="0.5" />
-                  ))}
-                  {Array.from({ length: 10 }).map((_, i) => (
-                    <line key={`v${i}`} x1={i * 45} y1="0" x2={i * 45} y2="300" stroke="currentColor" strokeWidth="0.5" />
-                  ))}
-                </svg>
-                <div className="absolute flex flex-col items-center gap-1">
-                  <MapPin className="w-8 h-8 text-primary" />
-                  <span className="text-xs font-medium bg-card px-2 py-0.5 rounded-md shadow-sm">
-                    {form.location || "지역을 골라주세요"}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setShowLocationPicker(true)}
-              className="w-full h-12 rounded-xl bg-card border border-border flex items-center gap-3 px-4 text-left transition-colors hover:border-primary"
-            >
-              <MapPin className="w-4 h-4 text-primary shrink-0" />
-              <span className={`text-sm flex-1 ${form.location ? "text-foreground font-medium" : "text-muted-foreground"}`}>
-                {form.location || "거주 지역 고르기"}
-              </span>
-            </button>
-
-            {/* Location picker bottom sheet */}
-            {showLocationPicker && (
-              <div className="fixed inset-0 z-50 flex items-end justify-center">
-                <div className="absolute inset-0 bg-foreground/30" onClick={() => setShowLocationPicker(false)} />
-                <div className="relative w-full max-w-[430px] bg-card rounded-t-3xl p-6 pb-10 animate-in slide-in-from-bottom duration-300">
-                  <div className="w-10 h-1 bg-muted rounded-full mx-auto mb-4" />
-                  <h3 className="text-lg font-bold mb-4">{"거주 지역 고르기"}</h3>
-                  <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto">
-                    {LOCATIONS.map((loc) => (
-                      <button
-                        key={loc}
-                        onClick={() => {
-                          setForm({ ...form, location: loc })
-                          setShowLocationPicker(false)
-                        }}
-                        className={`py-3 px-3 rounded-xl text-sm font-medium text-left transition-colors ${
-                          form.location === loc
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-muted text-foreground hover:bg-primary/10"
-                        }`}
-                      >
-                        {loc}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Step 5: Bio & SNS */}
-        {step === 5 && (
           <div className="flex flex-col gap-5 animate-in fade-in duration-300">
             <div>
               <label className="text-sm font-medium mb-2 block">MBTI</label>
@@ -361,7 +286,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
           }}
           className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-semibold"
         >
-          {step < steps.length - 1 ? "다음" : "시작하기!"}
+          {step < steps.length - 1 ? "다음" : "완료하고 메인으로"}
         </Button>
       </div>
     </div>

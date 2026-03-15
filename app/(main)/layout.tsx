@@ -25,7 +25,7 @@ export default function MainLayout({
 
   return (
     <AppShell className="bg-background flex flex-col h-[100dvh] overflow-hidden max-h-screen">
-      <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
+      <div className="flex flex-col flex-1 min-h-0 overflow-y-auto">
         {children}
       </div>
       {!isUserProfile && (

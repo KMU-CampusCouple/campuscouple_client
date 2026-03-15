@@ -618,6 +618,16 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                 </div>
               )}
             </div>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowFriendPicker(false)
+                setActiveSlotIndex(null)
+              }}
+              className="w-full h-10 rounded-xl mt-4"
+            >
+              {"닫기"}
+            </Button>
           </div>
         </div>
       )}
