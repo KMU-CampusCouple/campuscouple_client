@@ -20,19 +20,18 @@ interface BottomNavProps {
 
 export default function BottomNav({ activeTab, notificationCount = 0 }: BottomNavProps) {
   return (
-    <div className="w-full h-full px-3 flex flex-col justify-end pb-[max(0.5rem,env(safe-area-inset-bottom))]">
-      <nav
-        className="w-full max-w-[400px] min-h-[64px] bg-card rounded-2xl shadow-lg border border-border flex items-center justify-around"
-        role="navigation"
-        aria-label="메인 네비게이션"
-      >
+    <nav
+      className="w-full h-full min-h-[64px] bg-card rounded-t-2xl shadow-lg border border-border flex items-center justify-around pb-[max(0.5rem,env(safe-area-inset-bottom))]"
+      role="navigation"
+      aria-label="메인 네비게이션"
+    >
         {TAB_CONFIG.map((tab) => {
           const isActive = activeTab === tab.id
           return (
             <Link
               key={tab.id}
               href={tab.href}
-              className={`relative flex flex-col items-center gap-0.5 px-3 py-2.5 rounded-xl transition-colors ${
+              className={`relative flex flex-col items-center gap-0.5 px-3 pt-0 pb-2.5 rounded-xl transition-colors ${
                 isActive ? "text-primary" : "text-muted-foreground"
               }`}
               aria-label={tab.label}
@@ -52,7 +51,6 @@ export default function BottomNav({ activeTab, notificationCount = 0 }: BottomNa
             </Link>
           )
         })}
-      </nav>
-    </div>
+    </nav>
   )
 }
