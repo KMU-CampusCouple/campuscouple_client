@@ -158,7 +158,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
     <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
       <header className="sticky top-0 z-30 bg-primary/80 backdrop-blur-lg px-4 pt-2 pb-2 shrink-0">
         {/* App logo bar */}
-        <div className="flex items-center gap-2 mt-2 mb-3">
+        <div className="flex items-center gap-2 mb-3">
           <img src="/logo.jpg" alt="Campus Couple" className="w-7 h-7 rounded-lg object-cover" />
           <span className="text-sm font-bold text-primary-foreground">{"캠퍼스커플"}</span>
         </div>
@@ -177,7 +177,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
                 className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
                 aria-label="검색"
               >
-                <TossIcon name="icon-search-bold-mono" size={14} className="opacity-90 invert" />
+                <TossIcon name="icon-search-bold-mono" size={14} className="opacity-90" invert />
               </button>
             </div>
             <button
@@ -199,7 +199,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
                 className="flex items-center gap-1 text-sm font-semibold text-primary-foreground"
               >
                 {sortLabels[sortBy]}
-                <TossIcon name="icon-arrow-down-mono" size={16} className={`shrink-0 transition-transform ${showSortDropdown ? "rotate-180" : ""}`} />
+                <TossIcon name="icon-arrow-down-mono" size={16} className={`shrink-0 transition-transform ${showSortDropdown ? "rotate-180" : ""}`} invert />
               </button>
               {showSortDropdown && (
                 <div className="absolute top-full left-0 mt-1 bg-card rounded-xl border border-border shadow-lg z-10 min-w-[120px] py-1">
@@ -229,7 +229,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
               className="w-9 h-9 rounded-full flex items-center justify-center text-primary-foreground hover:bg-primary-foreground/10 transition-colors"
               aria-label="검색"
             >
-              <TossIcon name="icon-search-bold-mono" size={20} className="opacity-90 invert" />
+              <TossIcon name="icon-search-bold-mono" size={20} className="opacity-90" invert />
             </button>
           </div>
         )}
