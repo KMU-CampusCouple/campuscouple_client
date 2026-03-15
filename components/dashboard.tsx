@@ -139,7 +139,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
         className="flex flex-col flex-1 min-h-0"
         scrollContainerRef={scrollContainerRef}
       >
-      <MainHeader searchVisible={headerVisible}>
+      <MainHeader logoVisible={false} searchVisible={headerVisible}>
         <div className="relative w-full">
           <input
             type="text"

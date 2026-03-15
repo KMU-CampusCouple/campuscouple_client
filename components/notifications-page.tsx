@@ -8,8 +8,6 @@ import type { Notification } from "@/lib/store"
 import { useRefresh } from "@/contexts/RefreshContext"
 import { useFriends } from "@/contexts/FriendsContext"
 import { PullToRefresh } from "@/components/layout/PullToRefresh"
-import { MainHeader } from "@/components/layout/MainHeader"
-
 interface NotificationsPageProps {
   onNavigate?: (notification: Notification) => void
 }
@@ -66,7 +64,6 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
 
   return (
     <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
-      <MainHeader />
       <div className="flex flex-col min-h-full">
       <main className="flex-1 px-4 pt-6 pb-6 flex flex-col gap-2">
         {notifications.length === 0 ? (

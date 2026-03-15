@@ -9,7 +9,6 @@ import { currentUser, mockPosts, formatMeetingType } from "@/lib/store"
 import type { MeetingPost, UserProfile } from "@/lib/store"
 import { useRefresh } from "@/contexts/RefreshContext"
 import { PullToRefresh } from "@/components/layout/PullToRefresh"
-import { MainHeader } from "@/components/layout/MainHeader"
 
 type SubPage = "main" | "edit" | "my-posts" | "my-applications" | "my-matches"
 
@@ -417,7 +416,6 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
   // Main
   return (
     <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
-      <MainHeader />
       <div className="flex flex-col min-h-full">
       <main className="flex-1 px-4 pt-6 pb-6 flex flex-col gap-4">
         <div className="bg-card rounded-lg border border-border p-5">

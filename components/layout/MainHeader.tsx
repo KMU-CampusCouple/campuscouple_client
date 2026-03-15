@@ -16,8 +16,29 @@ const HEADER_PADDING = "px-4 pt-5 pb-3.5"
 const HEADER_PADDING_NO_CHILDREN = "px-4 pt-5 pb-5"
 const LOGO_ROW_GAP = "mb-3"
 
-export function MainHeader({ children, searchVisible = true }: MainHeaderProps) {
+export function MainHeader({ children, searchVisible = true, logoVisible = true }: MainHeaderProps) {
   const paddingClass = children != null ? HEADER_PADDING : HEADER_PADDING_NO_CHILDREN
+  const showLogo = logoVisible
+  const onlyChildren = !showLogo && children != null
+
+  if (onlyChildren) {
+    return (
+      <header
+        className={cn("sticky top-0 z-30 bg-primary/80 backdrop-blur-lg shrink-0 rounded-b-md", "px-4 pt-2 pb-3.5")}
+        role="banner"
+      >
+        <div
+          className={cn(
+            "overflow-hidden transition-all duration-200 ease-out",
+            searchVisible ? "max-h-12 opacity-100" : "max-h-0 opacity-0"
+          )}
+        >
+          <div className="min-h-[2.5rem] pt-0.5">{children}</div>
+        </div>
+      </header>
+    )
+  }
+
   return (
     <header
       className={cn("sticky top-0 z-30 bg-primary/80 backdrop-blur-lg shrink-0 rounded-b-md", paddingClass)}

@@ -188,7 +188,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
 
   return (
     <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
-      <MainHeader>
+      <MainHeader logoVisible={false}>
         <div className="flex gap-1 bg-primary-foreground/20 rounded-lg p-1">
           {(["friends", "requests", "search"] as const).map((t) => (
             <button
