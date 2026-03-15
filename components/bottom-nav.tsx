@@ -8,7 +8,7 @@ type Tab = "home" | "friends" | "notifications" | "mypage"
 
 const TAB_CONFIG: { id: Tab; label: string; href: string; icon: TossIconName }[] = [
   { id: "home", label: "메인", href: "/home", icon: "icon-home-mono" },
-  { id: "friends", label: "친구", href: "/friends", icon: "icon-users-mono" },
+  { id: "friends", label: "친구", href: "/friends", icon: "icon-user-two-mono" },
   { id: "notifications", label: "알림", href: "/notifications", icon: "icon-alarm-mono" },
   { id: "mypage", label: "마이", href: "/mypage", icon: "icon-user-mono" },
 ]

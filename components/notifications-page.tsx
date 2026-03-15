@@ -6,6 +6,7 @@ import UserAvatar from "@/components/user-avatar"
 import { mockNotifications } from "@/lib/store"
 import type { Notification } from "@/lib/store"
 import { useRefresh } from "@/contexts/RefreshContext"
+import { useFriends } from "@/contexts/FriendsContext"
 import { PullToRefresh } from "@/components/layout/PullToRefresh"
 import { MainHeader } from "@/components/layout/MainHeader"
 
@@ -15,6 +16,7 @@ interface NotificationsPageProps {
 
 export default function NotificationsPage({ onNavigate }: NotificationsPageProps) {
   const [notifications, setNotifications] = useState<Notification[]>(mockNotifications)
+  const { acceptRequest, rejectRequest } = useFriends()
 
   const handleTapNotification = (notif: Notification) => {
     setNotifications((prev) =>
@@ -90,27 +92,53 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
                 <p className="text-sm text-muted-foreground">{"새 알림이 오면 여기서 확인할 수 있어요"}</p>
               </div>
             ) : unread.map((notif) => (
-              <button
+              <div
                 key={notif.id}
-                onClick={() => handleTapNotification(notif)}
-                className="flex items-center gap-3.5 bg-card rounded-xl p-4 border border-border text-left w-full shadow-sm"
+                className="flex items-center gap-3.5 bg-card rounded-xl p-4 border border-border w-full shadow-sm"
               >
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
-                  style={{ background: getIconBg(notif.type), color: "white" }}
+                <button
+                  onClick={() => handleTapNotification(notif)}
+                  className="flex items-center gap-3.5 flex-1 min-w-0 text-left"
                 >
-                  {getIcon(notif.type)}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold">{notif.title}</p>
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+                    style={{ background: getIconBg(notif.type), color: "white" }}
+                  >
+                    {getIcon(notif.type)}
                   </div>
-                  <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed truncate">{notif.message}</p>
-                  <p className="text-[10px] text-muted-foreground mt-1">{getTimeAgo(notif.createdAt)}</p>
-                </div>
-                <TossIcon name="icon-arrow-right-small-mono" size={24} background="white" className="opacity-80 shrink-0" />
-              </button>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-semibold">{notif.title}</p>
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed truncate">{notif.message}</p>
+                    <p className="text-[10px] text-muted-foreground mt-1">{getTimeAgo(notif.createdAt)}</p>
+                  </div>
+                  <TossIcon name="icon-arrow-right-small-mono" size={24} background="white" className="opacity-80 shrink-0" />
+                </button>
+                {notif.type === "friend_request" && notif.fromUser && (
+                  <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
+                    <button
+                      onClick={() => {
+                        acceptRequest(notif.fromUser!.id)
+                        setNotifications((prev) => prev.filter((n) => n.id !== notif.id))
+                      }}
+                      className="text-xs font-medium text-primary py-1.5 px-2.5 rounded-lg bg-primary/10"
+                    >
+                      {"수락"}
+                    </button>
+                    <button
+                      onClick={() => {
+                        rejectRequest(notif.fromUser!.id)
+                        setNotifications((prev) => prev.filter((n) => n.id !== notif.id))
+                      }}
+                      className="text-xs font-medium text-muted-foreground py-1.5 px-2.5 rounded-lg bg-muted"
+                    >
+                      {"거절"}
+                    </button>
+                  </div>
+                )}
+              </div>
             ))}
 
             {read.length > 0 && (

@@ -15,13 +15,19 @@ const SNS_PLATFORMS = [
   { key: "telegram", label: "Telegram" },
 ] as const
 
+export type FriendStatus = "none" | "pending" | "friend"
+
 interface UserProfileProps {
   user: UserProfileType
   isMatched: boolean
   onBack: () => void
+  /** 내 프로필이면 없음. 남의 프로필일 때만 전달 */
+  friendStatus?: FriendStatus
+  onAddFriend?: () => void
+  onRemoveFriend?: () => void
 }
 
-export default function UserProfile({ user, isMatched, onBack }: UserProfileProps) {
+export default function UserProfile({ user, isMatched, onBack, friendStatus, onAddFriend, onRemoveFriend }: UserProfileProps) {
   const [photoIndex, setPhotoIndex] = useState(0)
   const photos = user.photos.slice(0, 6)
   const hasPhotos = photos.length > 0
@@ -76,6 +82,31 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
             <TossIcon name="icon-arrow-left-mono" size={24} background="white" />
           </button>
           <h1 className="text-lg font-bold flex-1 text-foreground leading-tight">{"프로필"}</h1>
+          {friendStatus !== undefined && (
+            <>
+              {friendStatus === "friend" && (
+                <button
+                  onClick={onRemoveFriend}
+                  className="text-sm font-medium text-muted-foreground hover:text-destructive transition-colors shrink-0 py-1 px-2"
+                >
+                  {"친구삭제"}
+                </button>
+              )}
+              {friendStatus === "pending" && (
+                <span className="text-sm text-muted-foreground shrink-0 py-1 px-2">
+                  {"요청됨"}
+                </span>
+              )}
+              {friendStatus === "none" && (
+                <button
+                  onClick={onAddFriend}
+                  className="text-sm font-medium text-primary shrink-0 py-1 px-2"
+                >
+                  {"친구추가"}
+                </button>
+              )}
+            </>
+          )}
         </div>
       </header>
 

@@ -225,7 +225,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
                     onClick={() => handleRemovePhoto(i)}
                     className="absolute top-2 right-2 w-6 h-6 rounded-full bg-foreground/50 text-background flex items-center justify-center"
                   >
-                    <TossIcon name="icon-close-mono" size={24} onPrimary />
+                    <TossIcon name="icon-chip-x-mono" size={24} onPrimary />
                   </button>
                   {i === 0 && (
                     <span className="absolute bottom-2 left-2 text-[10px] bg-primary text-primary-foreground px-2 py-0.5 rounded-md font-medium">

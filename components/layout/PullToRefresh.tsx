@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { Children } from "react"
 import { motion } from "framer-motion"
-import { TossIcon } from "@/components/toss-icon"
 
 const PULL_THRESHOLD = 80
 const MAX_PULL = 240
@@ -202,7 +201,7 @@ export function PullToRefresh({
               >
                 {showIndicator && (
                   <div className="flex flex-col items-center justify-center gap-1 w-full h-full min-h-[40px]">
-                    <span className="shrink-0 animate-spin inline-flex"><TossIcon name="icon-loader-mono" size={24} className="text-muted-foreground" /></span>
+                    <span className="shrink-0 inline-flex h-6 w-6 items-center justify-center"><span className="h-5 w-5 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-muted-foreground" /></span>
                     <span className="text-xs text-muted-foreground">
                       {isRefreshing ? "새로고침 중..." : "당겨서 새로고침"}
                     </span>
@@ -228,7 +227,7 @@ export function PullToRefresh({
               >
                 {showIndicator && (
                   <div className="flex flex-col items-center justify-center gap-1 w-full h-full min-h-[40px]">
-                    <span className="shrink-0 animate-spin inline-flex"><TossIcon name="icon-loader-mono" size={24} className="text-muted-foreground" /></span>
+                    <span className="shrink-0 inline-flex h-6 w-6 items-center justify-center"><span className="h-5 w-5 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-muted-foreground" /></span>
                     <span className="text-xs text-muted-foreground">
                       {isRefreshing ? "새로고침 중..." : "당겨서 새로고침"}
                     </span>

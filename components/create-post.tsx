@@ -192,7 +192,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                   onClick={() => { setShowLocationField(false); setLocation("") }}
                   className="text-muted-foreground hover:text-destructive transition-colors"
                 >
-                  <TossIcon name="icon-close-mono" size={24} background="white" />
+                  <TossIcon name="icon-chip-x-mono" size={24} background="white" />
                 </button>
               </div>
               <Input
@@ -229,7 +229,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                   onClick={() => { setShowTimeField(false); setDate(""); setTime("") }}
                   className="text-muted-foreground hover:text-destructive transition-colors"
                 >
-                  <TossIcon name="icon-close-mono" size={24} background="white" />
+                  <TossIcon name="icon-chip-x-mono" size={24} background="white" />
                 </button>
               </div>
               <div className="flex gap-3">
