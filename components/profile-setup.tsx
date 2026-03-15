@@ -64,7 +64,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
         <div className="flex items-center gap-3 mb-4">
           {step > 0 && (
             <button onClick={() => setStep(step - 1)} className="text-foreground">
-              <TossIcon name="icon-arrow-left-mono" size={20} />
+              <TossIcon name="icon-arrow-left-mono" size={24} />
             </button>
           )}
           <div className="flex-1">
@@ -96,7 +96,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                     onClick={() => handleRemovePhoto(i)}
                     className="absolute top-2 right-2 w-6 h-6 rounded-full bg-foreground/50 text-background flex items-center justify-center"
                   >
-                    <TossIcon name="icon-close-mono" size={14} />
+                    <TossIcon name="icon-close-mono" size={24} />
                   </button>
                   {i === 0 && (
                     <span className="absolute bottom-2 left-2 text-[10px] bg-primary text-primary-foreground px-2 py-0.5 rounded-md font-medium">

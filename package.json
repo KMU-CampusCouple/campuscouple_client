@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
-    "dev:granite": "granite dev",
+    "dev": "granite dev",
+    "dev:next": "next dev --turbo",
     "build": "next build",
     "build:granite": "granite build",
     "start": "next start",

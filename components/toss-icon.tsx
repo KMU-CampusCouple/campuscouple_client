@@ -3,13 +3,13 @@
 /**
  * 토스 그래픽 리소스(아이콘) 사용 컴포넌트.
  * @see https://developers-apps-in-toss.toss.im/design/resources.md
- * - 아이콘은 24~40px 크기로 사용 (기본 24px)
+ * - 아이콘은 화면에서 24~40px 크기로만 사용 (가이드 준수)
  * - static.toss.im/icons/svg/ URL 사용
  * - invert: 밝은 배경(헤더 등)에서 흰색으로 표시
  */
 const TOSS_ICON_BASE = "https://static.toss.im/icons/svg"
-/** 토스 가이드: 24~40px 권장. 작은 크기 요청 시 24px 소스로 스케일해 선명도 유지 */
-const MIN_RENDER_SIZE = 24
+const MIN_ICON_SIZE = 24
+const MAX_ICON_SIZE = 40
 
 export type TossIconName =
   | "icon-home-mono"
@@ -52,7 +52,7 @@ export type TossIconName =
 
 interface TossIconProps {
   name: TossIconName
-  /** 24~40px 권장 (기본 24). 작은 값도 지원하며 내부적으로 24px 소스로 스케일해 선명도 유지 */
+  /** 24~40px (가이드 준수). 미만/초과 시 24 또는 40으로 클램프 */
   size?: number
   className?: string
   /** true면 흰색으로 표시 (헤더·어두운 배경용). mono 아이콘에 filter: invert 적용 */
@@ -68,25 +68,17 @@ export function TossIcon({
   "aria-hidden": ariaHidden = true,
 }: TossIconProps) {
   const src = `${TOSS_ICON_BASE}/${name}.svg`
-  const renderSize = size < MIN_RENDER_SIZE ? MIN_RENDER_SIZE : size
-  const scale = size < MIN_RENDER_SIZE ? size / MIN_RENDER_SIZE : 1
+  const clampedSize = Math.min(MAX_ICON_SIZE, Math.max(MIN_ICON_SIZE, size))
   return (
     <span
       className={`inline-flex items-center justify-center shrink-0 ${invert ? "invert" : ""} ${className}`}
-      style={
-        scale !== 1
-          ? { width: size, height: size, fontSize: 0 }
-          : undefined
-      }
       aria-hidden={ariaHidden}
     >
       <img
         src={src}
         alt=""
-        width={renderSize}
-        height={renderSize}
-        style={scale !== 1 ? { width: size, height: size, objectFit: "contain" } : undefined}
-        className={scale !== 1 ? "max-w-none" : ""}
+        width={clampedSize}
+        height={clampedSize}
         loading="lazy"
         decoding="async"
       />

@@ -21,7 +21,7 @@ interface BottomNavProps {
 export default function BottomNav({ activeTab, notificationCount = 0 }: BottomNavProps) {
   return (
     <nav
-      className="w-full h-full min-h-[64px] bg-card rounded-t-2xl shadow-lg border border-border flex items-center justify-around pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]"
+      className="w-full h-full min-h-[64px] bg-card rounded-2xl shadow-lg border border-border flex items-center justify-around pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]"
       role="navigation"
       aria-label="메인 네비게이션"
     >

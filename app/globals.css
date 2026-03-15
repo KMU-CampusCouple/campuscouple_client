@@ -10,6 +10,13 @@
 
 @layer base {
   :root {
+    /* 앱인토스 해상도 가이드: 논리 해상도 하나 기준(세로형 360×640~420×740), 스케일링으로 기기 대응 */
+    --logical-viewport-width: 390px;
+    --logical-viewport-height: 740px;
+    --logical-max-width: 430px; /* 권장 상한, 트래픽 70~80% 구간 반영 */
+    /* Safe Area: 노치, 카메라 홀, Dynamic Island 대응 */
+    --safe-area-inset-top: env(safe-area-inset-top, 0px);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
     /* 하단 네비 높이: 스크롤 영역 pb와 동기화 (절대 겹치지 않도록) */
     --bottom-nav-height: calc(72px + max(0.5rem, env(safe-area-inset-bottom, 0px)));
     --background: 345 20% 97.5%;
@@ -18,7 +25,8 @@
     --card-foreground: 0 0% 12%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 12%;
-    --primary: 345 55% 68%;
+    /* 앱인토스 브랜딩: granite.config.ts brand.primaryColor(#3182F6)와 동일하게 유지 */
+    --primary: 217 91% 58%;
     --primary-foreground: 0 0% 100%;
     --secondary: 345 15% 95%;
     --secondary-foreground: 0 0% 25%;
@@ -30,8 +38,8 @@
     --destructive-foreground: 0 0% 98%;
     --border: 345 12% 91%;
     --input: 345 12% 91%;
-    --ring: 345 55% 68%;
-    --chart-1: 345 55% 68%;
+    --ring: 217 91% 58%;
+    --chart-1: 217 91% 58%;
     --chart-2: 350 50% 78%;
     --chart-3: 15 60% 72%;
     --chart-4: 330 40% 60%;
@@ -39,12 +47,12 @@
     --radius: 0.75rem;
     --sidebar-background: 345 20% 97.5%;
     --sidebar-foreground: 0 0% 20%;
-    --sidebar-primary: 345 55% 68%;
+    --sidebar-primary: 217 91% 58%;
     --sidebar-primary-foreground: 0 0% 98%;
     --sidebar-accent: 345 15% 94%;
     --sidebar-accent-foreground: 0 0% 20%;
     --sidebar-border: 345 12% 91%;
-    --sidebar-ring: 345 55% 68%;
+    --sidebar-ring: 217 91% 58%;
   }
 }
 
@@ -59,8 +67,11 @@
   }
   html,
   body {
+    margin: 0;
+    padding: 0;
     overscroll-behavior: none;
     overscroll-behavior-y: none;
+    min-height: 100dvh; /* 풀스크린: 콘텐츠가 화면을 완전히 채우도록 */
   }
   body {
     @apply bg-background text-foreground;

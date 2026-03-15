@@ -8,14 +8,14 @@ export default defineConfig({
     displayName: '캠퍼스커플',
     // # 포함 여섯 자리 헥스 코드 (예: #3182F6). 브릿지·버튼 등에 사용.
     primaryColor: '#3182F6',
-    // 앱인토스 콘솔에 업로드한 로고(600×600px 정사각형) URL과 동일하게 입력. 테스트 시 빈 문자열 가능.
+    // 앱인토스 콘솔에 업로드한 로고(600×600px 각진 정사각형, 배경 필수) URL과 동일하게 입력. 출시/검수 시 반드시 입력 필요. 테스트 시 빈 문자열 가능.
     icon: '',
   },
   web: {
     host: 'localhost',
-    port: 3000, // Next.js 기본 포트
+    port: 3000, // Next.js 기본 포트 (실기기 테스트 시: ipconfig getifaddr en0 등으로 IP 확인 후 host에 입력, commands.dev에 --host 추가)
     commands: {
-      dev: 'next dev --turbo', // 개발 모드
+      dev: 'next dev --turbo', // 개발 모드 (실기기: next dev --turbo --host)
       build: 'next build', // 빌드 (static export 시 out 폴더에 출력)
     },
   },
