@@ -85,6 +85,7 @@
     @apply border-border;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    overscroll-behavior: none;
   }
   *::-webkit-scrollbar {
     display: none;

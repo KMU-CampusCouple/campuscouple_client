@@ -59,8 +59,8 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <div className="px-6 pt-10 pb-3">
+    <div className="min-h-[100dvh] flex flex-col bg-background max-h-[100dvh]">
+      <div className="shrink-0 px-6 pt-10 pb-3">
         <div className="flex items-center gap-3 mb-4">
           {step > 0 && (
             <button onClick={() => setStep(step - 1)} className="text-foreground">
@@ -81,7 +81,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
         </div>
       </div>
 
-      <div className="flex-1 px-6 py-4">
+      <div className="flex-1 min-h-0 overflow-y-auto px-6 py-4">
         {/* Step 0: Photos - 세로4 가로3, bigger size */}
         {step === 0 && (
           <div className="flex flex-col gap-4 animate-in fade-in duration-300">
@@ -278,7 +278,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
         )}
       </div>
 
-      <div className="px-6 pb-8 pt-4">
+      <div className="shrink-0 px-6 pt-4 pb-[max(2rem,env(safe-area-inset-bottom,0px))]">
         <Button
           onClick={() => {
             if (step < steps.length - 1) setStep(step + 1)
