@@ -25,8 +25,7 @@
     --card-foreground: 0 0% 12%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 12%;
-    /* 앱인토스 브랜딩: granite.config.ts brand.primaryColor(#3182F6)와 동일하게 유지 */
-    --primary: 217 91% 58%;
+    --primary: 345 55% 68%;
     --primary-foreground: 0 0% 100%;
     --secondary: 345 15% 95%;
     --secondary-foreground: 0 0% 25%;
@@ -38,8 +37,8 @@
     --destructive-foreground: 0 0% 98%;
     --border: 345 12% 91%;
     --input: 345 12% 91%;
-    --ring: 217 91% 58%;
-    --chart-1: 217 91% 58%;
+    --ring: 345 55% 68%;
+    --chart-1: 345 55% 68%;
     --chart-2: 350 50% 78%;
     --chart-3: 15 60% 72%;
     --chart-4: 330 40% 60%;
@@ -47,12 +46,12 @@
     --radius: 0.75rem;
     --sidebar-background: 345 20% 97.5%;
     --sidebar-foreground: 0 0% 20%;
-    --sidebar-primary: 217 91% 58%;
+    --sidebar-primary: 345 55% 68%;
     --sidebar-primary-foreground: 0 0% 98%;
     --sidebar-accent: 345 15% 94%;
     --sidebar-accent-foreground: 0 0% 20%;
     --sidebar-border: 345 12% 91%;
-    --sidebar-ring: 217 91% 58%;
+    --sidebar-ring: 345 55% 68%;
   }
 }
 
