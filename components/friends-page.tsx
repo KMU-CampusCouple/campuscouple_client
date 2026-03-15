@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useCallback } from "react"
-import { Search, UserPlus, Check, X, Users, Trash2, Ban } from "lucide-react"
+import { TossIcon } from "@/components/toss-icon"
 import { Button } from "@/components/ui/button"
 import UserAvatar from "@/components/user-avatar"
 import { friends as initialFriends, allUsers, friendRequests as initialRequests } from "@/lib/store"
@@ -105,13 +105,13 @@ function SwipeableFriendRow({
           onClick={() => { handleReset(); onDelete() }}
           className="w-12 h-12 rounded-xl bg-muted text-foreground flex items-center justify-center shrink-0"
         >
-          <Trash2 className="w-4 h-4" />
+          <TossIcon name="icon-trash-mono" size={16} />
         </button>
         <button
           onClick={() => { handleReset(); onBlock() }}
           className="w-12 h-12 rounded-xl bg-destructive text-destructive-foreground flex items-center justify-center shrink-0"
         >
-          <Ban className="w-4 h-4" />
+          <TossIcon name="icon-ban-mono" size={16} />
         </button>
       </div>
       {/* Foreground row */}
@@ -211,7 +211,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
         {tab === "search" && (
           <>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <TossIcon name="icon-search-bold-mono" size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="이름이나 대학교로 검색해보세요"
@@ -224,12 +224,12 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
                 className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors"
                 aria-label="검색"
               >
-                <Search className="w-3.5 h-3.5 text-primary" />
+                <TossIcon name="icon-search-bold-mono" size={14} className="text-primary" />
               </button>
             </div>
             {searchQuery && searchResults.length === 0 && (
               <div className="flex-1 flex flex-col items-center justify-center py-16 text-muted-foreground">
-                <Users className="w-10 h-10 mb-2 opacity-30" />
+                <TossIcon name="icon-users-mono" size={40} className="mb-2 opacity-30" />
                 <p className="text-sm">{"검색 결과가 나오면 여기 표시돼요"}</p>
               </div>
             )}
@@ -252,7 +252,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
                     size="sm"
                     className="rounded-lg bg-primary text-primary-foreground h-8 px-3 gap-1"
                   >
-                    <UserPlus className="w-3.5 h-3.5" />
+                    <TossIcon name="icon-user-plus-mono" size={14} />
                     <span className="text-xs">{"추가"}</span>
                   </Button>
                 )}
@@ -265,7 +265,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
           <>
             {requests.length === 0 ? (
               <div className="flex-1 flex flex-col items-center justify-center py-16 text-muted-foreground">
-                <UserPlus className="w-10 h-10 mb-2 opacity-30" />
+                <TossIcon name="icon-user-plus-mono" size={40} className="mb-2 opacity-30" />
                 <p className="text-sm">{"신청이 오면 여기서 확인할 수 있어요"}</p>
               </div>
             ) : (
@@ -284,14 +284,14 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
                       className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center"
                       aria-label="수락"
                     >
-                      <Check className="w-4 h-4" />
+                      <TossIcon name="icon-check-mono" size={16} />
                     </button>
                     <button
                       onClick={() => handleReject(req.id)}
                       className="w-8 h-8 rounded-full bg-muted text-muted-foreground flex items-center justify-center"
                       aria-label="거절"
                     >
-                      <X className="w-4 h-4" />
+                      <TossIcon name="icon-close-mono" size={16} />
                     </button>
                   </div>
                 </div>
@@ -311,7 +311,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
             <>
               {friendsList.length > 0 && (
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <TossIcon name="icon-search-bold-mono" size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   <input
                     type="text"
                     placeholder="친구 검색해보세요"
@@ -323,12 +323,12 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
               )}
               {friendsList.length === 0 ? (
                 <div className="flex-1 flex flex-col items-center justify-center py-16 text-muted-foreground">
-                  <Users className="w-10 h-10 mb-2 opacity-30" />
+                  <TossIcon name="icon-users-mono" size={40} className="mb-2 opacity-30" />
                   <p className="text-sm">{"친구를 추가하면 여기서 볼 수 있어요"}</p>
                 </div>
               ) : filtered.length === 0 ? (
                 <div className="flex-1 flex flex-col items-center justify-center py-16 text-muted-foreground">
-                  <Search className="w-10 h-10 mb-2 opacity-30" />
+                  <TossIcon name="icon-search-bold-mono" size={40} className="mb-2 opacity-30" />
                   <p className="text-sm">{"검색 결과가 나오면 여기 표시돼요"}</p>
                 </div>
               ) : (

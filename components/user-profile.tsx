@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useCallback } from "react"
-import { ArrowLeft, GraduationCap, BookOpen, Hash, Sparkles, Lock, Dumbbell, Heart } from "lucide-react"
+import { TossIcon } from "@/components/toss-icon"
 import UserAvatar from "@/components/user-avatar"
 import type { UserProfile as UserProfileType } from "@/lib/store"
 
@@ -73,7 +73,7 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
       <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3">
         <div className="flex items-center gap-3">
           <button onClick={onBack} className="text-foreground">
-            <ArrowLeft className="w-5 h-5" />
+            <TossIcon name="icon-arrow-left-mono" size={20} />
           </button>
           <h1 className="text-lg font-bold flex-1 text-foreground">{"프로필"}</h1>
         </div>
@@ -141,7 +141,7 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
         <div className="bg-card rounded-2xl border border-border overflow-hidden">
           <div className="flex items-center gap-3 px-4 py-3.5 border-b border-border">
             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <GraduationCap className="w-4 h-4 text-primary" />
+              <TossIcon name="icon-graduation-mono" size={16} />
             </div>
             <div>
               <p className="text-[10px] text-muted-foreground">{"대학교"}</p>
@@ -151,7 +151,7 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
 
           <div className="flex items-center gap-3 px-4 py-3.5 border-b border-border">
             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <BookOpen className="w-4 h-4 text-primary" />
+              <TossIcon name="icon-book-mono" size={16} />
             </div>
             <div>
               <p className="text-[10px] text-muted-foreground">{"학과"}</p>
@@ -161,7 +161,7 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
 
           <div className="flex items-center gap-3 px-4 py-3.5 border-b border-border">
             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <Hash className="w-4 h-4 text-primary" />
+              <TossIcon name="icon-hash-mono" size={16} />
             </div>
             <div>
               <p className="text-[10px] text-muted-foreground">{"학번"}</p>
@@ -171,7 +171,7 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
 
           <div className="flex items-center gap-3 px-4 py-3.5 border-b border-border">
             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-primary" />
+              <TossIcon name="icon-sparkles-mono" size={16} />
             </div>
             <div>
               <p className="text-[10px] text-muted-foreground">{"성별"}</p>
@@ -183,7 +183,7 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
           {user.specs && (
             <div className="flex items-center gap-3 px-4 py-3.5 border-b border-border">
               <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                <Dumbbell className="w-4 h-4 text-primary" />
+                <TossIcon name="icon-dumbbell-mono" size={16} />
               </div>
               <div>
                 <p className="text-[10px] text-muted-foreground">{"신체/직업 스펙"}</p>
@@ -196,7 +196,7 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
           {user.idealType && (
             <div className="flex items-center gap-3 px-4 py-3.5 border-b border-border">
               <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                <Heart className="w-4 h-4 text-primary" />
+                <TossIcon name="icon-heart-mono" size={16} />
               </div>
               <div>
                 <p className="text-[10px] text-muted-foreground">{"이상형"}</p>
@@ -236,7 +236,7 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
                 </div>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted rounded-full px-2.5 py-1">
-                    <Lock className="w-3 h-3" />
+                    <TossIcon name="icon-lock-mono" size={12} />
                     <span>{"매칭 후 공개"}</span>
                   </div>
                 </div>
@@ -247,7 +247,7 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
 
         {!isMatched && (
           <div className="bg-muted rounded-xl p-4 flex items-start gap-3">
-            <Lock className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
+            <TossIcon name="icon-lock-mono" size={16} className="mt-0.5 shrink-0 opacity-70" />
             <p className="text-xs text-muted-foreground leading-relaxed">
               {"SNS 아이디는 미팅 매칭 이후에 열람할 수 있어요."}
             </p>

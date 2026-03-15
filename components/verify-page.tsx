@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { GraduationCap, Mail, CheckCircle2, ArrowRight, Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react"
+import { TossIcon } from "@/components/toss-icon"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -39,7 +40,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
         {step === "email" && (
           <div className="flex flex-col items-center gap-6 animate-in fade-in duration-500">
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-primary">
-              <GraduationCap className="w-8 h-8 text-primary-foreground" />
+              <TossIcon name="icon-graduation-mono" size={32} className="invert" />
             </div>
             <div className="text-center">
               <h1 className="text-xl font-bold mb-2">{"대학교 인증"}</h1>
@@ -49,7 +50,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
             </div>
             <div className="w-full flex flex-col gap-3">
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <TossIcon name="icon-mail-mono" size={16} className="absolute left-3 top-1/2 -translate-y-1/2 opacity-70" />
                 <Input
                   type="email"
                   placeholder="example@university.ac.kr"
@@ -75,7 +76,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
         {step === "code" && (
           <div className="flex flex-col items-center gap-6 animate-in fade-in duration-500">
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-primary">
-              <Mail className="w-8 h-8 text-primary-foreground" />
+              <TossIcon name="icon-mail-mono" size={32} className="invert" />
             </div>
             <div className="text-center">
               <h1 className="text-xl font-bold mb-2">{"인증 코드 입력"}</h1>
@@ -113,7 +114,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
         {step === "done" && (
           <div className="flex flex-col items-center gap-6 animate-in fade-in duration-500">
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-primary">
-              <CheckCircle2 className="w-8 h-8 text-primary-foreground" />
+              <TossIcon name="icon-check-circle-mono" size={32} className="invert" />
             </div>
             <div className="text-center">
               <h1 className="text-xl font-bold mb-2">{"인증 완료!"}</h1>
@@ -126,7 +127,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
               className="h-12 rounded-xl bg-primary text-primary-foreground font-semibold w-full gap-2"
             >
               {"프로필 설정하기"}
-              <ArrowRight className="w-4 h-4" />
+              <TossIcon name="icon-arrow-right-mono" size={16} className="invert" />
             </Button>
           </div>
         )}
