@@ -50,7 +50,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
             </div>
             <div className="w-full flex flex-col gap-3">
               <div className="relative">
-                <TossIcon name="icon-mail-mono" size={16} className="absolute left-3 top-1/2 -translate-y-1/2 opacity-70" />
+                <TossIcon name="icon-mail-mono" size={24} className="absolute left-3 top-1/2 -translate-y-1/2 opacity-70" />
                 <Input
                   type="email"
                   placeholder="example@university.ac.kr"
@@ -117,9 +117,9 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
               <TossIcon name="icon-check-circle-mono" size={32} className="invert" />
             </div>
             <div className="text-center">
-              <h1 className="text-xl font-bold mb-2">{"인증 완료!"}</h1>
+              <h1 className="text-xl font-bold mb-2">{"인증했어요!"}</h1>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                {"대학생 인증을 마쳤어요."}
+                {"대학생 인증을 끝냈어요."}
               </p>
             </div>
             <Button
@@ -127,7 +127,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
               className="h-12 rounded-xl bg-primary text-primary-foreground font-semibold w-full gap-2"
             >
               {"프로필 설정하기"}
-              <TossIcon name="icon-arrow-right-mono" size={16} className="invert" />
+              <TossIcon name="icon-arrow-right-mono" size={24} className="invert" />
             </Button>
           </div>
         )}

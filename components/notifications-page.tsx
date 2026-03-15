@@ -27,11 +27,11 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
   const getIcon = (type: Notification["type"]) => {
     switch (type) {
       case "friend_request":
-        return <TossIcon name="icon-user-plus-mono" size={16} />
+        return <TossIcon name="icon-user-plus-mono" size={24} />
       case "application":
-        return <TossIcon name="icon-message-mono" size={16} />
+        return <TossIcon name="icon-message-mono" size={24} />
       case "matched":
-        return <TossIcon name="icon-heart-mono" size={16} />
+        return <TossIcon name="icon-heart-mono" size={24} />
     }
   }
 
@@ -91,7 +91,7 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
             </div>
             {unread.length === 0 ? (
               <div className="flex items-center justify-center py-8">
-                <p className="text-sm text-muted-foreground">{"새로운 알림이 없어요"}</p>
+                <p className="text-sm text-muted-foreground">{"새 알림이 오면 여기서 확인할 수 있어요"}</p>
               </div>
             ) : unread.map((notif) => (
               <button
@@ -113,7 +113,7 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
                   <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed truncate">{notif.message}</p>
                   <p className="text-[10px] text-muted-foreground mt-1">{getTimeAgo(notif.createdAt)}</p>
                 </div>
-                <TossIcon name="icon-arrow-right-small-mono" size={16} className="opacity-70 shrink-0" />
+                <TossIcon name="icon-arrow-right-small-mono" size={24} className="opacity-70 shrink-0" />
               </button>
             ))}
 
@@ -138,7 +138,7 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
                   <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed truncate">{notif.message}</p>
                   <p className="text-[10px] text-muted-foreground mt-1">{getTimeAgo(notif.createdAt)}</p>
                 </div>
-                <TossIcon name="icon-arrow-right-small-mono" size={16} className="opacity-50 shrink-0" />
+                <TossIcon name="icon-arrow-right-small-mono" size={24} className="opacity-50 shrink-0" />
               </button>
             ))}
           </>

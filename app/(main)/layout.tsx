@@ -24,12 +24,12 @@ export default function MainLayout({
   const isUserProfile = pathname.startsWith("/user/")
 
   return (
-    <AppShell className="bg-background flex flex-col h-[100dvh] overflow-hidden max-h-screen">
+    <AppShell className="bg-background flex flex-col h-[100dvh] overflow-hidden max-h-screen pt-[var(--safe-area-inset-top)]">
       <div className="flex flex-col flex-1 min-h-0 overflow-y-auto">
         {children}
       </div>
       {!isUserProfile && (
-        <div className="shrink-0 w-full bg-background flex flex-col justify-end" style={{ height: "var(--bottom-nav-height)" }}>
+        <div className="shrink-0 w-full bg-background flex flex-col justify-end px-3 pb-1" style={{ height: "var(--bottom-nav-height)" }}>
           <BottomNav activeTab={activeTab} notificationCount={2} />
         </div>
       )}

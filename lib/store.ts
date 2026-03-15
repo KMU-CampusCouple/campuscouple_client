@@ -470,7 +470,7 @@ export const mockNotifications: Notification[] = [
   {
     id: "n3",
     type: "matched",
-    title: "매칭 완료!",
+    title: "매칭됐어요!",
     message: "'이태원 분위기 좋은 미팅'에서 매칭했어요",
     relatedId: "p3",
     read: true,

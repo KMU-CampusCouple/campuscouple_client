@@ -12,12 +12,14 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
 }
 
+// 앱인토스 해상도 가이드: 세로형 미니앱 논리 해상도 360×640~420×740 기준, 하나의 기준으로 설계 후 스케일링
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
   themeColor: '#e8a4b8',
+  viewportFit: 'cover', // 풀스크린 + Safe Area(노치/Dynamic Island) 영역 확보
 }
 
 export default function RootLayout({
