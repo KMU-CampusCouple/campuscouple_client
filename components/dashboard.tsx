@@ -31,7 +31,7 @@ function PostCard({
   return (
     <button
       onClick={onClick}
-      className={`w-full bg-card rounded-lg p-5 border border-border text-left transition-shadow hover:shadow-sm ${
+      className={`w-full bg-card rounded-2xl p-5 border border-border text-left transition-shadow hover:shadow-sm ${
         isClosed ? "opacity-50" : ""
       }`}
     >
@@ -139,14 +139,14 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
         className="flex flex-col flex-1 min-h-0"
         scrollContainerRef={scrollContainerRef}
       >
-      <MainHeader logoVisible={false} searchVisible={headerVisible}>
+      <MainHeader searchVisible={headerVisible}>
         <div className="relative w-full">
           <input
             type="text"
             placeholder="미팅을 검색해보세요"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-10 pl-3 pr-10 rounded-lg bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="w-full h-10 pl-3 pr-10 rounded-xl bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
           />
           <span
             className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center pointer-events-none text-muted-foreground"

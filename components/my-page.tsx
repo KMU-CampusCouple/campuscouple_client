@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef, useCallback } from "react"
+import heic2any from "heic2any"
 import { TossIcon, type TossIconName } from "@/components/toss-icon"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,6 +10,7 @@ import { currentUser, mockPosts, formatMeetingType } from "@/lib/store"
 import type { MeetingPost, UserProfile } from "@/lib/store"
 import { useRefresh } from "@/contexts/RefreshContext"
 import { PullToRefresh } from "@/components/layout/PullToRefresh"
+import { MainHeader } from "@/components/layout/MainHeader"
 
 type SubPage = "main" | "edit" | "my-posts" | "my-applications" | "my-matches"
 
@@ -75,18 +77,18 @@ function SwipeablePostItem({
   }, [offset])
 
   return (
-    <div className="relative overflow-hidden rounded-lg">
+    <div className="relative overflow-hidden rounded-xl">
       <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
         <button
           onClick={() => { setOffset(0); onDelete() }}
-          className="w-11 h-11 rounded-lg bg-destructive text-destructive-foreground flex items-center justify-center"
+          className="w-11 h-11 rounded-xl bg-destructive text-destructive-foreground flex items-center justify-center"
         >
           <TossIcon name="icon-trash-mono" size={24} background="white" />
         </button>
       </div>
       <div
         ref={rowRef}
-        className="relative bg-card border border-border rounded-lg flex items-center gap-3 p-3 select-none"
+        className="relative bg-card border border-border rounded-xl flex items-center gap-3 p-3 select-none"
         style={{ transform: `translateX(${offset}px)`, transition: isDraggingRef.current ? 'none' : 'transform 0.2s ease-out' }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -187,7 +189,6 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
     let blob: Blob = file
     if (isHeic(file)) {
       try {
-        const heic2any = (await import("heic2any")).default
         const converted = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.92 })
         blob = Array.isArray(converted) ? converted[0] : converted
       } catch {
@@ -239,7 +240,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
             <label className="text-sm font-medium mb-2 block">{"프로필 사진 (최대 6장)"}</label>
             <div className="grid grid-cols-2 gap-3">
               {editPhotos.map((url, i) => (
-                <div key={i} className="relative aspect-square rounded-lg overflow-hidden">
+                <div key={i} className="relative aspect-square rounded-2xl overflow-hidden">
                   <img src={url} alt="" className="w-full h-full object-cover" />
                   <button
                     onClick={() => handleRemovePhoto(i)}
@@ -258,7 +259,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
                 <button
                   type="button"
                   onClick={handleAddPhoto}
-                  className="aspect-square rounded-lg border-2 border-dashed border-border flex flex-col items-center justify-center gap-3 transition-colors hover:border-primary hover:bg-primary/5"
+                  className="aspect-square rounded-2xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-3 transition-colors hover:border-primary hover:bg-primary/5"
                 >
                   <TossIcon name="icon-plus-small-mono" size={24} background="white" className="opacity-70" />
                   <span className="text-xs text-muted-foreground">{"추가"}</span>
@@ -272,7 +273,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
             <Input
               value={editForm.name}
               onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-              className="h-12 rounded-lg bg-card"
+              className="h-12 rounded-xl bg-card"
             />
           </div>
           <div>
@@ -280,7 +281,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
             <Input
               value={editForm.department}
               onChange={(e) => setEditForm({ ...editForm, department: e.target.value })}
-              className="h-12 rounded-lg bg-card"
+              className="h-12 rounded-xl bg-card"
             />
           </div>
           <div>
@@ -316,7 +317,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
             <Input
               value={editForm.bio}
               onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
-              className="h-12 rounded-lg bg-card"
+              className="h-12 rounded-xl bg-card"
             />
           </div>
           <div>
@@ -325,7 +326,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
               value={editForm.specs}
               onChange={(e) => setEditForm({ ...editForm, specs: e.target.value })}
               placeholder="예) 180cm / 대학생"
-              className="h-12 rounded-lg bg-card"
+              className="h-12 rounded-xl bg-card"
             />
           </div>
           <div>
@@ -334,7 +335,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
               value={editForm.idealType}
               onChange={(e) => setEditForm({ ...editForm, idealType: e.target.value })}
               placeholder="예) 밝고 긍정적인 사람"
-              className="h-12 rounded-lg bg-card"
+              className="h-12 rounded-xl bg-card"
             />
           </div>
           <div>
@@ -355,7 +356,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
                     value={editForm[sns.key as keyof typeof editForm]}
                     onChange={(e) => setEditForm({ ...editForm, [sns.key]: e.target.value })}
                     placeholder={sns.placeholder}
-                    className="h-10 rounded-lg bg-card flex-1"
+                    className="h-10 rounded-xl bg-card flex-1"
                   />
                 </div>
               ))}
@@ -416,9 +417,10 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
   // Main
   return (
     <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
+      <MainHeader />
       <div className="flex flex-col min-h-full">
       <main className="flex-1 px-4 pt-6 pb-6 flex flex-col gap-4">
-        <div className="bg-card rounded-lg border border-border p-5">
+        <div className="bg-card rounded-2xl border border-border p-5">
           <div className="flex items-center gap-4">
             <UserAvatar user={currentUser} size="xl" />
             <div className="flex-1">
@@ -432,7 +434,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
           <Button
             onClick={() => setSubPage("edit")}
             variant="outline"
-            className="w-full mt-4 h-11 rounded-lg text-sm gap-2.5"
+            className="w-full mt-4 h-11 rounded-xl text-sm gap-2.5"
           >
             <TossIcon name="icon-setting-mono" size={24} background="white" className="opacity-80" />
             {"프로필 수정"}
@@ -449,7 +451,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
               <button
                 key={item.sub}
                 onClick={() => setSubPage(item.sub)}
-                className="flex items-center gap-4 bg-card rounded-lg border border-border p-4"
+                className="flex items-center gap-4 bg-card rounded-xl border border-border p-4"
               >
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                   <TossIcon name={item.icon} size={24} background="white" className="opacity-80" />
@@ -465,7 +467,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
         <div className="flex flex-col gap-2.5 mt-2">
           <button
             onClick={() => setShowAccountDialog("logout")}
-            className="flex items-center gap-4 bg-card rounded-lg border border-border p-4"
+            className="flex items-center gap-4 bg-card rounded-xl border border-border p-4"
           >
             <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center shrink-0">
               <TossIcon name="icon-logout-mono" size={24} background="white" className="opacity-80" />
@@ -474,7 +476,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
           </button>
           <button
             onClick={() => setShowAccountDialog("withdraw")}
-            className="flex items-center gap-4 bg-card rounded-lg border border-border p-4"
+            className="flex items-center gap-4 bg-card rounded-xl border border-border p-4"
           >
             <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center shrink-0">
               <TossIcon name="icon-ban-mono" size={24} background="white" className="opacity-80" />
@@ -488,7 +490,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
       {showAccountDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-foreground/30" onClick={() => setShowAccountDialog(null)} />
-          <div className="relative bg-card rounded-lg p-6 w-full max-w-xs shadow-xl">
+          <div className="relative bg-card rounded-2xl p-6 w-full max-w-xs shadow-xl">
             <h3 className="text-lg font-bold mb-2">
               {showAccountDialog === "logout" ? "로그아웃" : "회원 탈퇴"}
             </h3>
@@ -501,7 +503,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
               <Button
                 onClick={() => setShowAccountDialog(null)}
                 variant="outline"
-                className="flex-1 h-10 rounded-lg"
+                className="flex-1 h-10 rounded-xl"
               >
                 {"닫기"}
               </Button>
@@ -510,7 +512,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: 
                   setShowAccountDialog(null)
                   if (onLogout) onLogout()
                 }}
-                className={`flex-1 h-10 rounded-lg ${
+                className={`flex-1 h-10 rounded-xl ${
                   showAccountDialog === "withdraw"
                     ? "bg-destructive text-destructive-foreground"
                     : "bg-primary text-primary-foreground"

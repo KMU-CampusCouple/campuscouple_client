@@ -8,6 +8,8 @@ import type { Notification } from "@/lib/store"
 import { useRefresh } from "@/contexts/RefreshContext"
 import { useFriends } from "@/contexts/FriendsContext"
 import { PullToRefresh } from "@/components/layout/PullToRefresh"
+import { MainHeader } from "@/components/layout/MainHeader"
+
 interface NotificationsPageProps {
   onNavigate?: (notification: Notification) => void
 }
@@ -64,6 +66,7 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
 
   return (
     <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
+      <MainHeader />
       <div className="flex flex-col min-h-full">
       <main className="flex-1 px-4 pt-6 pb-6 flex flex-col gap-2">
         {notifications.length === 0 ? (
@@ -91,7 +94,7 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
             ) : unread.map((notif) => (
               <div
                 key={notif.id}
-                className="flex items-center gap-3.5 bg-card rounded-lg p-4 border border-border w-full shadow-sm"
+                className="flex items-center gap-3.5 bg-card rounded-xl p-4 border border-border w-full shadow-sm"
               >
                 <button
                   onClick={() => handleTapNotification(notif)}
@@ -149,7 +152,7 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
               <button
                 key={notif.id}
                 onClick={() => handleTapNotification(notif)}
-                className="flex items-center gap-3.5 rounded-lg p-4 border border-border/60 text-left w-full"
+                className="flex items-center gap-3.5 rounded-xl p-4 border border-border/60 text-left w-full"
                 style={{ background: "hsl(345, 25%, 95%)" }}
               >
                 <div

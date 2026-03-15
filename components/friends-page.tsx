@@ -99,18 +99,18 @@ function SwipeableFriendRow({
   }
 
   return (
-    <div className="relative overflow-hidden rounded-lg">
+    <div className="relative overflow-hidden rounded-xl">
       {/* Action buttons behind */}
       <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
         <button
           onClick={() => { handleReset(); onDelete() }}
-          className="w-12 h-12 rounded-lg bg-muted text-foreground flex items-center justify-center shrink-0"
+          className="w-12 h-12 rounded-xl bg-muted text-foreground flex items-center justify-center shrink-0"
         >
           <TossIcon name="icon-trash-mono" size={24} background="white" />
         </button>
         <button
           onClick={() => { handleReset(); onBlock() }}
-          className="w-12 h-12 rounded-lg bg-destructive text-destructive-foreground flex items-center justify-center shrink-0"
+          className="w-12 h-12 rounded-xl bg-destructive text-destructive-foreground flex items-center justify-center shrink-0"
         >
           <TossIcon name="icon-ban-mono" size={24} background="white" />
         </button>
@@ -118,7 +118,7 @@ function SwipeableFriendRow({
       {/* Foreground row */}
       <div
         ref={rowRef}
-        className="relative bg-card border border-border rounded-lg flex items-center gap-3.5 p-3.5 select-none"
+        className="relative bg-card border border-border rounded-xl flex items-center gap-3.5 p-3.5 select-none"
         style={{ transform: `translateX(${offset}px)`, transition: isDraggingRef.current ? 'none' : 'transform 0.2s ease-out' }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -188,8 +188,8 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
 
   return (
     <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
-      <MainHeader logoVisible={false}>
-        <div className="flex gap-1 bg-primary-foreground/20 rounded-lg p-1">
+      <MainHeader>
+        <div className="flex gap-1 bg-primary-foreground/20 rounded-xl p-1">
           {(["friends", "requests", "search"] as const).map((t) => (
             <button
               key={t}
@@ -214,7 +214,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
                 placeholder="이름이나 대학교로 검색해보세요"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-11 pl-11 pr-10 rounded-lg bg-muted border-0 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="w-full h-11 pl-11 pr-10 rounded-xl bg-muted border-0 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
                 autoFocus
               />
               <button
@@ -231,7 +231,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
               </div>
             )}
             {searchResults.map((user) => (
-              <div key={user.id} className="flex items-center gap-3.5 bg-card rounded-lg border border-border p-3.5">
+              <div key={user.id} className="flex items-center gap-3.5 bg-card rounded-xl border border-border p-3.5">
                 <button onClick={() => onViewProfile(user)}>
                   <UserAvatar user={user} size="md" />
                 </button>
@@ -267,7 +267,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
               </div>
             ) : (
               requests.map((req) => (
-                <div key={req.id} className="flex items-center gap-3.5 bg-card rounded-lg border border-border p-3.5">
+                <div key={req.id} className="flex items-center gap-3.5 bg-card rounded-xl border border-border p-3.5">
                   <button onClick={() => onViewProfile(req.from)}>
                     <UserAvatar user={req.from} size="md" />
                   </button>
@@ -312,7 +312,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
                     placeholder="친구 검색해보세요"
                     value={friendsSearchQuery}
                     onChange={(e) => setFriendsSearchQuery(e.target.value)}
-                    className="w-full h-11 pl-11 pr-4 rounded-lg bg-muted border-0 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className="w-full h-11 pl-11 pr-4 rounded-xl bg-muted border-0 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
                   />
                 </div>
               )}
@@ -346,7 +346,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
       {showConfirmDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-foreground/30" onClick={() => setShowConfirmDialog(null)} />
-          <div className="relative bg-card rounded-lg p-6 w-full max-w-xs shadow-xl">
+          <div className="relative bg-card rounded-2xl p-6 w-full max-w-xs shadow-xl">
             <h3 className="text-lg font-bold mb-2">
               {showConfirmDialog.type === "delete" ? "친구 삭제" : "사용자 차단"}
             </h3>
@@ -359,7 +359,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
               <Button
                 onClick={() => setShowConfirmDialog(null)}
                 variant="outline"
-                className="flex-1 h-10 rounded-lg"
+                className="flex-1 h-10 rounded-xl"
               >
                 {"닫기"}
               </Button>
@@ -371,7 +371,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
                     handleBlockUser(showConfirmDialog.userId)
                   }
                 }}
-                className={`flex-1 h-10 rounded-lg ${
+                className={`flex-1 h-10 rounded-xl ${
                   showConfirmDialog.type === "block"
                     ? "bg-destructive text-destructive-foreground"
                     : "bg-primary text-primary-foreground"
