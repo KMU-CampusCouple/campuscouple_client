@@ -3,6 +3,7 @@ import { Noto_Sans_KR } from 'next/font/google'
 
 import './globals.css'
 import { AppProviders } from '@/components/layout/AppProviders'
+import { AppShellWithNav } from '@/components/layout/AppShellWithNav'
 
 const notoSansKR = Noto_Sans_KR({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'] })
 
@@ -30,7 +31,9 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={`${notoSansKR.className} antialiased`}>
-        <AppProviders>{children}</AppProviders>
+        <AppProviders>
+        <AppShellWithNav>{children}</AppShellWithNav>
+      </AppProviders>
       </body>
     </html>
   )

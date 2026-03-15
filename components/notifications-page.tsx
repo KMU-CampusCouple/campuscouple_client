@@ -114,7 +114,9 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
                     <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed truncate">{notif.message}</p>
                     <p className="text-[10px] text-muted-foreground mt-1">{getTimeAgo(notif.createdAt)}</p>
                   </div>
-                  <TossIcon name="icon-arrow-right-small-mono" size={24} background="white" className="opacity-80 shrink-0" />
+                  {notif.type !== "friend_request" && (
+                    <TossIcon name="icon-arrow-right-small-mono" size={24} background="white" className="opacity-80 shrink-0" />
+                  )}
                 </button>
                 {notif.type === "friend_request" && notif.fromUser && (
                   <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
