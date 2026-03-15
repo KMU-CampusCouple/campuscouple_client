@@ -123,7 +123,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
             </div>
             <Button
               onClick={onComplete}
-              className="h-12 rounded-xl bg-primary text-primary-foreground font-semibold w-full gap-2 flex items-center justify-center"
+              className="h-12 rounded-xl bg-primary text-primary-foreground font-semibold w-full gap-1.5 flex items-center justify-center"
             >
               {"프로필 설정하기"}
               <TossIcon name="icon-arrow-right-mono" size={24} onPrimary />

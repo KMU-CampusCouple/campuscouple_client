@@ -57,8 +57,12 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file || !file.type.startsWith("image/")) return
-    const url = URL.createObjectURL(file)
-    setPhotos((prev) => [...prev, url])
+    const reader = new FileReader()
+    reader.onload = () => {
+      const dataUrl = reader.result as string
+      if (dataUrl) setPhotos((prev) => [...prev, dataUrl])
+    }
+    reader.readAsDataURL(file)
     e.target.value = ""
   }
 
@@ -104,8 +108,8 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
             <p className="text-sm text-muted-foreground">{"최대 6장까지 업로드 가능해요"}</p>
             <div className="grid grid-cols-2 gap-3">
               {photos.map((url, i) => (
-                <div key={i} className="relative aspect-square rounded-2xl overflow-hidden">
-                  <img src={url} alt="" className="w-full h-full object-cover" />
+                <div key={i} className="relative aspect-square rounded-2xl overflow-hidden bg-muted min-h-0">
+                  <img src={url} alt="" className="w-full h-full object-cover block" referrerPolicy="no-referrer" />
                   <button
                     onClick={() => handleRemovePhoto(i)}
                     className="absolute top-2 right-2 w-6 h-6 rounded-full bg-foreground/50 text-background flex items-center justify-center"
@@ -122,9 +126,9 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
               {photos.length < 6 && (
                 <button
                   onClick={handleAddPhoto}
-                  className="aspect-square rounded-2xl border-2 border-dashed border-primary/40 flex flex-col items-center justify-center gap-3 transition-colors hover:border-primary hover:bg-primary/10 bg-primary/5"
+                  className="aspect-square rounded-2xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-3 transition-colors hover:border-primary hover:bg-primary/5"
                 >
-                  <TossIcon name="icon-plus-small-mono" size={24} onPrimary className="opacity-90" />
+                  <TossIcon name="icon-plus-small-mono" size={24} background="white" className="opacity-70" />
                   <span className="text-xs text-muted-foreground">{"추가"}</span>
                 </button>
               )}

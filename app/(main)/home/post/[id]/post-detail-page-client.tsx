@@ -9,7 +9,7 @@ export default function PostDetailPageClient({ id }: { id: string }) {
   const router = useRouter()
   const post = getPostById(id)
 
-  const handleBack = () => router.push("/home")
+  const handleBack = () => router.back()
   const handleViewProfile = (user: UserProfile) => router.push(`/user/${user.id}`)
 
   return (

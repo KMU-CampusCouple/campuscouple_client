@@ -101,9 +101,18 @@
     padding: 0;
     overscroll-behavior: none;
     overscroll-behavior-y: none;
+    overscroll-behavior-x: none;
     min-height: 100dvh; /* 풀스크린: 콘텐츠가 화면을 완전히 채우도록 */
   }
   body {
     @apply bg-background text-foreground;
+  }
+  /* 모든 스크롤 영역에서 오버스크롤(바운스) 금지 */
+  [class*="overflow-y-auto"],
+  [class*="overflow-auto"],
+  .overflow-y-auto,
+  .overflow-auto {
+    overscroll-behavior: none;
+    overscroll-behavior-y: none;
   }
 }

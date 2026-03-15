@@ -8,7 +8,7 @@ export default function CreatePostRoute() {
 
   return (
     <CreatePost
-      onBack={() => router.push("/home")}
+      onBack={() => router.back()}
       onSubmit={() => router.push("/home")}
     />
   )
