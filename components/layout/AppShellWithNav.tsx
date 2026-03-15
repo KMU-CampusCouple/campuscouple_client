@@ -33,7 +33,7 @@ export function AppShellWithNav({ children }: { children: React.ReactNode }) {
       </div>
       {showNav && (
         <div
-          className="shrink-0 w-full min-w-0 flex flex-col justify-end pb-1"
+          className="shrink-0 w-full min-w-0 flex flex-col justify-end pb-1 bg-card"
           style={{ height: "var(--bottom-nav-height)" }}
         >
           <BottomNav activeTab={activeTab} notificationCount={2} />
