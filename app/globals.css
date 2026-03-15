@@ -8,13 +8,13 @@
   }
 }
 
-/* TossIcon: 배경에 따른 아이콘 색 (밝은 배경=회색, 어두운 배경=흰색) */
-[data-toss-icon-bg="light"] img {
+/* TossIcon: 배경이 흰색일 때만 회색, 나머지는 흰색 */
+[data-toss-icon-bg="default"] img {
+  filter: invert(1);
+}
+[data-toss-icon-bg="white"] img {
   filter: brightness(0) saturate(100%);
   opacity: 0.6;
-}
-[data-toss-icon-bg="dark"] img {
-  filter: invert(1);
 }
 
 @layer base {

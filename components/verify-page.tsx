@@ -40,7 +40,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
         {step === "email" && (
           <div className="flex flex-col items-center gap-6 animate-in fade-in duration-500">
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-primary">
-              <TossIcon name="icon-graduation-mono" size={32} background="dark" />
+              <TossIcon name="icon-graduation-mono" size={32} />
             </div>
             <div className="text-center">
               <h1 className="text-xl font-bold mb-2">{"대학교 인증"}</h1>
@@ -50,7 +50,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
             </div>
             <div className="w-full flex flex-col gap-3">
               <div className="relative">
-                <TossIcon name="icon-mail-mono" size={24} className="absolute left-3.5 top-1/2 -translate-y-1/2 opacity-70" />
+                <TossIcon name="icon-mail-mono" size={24} background="white" className="absolute left-3.5 top-1/2 -translate-y-1/2 opacity-70" />
                 <Input
                   type="email"
                   placeholder="example@university.ac.kr"
@@ -76,7 +76,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
         {step === "code" && (
           <div className="flex flex-col items-center gap-6 animate-in fade-in duration-500">
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-primary">
-              <TossIcon name="icon-mail-mono" size={32} background="dark" />
+              <TossIcon name="icon-mail-mono" size={32} />
             </div>
             <div className="text-center">
               <h1 className="text-xl font-bold mb-2">{"인증 코드 입력"}</h1>
@@ -114,7 +114,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
         {step === "done" && (
           <div className="flex flex-col items-center gap-6 animate-in fade-in duration-500">
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-primary">
-              <TossIcon name="icon-check-circle-mono" size={32} background="dark" />
+              <TossIcon name="icon-check-circle-mono" size={32} />
             </div>
             <div className="text-center">
               <h1 className="text-xl font-bold mb-2">{"인증했어요!"}</h1>
@@ -127,7 +127,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
               className="h-12 rounded-xl bg-primary text-primary-foreground font-semibold w-full gap-2"
             >
               {"프로필 설정하기"}
-              <TossIcon name="icon-arrow-right-mono" size={24} background="dark" />
+              <TossIcon name="icon-arrow-right-mono" size={24} />
             </Button>
           </div>
         )}

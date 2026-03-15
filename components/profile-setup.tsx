@@ -64,7 +64,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
         <div className="flex items-center gap-3 mb-4">
           {step > 0 && (
             <button onClick={() => setStep(step - 1)} className="text-foreground">
-              <TossIcon name="icon-arrow-left-mono" size={24} />
+              <TossIcon name="icon-arrow-left-mono" size={24} background="white" />
             </button>
           )}
           <div className="flex-1">
@@ -90,13 +90,13 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
               {photos.map((color, i) => (
                 <div key={i} className="relative aspect-square rounded-2xl overflow-hidden">
                   <div className="w-full h-full flex items-center justify-center" style={{ background: color }}>
-                    <TossIcon name="icon-camera-mono" size={32} className="opacity-50" />
+                    <TossIcon name="icon-camera-mono" size={32} background="white" className="opacity-50" />
                   </div>
                   <button
                     onClick={() => handleRemovePhoto(i)}
                     className="absolute top-2 right-2 w-6 h-6 rounded-full bg-foreground/50 text-background flex items-center justify-center"
                   >
-                    <TossIcon name="icon-close-mono" size={24} />
+                    <TossIcon name="icon-close-mono" size={24} background="white" />
                   </button>
                   {i === 0 && (
                     <span className="absolute bottom-2 left-2 text-[10px] bg-primary text-primary-foreground px-2 py-0.5 rounded-md font-medium">
@@ -110,7 +110,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                   onClick={handleAddPhoto}
                   className="aspect-square rounded-2xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-3 transition-colors hover:border-primary hover:bg-primary/5"
                 >
-                  <TossIcon name="icon-plus-small-mono" size={24} className="opacity-70" />
+                  <TossIcon name="icon-plus-small-mono" size={24} background="white" className="opacity-70" />
                   <span className="text-xs text-muted-foreground">{"추가"}</span>
                 </button>
               )}

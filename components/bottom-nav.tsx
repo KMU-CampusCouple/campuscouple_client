@@ -38,7 +38,7 @@ export default function BottomNav({ activeTab, notificationCount = 0 }: BottomNa
               aria-current={isActive ? "page" : undefined}
             >
               <div className={`relative flex items-center justify-center ${!isActive ? "opacity-60" : ""}`}>
-                <TossIcon name={tab.icon} size={24} className="w-6 h-6 object-contain" />
+                <TossIcon name={tab.icon} size={24} background="white" className="w-6 h-6 object-contain" />
                 {tab.id === "notifications" && notificationCount > 0 && (
                   <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-destructive text-destructive-foreground text-[11px] flex items-center justify-center font-medium">
                     {notificationCount}

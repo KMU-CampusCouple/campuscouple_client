@@ -9,6 +9,7 @@ import { currentUser, mockPosts, formatMeetingType } from "@/lib/store"
 import type { MeetingPost, UserProfile } from "@/lib/store"
 import { useRefresh } from "@/contexts/RefreshContext"
 import { PullToRefresh } from "@/components/layout/PullToRefresh"
+import { MainHeader } from "@/components/layout/MainHeader"
 
 type SubPage = "main" | "edit" | "my-posts" | "my-applications" | "my-matches"
 
@@ -79,7 +80,7 @@ function SwipeablePostItem({
           onClick={() => { setOffset(0); onDelete() }}
           className="w-11 h-11 rounded-xl bg-destructive text-destructive-foreground flex items-center justify-center"
         >
-          <TossIcon name="icon-trash-mono" size={24} />
+          <TossIcon name="icon-trash-mono" size={24} background="white" />
         </button>
       </div>
       <div
@@ -178,7 +179,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
         <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3">
           <div className="flex items-center gap-3">
             <button onClick={() => setSubPage("main")} className="text-foreground">
-              <TossIcon name="icon-arrow-left-mono" size={24} />
+              <TossIcon name="icon-arrow-left-mono" size={24} background="white" />
             </button>
             <h1 className="text-lg font-bold flex-1 text-foreground">{"프로필 수정"}</h1>
             <Button
@@ -198,13 +199,13 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
               {editPhotos.map((color, i) => (
                 <div key={i} className="relative aspect-square rounded-2xl overflow-hidden">
                   <div className="w-full h-full flex items-center justify-center" style={{ background: color }}>
-                    <TossIcon name="icon-camera-mono" size={32} className="opacity-50" />
+                    <TossIcon name="icon-camera-mono" size={32} background="white" className="opacity-50" />
                   </div>
                   <button
                     onClick={() => handleRemovePhoto(i)}
                     className="absolute top-2 right-2 w-6 h-6 rounded-full bg-foreground/50 text-background flex items-center justify-center"
                   >
-                    <TossIcon name="icon-close-mono" size={24} />
+                    <TossIcon name="icon-close-mono" size={24} background="white" />
                   </button>
                   {i === 0 && (
                     <span className="absolute bottom-2 left-2 text-[10px] bg-primary text-primary-foreground px-2 py-0.5 rounded-md font-medium">
@@ -218,7 +219,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
                   onClick={handleAddPhoto}
                   className="aspect-square rounded-2xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-3 transition-colors hover:border-primary hover:bg-primary/5"
                 >
-                  <TossIcon name="icon-plus-small-mono" size={24} className="opacity-70" />
+                  <TossIcon name="icon-plus-small-mono" size={24} background="white" className="opacity-70" />
                   <span className="text-xs text-muted-foreground">{"추가"}</span>
                 </button>
               )}
@@ -335,7 +336,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
         <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3 shrink-0">
           <div className="flex items-center gap-3">
             <button onClick={() => setSubPage("main")} className="text-foreground">
-              <TossIcon name="icon-arrow-left-mono" size={24} />
+              <TossIcon name="icon-arrow-left-mono" size={24} background="white" />
             </button>
             <h1 className="text-lg font-bold text-foreground">{title}</h1>
           </div>
@@ -344,7 +345,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
         <main className="flex-1 px-4 pt-6 py-2 pb-6 flex flex-col gap-3">
           {list.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
-              <TossIcon name="icon-document-mono" size={40} className="mb-2 opacity-30" />
+              <TossIcon name="icon-document-mono" size={40} background="white" className="mb-2 opacity-30" />
               <p className="text-sm">{"글을 쓰면 여기서 볼 수 있어요"}</p>
             </div>
           ) : (
@@ -366,14 +367,9 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
   // Main
   return (
     <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
-      <header className="sticky top-0 z-30 bg-primary/80 backdrop-blur-lg px-4 pt-5 pb-2 shrink-0">
-        <div className="flex items-center gap-2">
-          <img src="/logo.jpg" alt="캠퍼스커플" className="w-7 h-7 rounded-lg object-cover" />
-          <span className="text-sm font-bold text-primary-foreground">{"캠퍼스커플"}</span>
-        </div>
-      </header>
-      <div className="flex flex-col min-h-full gap-6">
-      <main className="flex-1 px-4 pt-4 pb-6 flex flex-col gap-4">
+      <MainHeader />
+      <div className="flex flex-col min-h-full">
+      <main className="flex-1 px-4 pt-6 pb-6 flex flex-col gap-4">
         <div className="bg-card rounded-2xl border border-border p-5">
           <div className="flex items-center gap-4">
             <UserAvatar user={currentUser} size="xl" />
@@ -390,7 +386,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
             variant="outline"
             className="w-full mt-4 h-11 rounded-xl text-sm gap-2.5"
           >
-            <TossIcon name="icon-setting-mono" size={24} />
+            <TossIcon name="icon-setting-mono" size={24} background="white" />
             {"프로필 수정"}
           </Button>
         </div>
@@ -408,11 +404,11 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
                 className="flex items-center gap-4 bg-card rounded-xl border border-border p-4"
               >
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                  <TossIcon name={item.icon} size={24} />
+                  <TossIcon name={item.icon} size={24} background="white" />
                 </div>
                 <span className="flex-1 text-sm font-medium text-left">{item.label}</span>
                 <span className="text-sm text-muted-foreground mr-1">{item.count}</span>
-                <TossIcon name="icon-arrow-right-small-mono" size={24} className="opacity-70 shrink-0" />
+                <TossIcon name="icon-arrow-right-small-mono" size={24} background="white" className="opacity-70 shrink-0" />
               </button>
             ))}
         </div>
@@ -424,7 +420,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
             className="flex items-center gap-4 bg-card rounded-xl border border-border p-4"
           >
             <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center shrink-0">
-              <TossIcon name="icon-logout-mono" size={24} className="opacity-70" />
+              <TossIcon name="icon-logout-mono" size={24} background="white" className="opacity-70" />
             </div>
             <span className="flex-1 text-sm font-medium text-left text-muted-foreground">{"로그아웃"}</span>
           </button>
@@ -433,7 +429,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
             className="flex items-center gap-4 bg-card rounded-xl border border-border p-4"
           >
             <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center shrink-0">
-              <TossIcon name="icon-ban-mono" size={24} className="opacity-90" />
+              <TossIcon name="icon-ban-mono" size={24} background="white" className="opacity-90" />
             </div>
             <span className="flex-1 text-sm font-medium text-left text-destructive">{"탈퇴하기"}</span>
           </button>
