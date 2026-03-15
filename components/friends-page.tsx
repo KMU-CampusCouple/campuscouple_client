@@ -1,14 +1,14 @@
 "use client"
 
-import { useState, useRef, useCallback, useEffect } from "react"
+import { useState, useRef, useCallback } from "react"
 import { TossIcon } from "@/components/toss-icon"
 import { Button } from "@/components/ui/button"
 import UserAvatar from "@/components/user-avatar"
 import { friends as initialFriends, allUsers, friendRequests as initialRequests } from "@/lib/store"
 import type { UserProfile, FriendRequest } from "@/lib/store"
 import { useRefresh } from "@/contexts/RefreshContext"
-import { useHeaderContent } from "@/contexts/HeaderContentContext"
 import { PullToRefresh } from "@/components/layout/PullToRefresh"
+import { MainHeader } from "@/components/layout/MainHeader"
 
 interface FriendsPageProps {
   onViewProfile: (user: UserProfile) => void
@@ -185,28 +185,24 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
   }
 
   const { triggerRefresh } = useRefresh()
-  const headerContent = useHeaderContent()
-
-  useEffect(() => {
-    headerContent?.setHeaderContent(
-      <div className="flex gap-1 bg-primary-foreground/20 rounded-lg p-1">
-        {(["friends", "requests", "search"] as const).map((t) => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              tab === t ? "bg-primary-foreground text-primary shadow-sm" : "text-primary-foreground/70"
-            }`}
-          >
-            {t === "friends" ? `내 친구 (${friendsList.length})` : t === "requests" ? `신청 (${requests.length})` : "검색"}
-          </button>
-        ))}
-      </div>
-    )
-  }, [tab, friendsList.length, requests.length, headerContent])
 
   return (
     <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
+      <MainHeader>
+        <div className="flex gap-1 bg-primary-foreground/20 rounded-lg p-1">
+          {(["friends", "requests", "search"] as const).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                tab === t ? "bg-primary-foreground text-primary shadow-sm" : "text-primary-foreground/70"
+              }`}
+            >
+              {t === "friends" ? `내 친구 (${friendsList.length})` : t === "requests" ? `신청 (${requests.length})` : "검색"}
+            </button>
+          ))}
+        </div>
+      </MainHeader>
       <div className="flex flex-col min-h-full">
         <main className="flex-1 px-4 pt-6 pb-6 flex flex-col gap-3">
         {tab === "search" && (

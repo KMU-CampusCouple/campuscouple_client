@@ -6,9 +6,8 @@ import type { MeetingPost, UserProfile } from "@/lib/store"
 import { mockPosts } from "@/lib/store"
 import { useState, useRef, useEffect } from "react"
 import { useRefresh } from "@/contexts/RefreshContext"
-import { useHeaderContent } from "@/contexts/HeaderContentContext"
-import { useScrollContainer } from "@/contexts/ScrollContainerContext"
 import { PullToRefresh } from "@/components/layout/PullToRefresh"
+import { MainHeader } from "@/components/layout/MainHeader"
 
 interface DashboardProps {
   onCreatePost: () => void
@@ -100,45 +99,25 @@ const SCROLL_THRESHOLD = 60
 
 export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: DashboardProps) {
   const [searchQuery, setSearchQuery] = useState("")
+  const [headerVisible, setHeaderVisible] = useState(true)
   const lastScrollY = useRef(0)
-  const { scrollContainerRef } = useScrollContainer() ?? { scrollContainerRef: { current: null } }
-  const headerContent = useHeaderContent()
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    headerContent?.setHeaderContent(
-      <div className="relative w-full">
-        <input
-          type="text"
-          placeholder="미팅을 검색해보세요"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full h-10 pl-3 pr-10 rounded-lg bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
-        />
-        <span
-          className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center pointer-events-none text-muted-foreground"
-          aria-hidden
-        >
-          <TossIcon name="icon-search-bold-mono" size={24} background="white" />
-        </span>
-      </div>
-    )
-  }, [searchQuery, headerContent])
-
-  useEffect(() => {
-    const el = scrollContainerRef?.current
-    if (!el || !headerContent) return
+    const el = scrollContainerRef.current
+    if (!el) return
     const handleScroll = () => {
       const y = el.scrollTop
       if (y > lastScrollY.current && y > SCROLL_THRESHOLD) {
-        headerContent.setSearchVisible(false)
+        setHeaderVisible(false)
       } else if (y <= SCROLL_THRESHOLD || y < lastScrollY.current) {
-        headerContent.setSearchVisible(true)
+        setHeaderVisible(true)
       }
       lastScrollY.current = y
     }
     el.addEventListener("scroll", handleScroll, { passive: true })
     return () => el.removeEventListener("scroll", handleScroll)
-  }, [headerContent])
+  }, [])
 
   const filteredPosts = mockPosts
     .filter((post) => {
@@ -155,11 +134,28 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
   return (
     <>
     <PullToRefresh
-      onRefresh={triggerRefresh}
-      enabled
-      className="flex flex-col flex-1 min-h-0"
-      scrollContainerRef={scrollContainerRef ?? { current: null }}
-    >
+        onRefresh={triggerRefresh}
+        enabled
+        className="flex flex-col flex-1 min-h-0"
+        scrollContainerRef={scrollContainerRef}
+      >
+      <MainHeader searchVisible={headerVisible}>
+        <div className="relative w-full">
+          <input
+            type="text"
+            placeholder="미팅을 검색해보세요"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full h-10 pl-3 pr-10 rounded-lg bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+          />
+          <span
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center pointer-events-none text-muted-foreground"
+            aria-hidden
+          >
+            <TossIcon name="icon-search-bold-mono" size={24} background="white" />
+          </span>
+        </div>
+      </MainHeader>
       <div className="flex flex-col min-h-full">
       <main className="flex-1 px-4 pt-6 pb-6 flex flex-col gap-3">
         {filteredPosts.length === 0 ? (
