@@ -4,7 +4,7 @@
  * 토스 그래픽 리소스(아이콘) 사용 컴포넌트.
  * @see https://developers-apps-in-toss.toss.im/design/resources.md
  * - 아이콘은 같은 오리진(public/icons/svg)에서 로드해 403/ORB 방지.
- *   실제 토스 아이콘은 `pnpm run icons:download` 로 내려받을 수 있음.
+ *   toss_icons.json URL로 `pnpm run icons:download [경로]` 실행해 PNG 내려받음.
  * - 최소 24px 규칙 준수(토스 가이드). 24~40px만 사용. 아이콘 임의 수정 금지.
  */
 const TOSS_ICON_BASE = "/icons/svg"
@@ -76,7 +76,8 @@ export function TossIcon({
   "aria-hidden": ariaHidden = true,
 }: TossIconProps) {
   const bg: "default" | "white" = background === "white" ? "white" : "default"
-  const src = `${TOSS_ICON_BASE}/${name}.svg`
+  const pngSrc = `${TOSS_ICON_BASE}/${name}.png`
+  const svgSrc = `${TOSS_ICON_BASE}/${name}.svg`
   const clampedSize = Math.min(MAX_ICON_SIZE, Math.max(MIN_ICON_SIZE, size))
   return (
     <span
@@ -84,16 +85,20 @@ export function TossIcon({
       data-toss-icon-bg={bg}
       data-toss-icon-on-primary={onPrimary ? "true" : undefined}
       data-toss-icon-active={active ? "true" : "false"}
-      style={active ? ({ "--icon-mask": `url(${src})` } as React.CSSProperties) : undefined}
+      style={active ? ({ "--icon-mask": `url(${pngSrc})` } as React.CSSProperties) : undefined}
       aria-hidden={ariaHidden}
     >
       <img
-        src={src}
+        src={pngSrc}
         alt=""
         width={clampedSize}
         height={clampedSize}
         loading="lazy"
         decoding="async"
+        onError={(e) => {
+          const el = e.currentTarget
+          if (el.src.endsWith(".png")) el.src = svgSrc
+        }}
       />
     </span>
   )
