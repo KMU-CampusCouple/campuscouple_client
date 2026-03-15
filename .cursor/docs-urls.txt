@@ -1,0 +1,5 @@
+# Cursor Docs에 추가할 URL (설정 → Indexing & Docs → Docs → + Add Doc)
+# 아래 한 줄씩 복사해서 추가하세요.
+
+https://developers-apps-in-toss.toss.im/llms.txt
+https://tossmini-docs.toss.im/tds-mobile/llms-full.txt

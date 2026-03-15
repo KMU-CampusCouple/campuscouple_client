@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { Home, Users, Bell, User } from "lucide-react"
 
+// 앱인토스 브랜딩 가이드: 탭바는 토스 제공 플로팅 형태 유지, 탭 최소 2개·최대 5개
 type Tab = "home" | "friends" | "notifications" | "mypage"
 
 const TAB_CONFIG: { id: Tab; label: string; href: string; icon: typeof Home }[] = [
@@ -18,14 +19,13 @@ interface BottomNavProps {
 }
 
 export default function BottomNav({ activeTab, notificationCount = 0 }: BottomNavProps) {
-
   return (
-    <nav
-      className="w-full h-full min-h-[88px] bg-card border-t border-border flex flex-col justify-end"
-      role="navigation"
-      aria-label="메인 네비게이션"
-    >
-      <div className="flex items-center justify-around w-full min-h-[88px] pt-4 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+    <div className="w-full px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] flex justify-center">
+      <nav
+        className="w-full max-w-[400px] min-h-[64px] bg-card rounded-2xl shadow-lg border border-border flex items-center justify-around"
+        role="navigation"
+        aria-label="메인 네비게이션"
+      >
         {TAB_CONFIG.map((tab) => {
           const Icon = tab.icon
           const isActive = activeTab === tab.id
@@ -33,7 +33,7 @@ export default function BottomNav({ activeTab, notificationCount = 0 }: BottomNa
             <Link
               key={tab.id}
               href={tab.href}
-              className={`relative flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl transition-colors ${
+              className={`relative flex flex-col items-center gap-0.5 px-3 py-2.5 rounded-xl transition-colors ${
                 isActive ? "text-primary" : "text-muted-foreground"
               }`}
               aria-label={tab.label}
@@ -53,7 +53,7 @@ export default function BottomNav({ activeTab, notificationCount = 0 }: BottomNa
             </Link>
           )
         })}
-      </div>
-    </nav>
+      </nav>
+    </div>
   )
 }

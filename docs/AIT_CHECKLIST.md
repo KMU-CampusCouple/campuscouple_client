@@ -24,6 +24,7 @@
 
 ### 2. 아이콘(선택)
 - `granite.config.ts`의 **brand.icon**이 `''`이면 테스트는 가능하지만, 출시/검수 시 콘솔에 업로드한 앱 아이콘 URL을 넣어야 할 수 있습니다.
+- 로고는 600×600px 정사각형, 배경 필수 등 기준은 [AIT_BRANDING_GUIDE.md](./AIT_BRANDING_GUIDE.md) 참고.
 
 ### 3. 동적 라우트 추가 시
 - **새로 `[id]` 같은 동적 세그먼트**를 만들면, 해당 페이지에 **generateStaticParams**를 꼭 추가해야 합니다.
