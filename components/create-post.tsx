@@ -133,9 +133,9 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
               <div key={f.id} className="shrink-0 snap-start relative flex flex-col items-center gap-2 p-3 rounded-xl bg-muted w-[88px] min-w-[88px]">
                 <button
                   onClick={() => toggleFriend(f)}
-                  className="absolute -top-2 -right-2.5 w-7 h-7 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center z-10"
+                  className="absolute -top-2 -right-2.5 w-6 h-6 rounded-full bg-foreground/50 text-background flex items-center justify-center z-10"
                 >
-                  <TossIcon name="icon-chip-x-mono" size={24} background="white" />
+                  <TossIcon name="icon-chip-x-mono" size={24} onPrimary />
                 </button>
                 <UserAvatar user={f} size="lg" />
                 <span className="text-xs font-medium truncate w-full text-center">{f.name}</span>

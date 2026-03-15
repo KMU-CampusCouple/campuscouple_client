@@ -4,9 +4,9 @@ import { useEffect, useState, useRef } from "react"
 
 const taglines = [
   "캠퍼스에서 안전하게 만나요",
-  "오늘, 새로운 설렘을 만나요",
-  "다시 설렐 시간을 보내요",
-  "캠퍼스에서 너를 만나요",
+  "오늘, 새로운 인연을 만나보세요",
+  "설레는 만남을 시작해요",
+  "캠퍼스에서 특별한 인연을 찾아보세요",
 ]
 
 export default function SplashScreen({ onComplete }: { onComplete: () => void }) {
