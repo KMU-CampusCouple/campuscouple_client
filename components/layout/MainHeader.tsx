@@ -24,7 +24,7 @@ export function MainHeader({ children, searchVisible = true, logoVisible = true 
   if (onlyChildren) {
     return (
       <header
-        className={cn("sticky top-0 z-30 bg-primary/80 backdrop-blur-lg shrink-0 rounded-b-md", "px-4 pt-2 pb-3.5")}
+        className={cn("sticky top-0 z-30 bg-primary/80 backdrop-blur-lg shrink-0", "px-4 pt-2 pb-3.5")}
         role="banner"
       >
         <div
@@ -41,7 +41,11 @@ export function MainHeader({ children, searchVisible = true, logoVisible = true 
 
   return (
     <header
-      className={cn("sticky top-0 z-30 bg-primary/80 backdrop-blur-lg shrink-0 rounded-b-md", paddingClass)}
+      className={cn(
+        "sticky top-0 z-30 bg-primary/80 backdrop-blur-lg shrink-0",
+        children == null && "rounded-b-md",
+        paddingClass
+      )}
       role="banner"
     >
       <div className={cn("flex items-center gap-2", children != null && LOGO_ROW_GAP)}>
