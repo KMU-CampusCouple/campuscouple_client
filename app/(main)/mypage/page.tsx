@@ -27,6 +27,7 @@ export default function MypageRoute() {
       onViewPost={handleViewPost}
       onViewProfile={handleViewProfile}
       onLogout={handleLogout}
+      onBackToMypage={() => router.push("/mypage")}
     />
   )
 }

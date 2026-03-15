@@ -249,7 +249,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
                     size="sm"
                     className="rounded-lg bg-primary text-primary-foreground h-8 px-3 gap-1"
                   >
-                    <TossIcon name="icon-user-plus-mono" size={24} background="white" />
+                    <TossIcon name="icon-user-plus-mono" size={24} onPrimary />
                     <span className="text-xs">{"추가"}</span>
                   </Button>
                 )}
@@ -281,11 +281,11 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
                       className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shrink-0"
                       aria-label="수락"
                     >
-                      <TossIcon name="icon-check-mono" size={24} background="white" />
+                      <TossIcon name="icon-check-mono" size={24} onPrimary />
                     </button>
                     <button
                       onClick={() => handleReject(req.id)}
-                      className="w-10 h-10 rounded-full bg-muted text-muted-foreground flex items-center justify-center shrink-0"
+                      className="w-10 h-10 rounded-full bg-muted text-foreground flex items-center justify-center shrink-0"
                       aria-label="거절"
                     >
                       <TossIcon name="icon-close-mono" size={24} background="white" />

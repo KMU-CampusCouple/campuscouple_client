@@ -71,11 +71,11 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
   return (
     <div className="flex flex-col flex-1 min-h-0 overflow-y-auto overscroll-contain pb-6">
       <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3">
-        <div className="flex items-center gap-3">
-          <button onClick={onBack} className="text-foreground">
+        <div className="flex items-center gap-3 min-h-[2rem]">
+          <button onClick={onBack} className="text-foreground flex items-center justify-center p-1 -m-1">
             <TossIcon name="icon-arrow-left-mono" size={24} background="white" />
           </button>
-          <h1 className="text-lg font-bold flex-1 text-foreground">{"프로필"}</h1>
+          <h1 className="text-lg font-bold flex-1 text-foreground leading-tight">{"프로필"}</h1>
         </div>
       </header>
 
@@ -141,7 +141,7 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
         <div className="bg-card rounded-2xl border border-border overflow-hidden">
           <div className="flex items-center gap-3.5 px-4 py-4 border-b border-border">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-              <TossIcon name="icon-graduation-mono" size={24} background="white" />
+              <TossIcon name="icon-graduation-mono" size={24} background="white" className="opacity-80" />
             </div>
             <div className="min-w-0">
               <p className="text-xs text-muted-foreground">{"대학교"}</p>
@@ -151,7 +151,7 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
 
           <div className="flex items-center gap-3.5 px-4 py-4 border-b border-border">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-              <TossIcon name="icon-book-mono" size={24} background="white" />
+              <TossIcon name="icon-book-mono" size={24} background="white" className="opacity-80" />
             </div>
             <div className="min-w-0">
               <p className="text-xs text-muted-foreground">{"학과"}</p>
@@ -161,7 +161,7 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
 
           <div className="flex items-center gap-3.5 px-4 py-4 border-b border-border">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-              <TossIcon name="icon-hash-mono" size={24} background="white" />
+              <TossIcon name="icon-hash-mono" size={24} background="white" className="opacity-80" />
             </div>
             <div className="min-w-0">
               <p className="text-xs text-muted-foreground">{"학번"}</p>
@@ -171,7 +171,7 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
 
           <div className="flex items-center gap-3.5 px-4 py-4 border-b border-border">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-              <TossIcon name="icon-sparkles-mono" size={24} background="white" />
+              <TossIcon name="icon-sparkles-mono" size={24} background="white" className="opacity-80" />
             </div>
             <div className="min-w-0">
               <p className="text-xs text-muted-foreground">{"성별"}</p>
@@ -183,7 +183,7 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
           {user.specs && (
             <div className="flex items-center gap-3.5 px-4 py-4 border-b border-border">
               <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                <TossIcon name="icon-dumbbell-mono" size={24} background="white" />
+                <TossIcon name="icon-dumbbell-mono" size={24} background="white" className="opacity-80" />
               </div>
               <div className="min-w-0">
                 <p className="text-xs text-muted-foreground">{"신체/직업 스펙"}</p>
@@ -196,7 +196,7 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
           {user.idealType && (
             <div className="flex items-center gap-3.5 px-4 py-4 border-b border-border">
               <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                <TossIcon name="icon-heart-mono" size={24} background="white" />
+                <TossIcon name="icon-heart-mono" size={24} background="white" className="opacity-80" />
               </div>
               <div className="min-w-0">
                 <p className="text-xs text-muted-foreground">{"이상형"}</p>
@@ -236,7 +236,7 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
                 </div>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="flex items-center gap-1.5 text-xs text-muted-foreground bg-muted rounded-full px-2.5 py-1">
-                    <TossIcon name="icon-lock-mono" size={24} background="white" />
+                    <TossIcon name="icon-lock-mono" size={24} background="white" className="opacity-80" />
                     <span>{"매칭 후 공개"}</span>
                   </div>
                 </div>
@@ -247,7 +247,7 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
 
         {!isMatched && (
           <div className="bg-muted rounded-xl p-4 flex items-start gap-3.5">
-            <TossIcon name="icon-lock-mono" size={24} background="white" className="mt-0.5 shrink-0 opacity-70" />
+            <TossIcon name="icon-lock-mono" size={24} background="white" className="mt-0.5 shrink-0 opacity-80" />
             <p className="text-sm text-muted-foreground leading-relaxed">
               {"SNS 아이디는 미팅 매칭 이후에 열람할 수 있어요."}
             </p>

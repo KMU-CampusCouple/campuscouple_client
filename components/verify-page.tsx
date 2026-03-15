@@ -39,7 +39,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
         {step === "email" && (
           <div className="flex flex-col items-center gap-6 animate-in fade-in duration-500">
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-primary">
-              <TossIcon name="icon-graduation-mono" size={32} />
+              <TossIcon name="icon-graduation-mono" size={32} onPrimary />
             </div>
             <div className="text-center">
               <h1 className="text-xl font-bold mb-2">{"대학교 인증"}</h1>
@@ -49,7 +49,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
             </div>
             <div className="w-full flex flex-col gap-3">
               <div className="relative">
-                <TossIcon name="icon-mail-mono" size={24} background="white" className="absolute left-3.5 top-1/2 -translate-y-1/2 opacity-70" />
+                <TossIcon name="icon-mail-mono" size={24} background="white" className="absolute left-3 top-1/2 -translate-y-1/2 scale-90 opacity-70" />
                 <Input
                   type="email"
                   placeholder="example@university.ac.kr"
@@ -63,7 +63,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
                 disabled={!email.includes("@") || loading}
                 className="h-12 rounded-xl bg-primary text-primary-foreground font-semibold"
               >
-                {loading ? <span className="animate-spin inline-flex"><TossIcon name="icon-loader-mono" size={24} /></span> : "인증 코드 보내기"}
+                {loading ? <span className="animate-spin inline-flex"><TossIcon name="icon-loader-mono" size={24} onPrimary /></span> : "인증 코드 보내기"}
               </Button>
             </div>
             <p className="text-xs text-muted-foreground text-center">
@@ -75,7 +75,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
         {step === "code" && (
           <div className="flex flex-col items-center gap-6 animate-in fade-in duration-500">
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-primary">
-              <TossIcon name="icon-mail-mono" size={32} />
+              <TossIcon name="icon-mail-mono" size={32} onPrimary />
             </div>
             <div className="text-center">
               <h1 className="text-xl font-bold mb-2">{"인증 코드 입력"}</h1>
@@ -98,7 +98,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
                 disabled={code.length < 4 || loading}
                 className="h-12 rounded-xl bg-primary text-primary-foreground font-semibold"
               >
-                {loading ? <span className="animate-spin inline-flex"><TossIcon name="icon-loader-mono" size={24} /></span> : "인증하기"}
+                {loading ? <span className="animate-spin inline-flex"><TossIcon name="icon-loader-mono" size={24} onPrimary /></span> : "인증하기"}
               </Button>
             </div>
             <button
@@ -113,7 +113,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
         {step === "done" && (
           <div className="flex flex-col items-center gap-6 animate-in fade-in duration-500">
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-primary">
-              <TossIcon name="icon-check-circle-mono" size={32} />
+              <TossIcon name="icon-check-circle-mono" size={32} onPrimary />
             </div>
             <div className="text-center">
               <h1 className="text-xl font-bold mb-2">{"인증했어요!"}</h1>
@@ -123,10 +123,10 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
             </div>
             <Button
               onClick={onComplete}
-              className="h-12 rounded-xl bg-primary text-primary-foreground font-semibold w-full gap-2"
+              className="h-12 rounded-xl bg-primary text-primary-foreground font-semibold w-full gap-2 flex items-center justify-center"
             >
               {"프로필 설정하기"}
-              <TossIcon name="icon-arrow-right-mono" size={24} />
+              <TossIcon name="icon-arrow-right-mono" size={24} onPrimary />
             </Button>
           </div>
         )}

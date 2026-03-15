@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "granite dev",
     "dev:next": "next dev --turbo",
+    "icons:download": "node scripts/download-toss-icons.mjs",
     "build": "next build",
     "build:granite": "granite build",
     "start": "next start",
