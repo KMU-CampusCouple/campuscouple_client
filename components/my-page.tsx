@@ -17,8 +17,8 @@ interface MyPageProps {
   onViewPost: (post: MeetingPost) => void
   onViewProfile: (user: UserProfile) => void
   onLogout?: () => void
-  /** 내가 쓴 글 / 내가 신청한 글 / 매칭된 글에서 뒤로가기 시 마이페이지로 이동 */
-  onBackToMypage?: () => void
+  /** 내가 쓴 글 / 내가 신청한 글 / 매칭된 글에서 뒤로가기 시 호출 (예: router.back()) */
+  onBack?: () => void
 }
 
 function SwipeablePostItem({
@@ -130,7 +130,7 @@ const MBTI_TYPES = [
   "미공개",
 ]
 
-export default function MyPage({ onViewPost, onViewProfile, onLogout, onBackToMypage }: MyPageProps) {
+export default function MyPage({ onViewPost, onViewProfile, onLogout, onBack }: MyPageProps) {
   const { triggerRefresh } = useRefresh()
   const [subPage, setSubPage] = useState<SubPage>("main")
   const [editPhotos, setEditPhotos] = useState<string[]>([])
@@ -174,8 +174,12 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBackToMy
   const handleEditFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file || !file.type.startsWith("image/")) return
-    const url = URL.createObjectURL(file)
-    setEditPhotos((prev) => [...prev, url])
+    const reader = new FileReader()
+    reader.onload = () => {
+      const dataUrl = reader.result as string
+      if (dataUrl) setEditPhotos((prev) => [...prev, dataUrl])
+    }
+    reader.readAsDataURL(file)
     e.target.value = ""
   }
 
@@ -234,9 +238,9 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBackToMy
                 <button
                   type="button"
                   onClick={handleAddPhoto}
-                  className="aspect-square rounded-2xl border-2 border-dashed border-primary/40 flex flex-col items-center justify-center gap-3 transition-colors hover:border-primary hover:bg-primary/10 bg-primary/5"
+                  className="aspect-square rounded-2xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-3 transition-colors hover:border-primary hover:bg-primary/5"
                 >
-                  <TossIcon name="icon-plus-small-mono" size={24} onPrimary className="opacity-90" />
+                  <TossIcon name="icon-plus-small-mono" size={24} background="white" className="opacity-70" />
                   <span className="text-xs text-muted-foreground">{"추가"}</span>
                 </button>
               )}
@@ -349,8 +353,8 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout, onBackToMy
       subPage === "my-posts" ? myPosts : subPage === "my-applications" ? myApplications : myMatches
 
     const handleBack = () => {
-      if (onBackToMypage) {
-        onBackToMypage()
+      if (onBack) {
+        onBack()
       } else {
         setSubPage("main")
       }

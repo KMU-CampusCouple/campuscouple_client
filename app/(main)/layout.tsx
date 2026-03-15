@@ -25,7 +25,7 @@ export default function MainLayout({
 
   return (
     <AppShell className="bg-background flex flex-col h-[100dvh] overflow-hidden max-h-screen pt-[var(--safe-area-inset-top)]">
-      <div className="flex flex-col flex-1 min-h-0 overflow-y-auto">
+      <div className="flex flex-col flex-1 min-h-0 overflow-y-auto overscroll-none">
         {children}
       </div>
       {!isUserProfile && (

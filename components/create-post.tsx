@@ -120,7 +120,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
           </div>
 
           <div
-            className="flex gap-3 overflow-x-auto py-2 pl-1 pr-4 snap-x snap-mandatory"
+            className="flex gap-3 overflow-x-auto py-2 pl-4 pr-4 snap-x snap-mandatory"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {/* Me */}
@@ -133,9 +133,9 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
               <div key={f.id} className="shrink-0 snap-start relative flex flex-col items-center gap-1.5 p-2.5 rounded-xl bg-muted w-[72px] min-w-[72px]">
                 <button
                   onClick={() => toggleFriend(f)}
-                  className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center z-10"
+                  className="absolute -top-0.5 -right-0.5 text-[10px] font-medium text-destructive hover:underline z-10"
                 >
-                  <TossIcon name="icon-close-mono" size={24} onPrimary />
+                  {"삭제"}
                 </button>
                 <UserAvatar user={f} size="md" />
                 <span className="text-[11px] font-medium truncate w-full text-center">{f.name}</span>
@@ -303,7 +303,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                 className="w-full h-11 pl-11 pr-4 rounded-xl bg-muted border-0 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
             </div>
-            <div className="flex flex-col gap-2 min-h-0 flex-1 overflow-y-auto">
+            <div className="flex flex-col gap-2 min-h-0 flex-1 overflow-y-auto overflow-x-visible py-2 px-1">
               {filteredFriends.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
                   <TossIcon name="icon-search-bold-mono" size={32} background="white" className="mb-2 opacity-30" />
