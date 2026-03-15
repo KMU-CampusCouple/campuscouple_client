@@ -1,6 +1,6 @@
 "use client"
 
-import { MapPin, Calendar, Clock, Users, ChevronDown, Search } from "lucide-react"
+import { TossIcon } from "@/components/toss-icon"
 import UserAvatar from "@/components/user-avatar"
 import type { MeetingPost, UserProfile } from "@/lib/store"
 import { mockPosts } from "@/lib/store"
@@ -62,15 +62,15 @@ function PostCard({
       {/* Info row */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground mb-4">
         <span className="flex items-center gap-1">
-          <MapPin className="w-3 h-3" />
+          <TossIcon name="icon-location-mono" size={14} className="shrink-0" />
           {post.location || "미정"}
         </span>
         <span className="flex items-center gap-1">
-          <Calendar className="w-3 h-3" />
+          <TossIcon name="icon-calendar-mono" size={14} className="shrink-0" />
           {post.date}
         </span>
         <span className="flex items-center gap-1">
-          <Clock className="w-3 h-3" />
+          <TossIcon name="icon-time-mono" size={14} className="shrink-0" />
           {post.time || "미정"}
         </span>
       </div>
@@ -177,7 +177,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
                 className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
                 aria-label="검색"
               >
-                <Search className="w-3.5 h-3.5 text-primary-foreground" />
+                <TossIcon name="icon-search-bold-mono" size={14} className="opacity-90 invert" />
               </button>
             </div>
             <button
@@ -199,7 +199,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
                 className="flex items-center gap-1 text-sm font-semibold text-primary-foreground"
               >
                 {sortLabels[sortBy]}
-                <ChevronDown className={`w-4 h-4 transition-transform ${showSortDropdown ? "rotate-180" : ""}`} />
+                <TossIcon name="icon-arrow-down-mono" size={16} className={`shrink-0 transition-transform ${showSortDropdown ? "rotate-180" : ""}`} />
               </button>
               {showSortDropdown && (
                 <div className="absolute top-full left-0 mt-1 bg-card rounded-xl border border-border shadow-lg z-10 min-w-[120px] py-1">
@@ -229,7 +229,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
               className="w-9 h-9 rounded-full flex items-center justify-center text-primary-foreground hover:bg-primary-foreground/10 transition-colors"
               aria-label="검색"
             >
-              <Search className="w-5 h-5" />
+              <TossIcon name="icon-search-bold-mono" size={20} className="opacity-90 invert" />
             </button>
           </div>
         )}
@@ -238,7 +238,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
       <main className="flex-1 px-4 pt-6 py-2 pb-6 flex flex-col gap-3">
         {filteredPosts.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
-            <Users className="w-12 h-12 mb-3 opacity-30" />
+            <TossIcon name="icon-users-mono" size={40} className="mb-3 opacity-30" />
             <p className="text-sm">{"미팅이 올라오면 여기서 볼 수 있어요"}</p>
           </div>
         ) : (

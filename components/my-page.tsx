@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useCallback } from "react"
-import { Camera, Settings, ChevronRight, FileText, MessageCircle, Heart, ArrowLeft, Plus, X, MapPin, Trash2, LogOut, UserX } from "lucide-react"
+import { TossIcon, type TossIconName } from "@/components/toss-icon"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import UserAvatar from "@/components/user-avatar"
@@ -79,7 +79,7 @@ function SwipeablePostItem({
           onClick={() => { setOffset(0); onDelete() }}
           className="w-11 h-11 rounded-xl bg-destructive text-destructive-foreground flex items-center justify-center"
         >
-          <Trash2 className="w-4 h-4" />
+          <TossIcon name="icon-trash-mono" size={16} />
         </button>
       </div>
       <div
@@ -178,7 +178,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
         <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3">
           <div className="flex items-center gap-3">
             <button onClick={() => setSubPage("main")} className="text-foreground">
-              <ArrowLeft className="w-5 h-5" />
+              <TossIcon name="icon-arrow-left-mono" size={20} />
             </button>
             <h1 className="text-lg font-bold flex-1 text-foreground">{"프로필 수정"}</h1>
             <Button
@@ -198,13 +198,13 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
               {editPhotos.map((color, i) => (
                 <div key={i} className="relative aspect-square rounded-2xl overflow-hidden">
                   <div className="w-full h-full flex items-center justify-center" style={{ background: color }}>
-                    <Camera className="w-8 h-8 text-card opacity-50" />
+                    <TossIcon name="icon-camera-mono" size={32} className="opacity-50" />
                   </div>
                   <button
                     onClick={() => handleRemovePhoto(i)}
                     className="absolute top-2 right-2 w-6 h-6 rounded-full bg-foreground/50 text-background flex items-center justify-center"
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <TossIcon name="icon-close-mono" size={14} />
                   </button>
                   {i === 0 && (
                     <span className="absolute bottom-2 left-2 text-[10px] bg-primary text-primary-foreground px-2 py-0.5 rounded-md font-medium">
@@ -218,7 +218,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
                   onClick={handleAddPhoto}
                   className="aspect-square rounded-2xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-3 transition-colors hover:border-primary hover:bg-primary/5"
                 >
-                  <Plus className="w-6 h-6 text-muted-foreground" />
+                  <TossIcon name="icon-plus-small-mono" size={24} className="opacity-70" />
                   <span className="text-xs text-muted-foreground">{"추가"}</span>
                 </button>
               )}
@@ -335,7 +335,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
         <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3 shrink-0">
           <div className="flex items-center gap-3">
             <button onClick={() => setSubPage("main")} className="text-foreground">
-              <ArrowLeft className="w-5 h-5" />
+              <TossIcon name="icon-arrow-left-mono" size={20} />
             </button>
             <h1 className="text-lg font-bold text-foreground">{title}</h1>
           </div>
@@ -344,7 +344,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
         <main className="flex-1 px-4 pt-6 py-2 pb-6 flex flex-col gap-3">
           {list.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
-              <FileText className="w-10 h-10 mb-2 opacity-30" />
+              <TossIcon name="icon-document-mono" size={40} className="mb-2 opacity-30" />
               <p className="text-sm">{"글이 없어요"}</p>
             </div>
           ) : (
@@ -390,7 +390,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
             variant="outline"
             className="w-full mt-4 h-9 rounded-xl text-sm gap-2"
           >
-            <Settings className="w-3.5 h-3.5" />
+            <TossIcon name="icon-setting-mono" size={14} />
             {"프로필 수정"}
           </Button>
         </div>
@@ -398,26 +398,23 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
         <div className="flex flex-col gap-2">
           <h3 className="text-sm font-semibold text-muted-foreground px-1">{"기록"}</h3>
           {[
-            { label: "내가 쓴 글", icon: FileText, sub: "my-posts" as SubPage, count: myPosts.length },
-            { label: "내가 신청한 글", icon: MessageCircle, sub: "my-applications" as SubPage, count: myApplications.length },
-            { label: "매칭된 글", icon: Heart, sub: "my-matches" as SubPage, count: myMatches.length },
-          ].map((item) => {
-            const Icon = item.icon
-            return (
+            { label: "내가 쓴 글", icon: "icon-document-mono" as TossIconName, sub: "my-posts" as SubPage, count: myPosts.length },
+            { label: "내가 신청한 글", icon: "icon-message-mono" as TossIconName, sub: "my-applications" as SubPage, count: myApplications.length },
+            { label: "매칭된 글", icon: "icon-heart-mono" as TossIconName, sub: "my-matches" as SubPage, count: myMatches.length },
+          ].map((item) => (
               <button
                 key={item.sub}
                 onClick={() => setSubPage(item.sub)}
                 className="flex items-center gap-3 bg-card rounded-xl border border-border p-3.5"
               >
                 <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Icon className="w-4 h-4 text-primary" />
+                  <TossIcon name={item.icon} size={16} />
                 </div>
                 <span className="flex-1 text-sm font-medium text-left">{item.label}</span>
                 <span className="text-xs text-muted-foreground mr-1">{item.count}</span>
-                <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                <TossIcon name="icon-arrow-right-small-mono" size={16} className="opacity-70" />
               </button>
-            )
-          })}
+            ))}
         </div>
 
         {/* Account actions */}
@@ -427,7 +424,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
             className="flex items-center gap-3 bg-card rounded-xl border border-border p-3.5"
           >
             <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
-              <LogOut className="w-4 h-4 text-muted-foreground" />
+              <TossIcon name="icon-logout-mono" size={16} className="opacity-70" />
             </div>
             <span className="flex-1 text-sm font-medium text-left text-muted-foreground">{"로그아웃"}</span>
           </button>
@@ -436,7 +433,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
             className="flex items-center gap-3 bg-card rounded-xl border border-border p-3.5"
           >
             <div className="w-9 h-9 rounded-full bg-destructive/10 flex items-center justify-center">
-              <UserX className="w-4 h-4 text-destructive" />
+              <TossIcon name="icon-ban-mono" size={16} className="opacity-90" />
             </div>
             <span className="flex-1 text-sm font-medium text-left text-destructive">{"탈퇴하기"}</span>
           </button>

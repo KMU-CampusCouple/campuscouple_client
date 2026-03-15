@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Bell, UserPlus, MessageCircle, Heart, ChevronRight } from "lucide-react"
+import { TossIcon } from "@/components/toss-icon"
 import UserAvatar from "@/components/user-avatar"
 import { mockNotifications } from "@/lib/store"
 import type { Notification } from "@/lib/store"
@@ -27,11 +27,11 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
   const getIcon = (type: Notification["type"]) => {
     switch (type) {
       case "friend_request":
-        return <UserPlus className="w-4 h-4" />
+        return <TossIcon name="icon-user-plus-mono" size={16} />
       case "application":
-        return <MessageCircle className="w-4 h-4" />
+        return <TossIcon name="icon-message-mono" size={16} />
       case "matched":
-        return <Heart className="w-4 h-4" />
+        return <TossIcon name="icon-heart-mono" size={16} />
     }
   }
 
@@ -73,7 +73,7 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
       <main className="flex-1 px-4 pt-6 py-2 pb-6 flex flex-col gap-2">
         {notifications.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
-            <Bell className="w-12 h-12 mb-3 opacity-30" />
+            <TossIcon name="icon-alarm-mono" size={40} className="mb-3 opacity-30" />
             <p className="text-sm">{"알림이 오면 여기서 확인할 수 있어요"}</p>
           </div>
         ) : (
@@ -113,7 +113,7 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
                   <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed truncate">{notif.message}</p>
                   <p className="text-[10px] text-muted-foreground mt-1">{getTimeAgo(notif.createdAt)}</p>
                 </div>
-                <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" />
+                <TossIcon name="icon-arrow-right-small-mono" size={16} className="opacity-70 shrink-0" />
               </button>
             ))}
 
@@ -138,7 +138,7 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
                   <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed truncate">{notif.message}</p>
                   <p className="text-[10px] text-muted-foreground mt-1">{getTimeAgo(notif.createdAt)}</p>
                 </div>
-                <ChevronRight className="w-4 h-4 text-muted-foreground/50 shrink-0" />
+                <TossIcon name="icon-arrow-right-small-mono" size={16} className="opacity-50 shrink-0" />
               </button>
             ))}
           </>

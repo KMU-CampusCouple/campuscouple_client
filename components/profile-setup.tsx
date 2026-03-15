@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Camera, ArrowLeft, Plus, X } from "lucide-react"
+import { TossIcon } from "@/components/toss-icon"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -64,7 +64,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
         <div className="flex items-center gap-3 mb-4">
           {step > 0 && (
             <button onClick={() => setStep(step - 1)} className="text-foreground">
-              <ArrowLeft className="w-5 h-5" />
+              <TossIcon name="icon-arrow-left-mono" size={20} />
             </button>
           )}
           <div className="flex-1">
@@ -90,13 +90,13 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
               {photos.map((color, i) => (
                 <div key={i} className="relative aspect-square rounded-2xl overflow-hidden">
                   <div className="w-full h-full flex items-center justify-center" style={{ background: color }}>
-                    <Camera className="w-8 h-8 text-card opacity-50" />
+                    <TossIcon name="icon-camera-mono" size={32} className="opacity-50" />
                   </div>
                   <button
                     onClick={() => handleRemovePhoto(i)}
                     className="absolute top-2 right-2 w-6 h-6 rounded-full bg-foreground/50 text-background flex items-center justify-center"
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <TossIcon name="icon-close-mono" size={14} />
                   </button>
                   {i === 0 && (
                     <span className="absolute bottom-2 left-2 text-[10px] bg-primary text-primary-foreground px-2 py-0.5 rounded-md font-medium">
@@ -110,7 +110,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                   onClick={handleAddPhoto}
                   className="aspect-square rounded-2xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-3 transition-colors hover:border-primary hover:bg-primary/5"
                 >
-                  <Plus className="w-6 h-6 text-muted-foreground" />
+                  <TossIcon name="icon-plus-small-mono" size={24} className="opacity-70" />
                   <span className="text-xs text-muted-foreground">{"추가"}</span>
                 </button>
               )}
