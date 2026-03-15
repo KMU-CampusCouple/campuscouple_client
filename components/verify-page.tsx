@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { Loader2 } from "lucide-react"
 import { TossIcon } from "@/components/toss-icon"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -64,7 +63,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
                 disabled={!email.includes("@") || loading}
                 className="h-12 rounded-xl bg-primary text-primary-foreground font-semibold"
               >
-                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "인증 코드 보내기"}
+                {loading ? <span className="animate-spin inline-flex"><TossIcon name="icon-loader-mono" size={24} /></span> : "인증 코드 보내기"}
               </Button>
             </div>
             <p className="text-xs text-muted-foreground text-center">
@@ -99,7 +98,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
                 disabled={code.length < 4 || loading}
                 className="h-12 rounded-xl bg-primary text-primary-foreground font-semibold"
               >
-                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "인증하기"}
+                {loading ? <span className="animate-spin inline-flex"><TossIcon name="icon-loader-mono" size={24} /></span> : "인증하기"}
               </Button>
             </div>
             <button

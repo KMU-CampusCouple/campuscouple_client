@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { Children } from "react"
 import { motion } from "framer-motion"
-import { Loader2 } from "lucide-react"
+import { TossIcon } from "@/components/toss-icon"
 
 const PULL_THRESHOLD = 80
 const MAX_PULL = 240
@@ -202,7 +202,7 @@ export function PullToRefresh({
               >
                 {showIndicator && (
                   <div className="flex flex-col items-center justify-center gap-1 w-full h-full min-h-[40px]">
-                    <Loader2 className="w-5 h-5 shrink-0 animate-spin text-muted-foreground" />
+                    <span className="shrink-0 animate-spin inline-flex"><TossIcon name="icon-loader-mono" size={24} className="text-muted-foreground" /></span>
                     <span className="text-xs text-muted-foreground">
                       {isRefreshing ? "새로고침 중..." : "당겨서 새로고침"}
                     </span>
@@ -228,7 +228,7 @@ export function PullToRefresh({
               >
                 {showIndicator && (
                   <div className="flex flex-col items-center justify-center gap-1 w-full h-full min-h-[40px]">
-                    <Loader2 className="w-5 h-5 shrink-0 animate-spin text-muted-foreground" />
+                    <span className="shrink-0 animate-spin inline-flex"><TossIcon name="icon-loader-mono" size={24} className="text-muted-foreground" /></span>
                     <span className="text-xs text-muted-foreground">
                       {isRefreshing ? "새로고침 중..." : "당겨서 새로고침"}
                     </span>

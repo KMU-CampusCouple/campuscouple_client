@@ -3,11 +3,10 @@
 /**
  * 토스 그래픽 리소스(아이콘) 사용 컴포넌트.
  * @see https://developers-apps-in-toss.toss.im/design/resources.md
- * - 아이콘은 화면에서 24~40px 크기로만 사용 (가이드 준수)
- * - 외부 CDN(static.toss.im)은 배포 환경에서 403/ORB로 차단되므로, 로컬 public/icons/svg 사용
- * - background="white": 배경이 흰색일 때만 회색 아이콘. 생략 시 흰색 아이콘.
+ * - 아이콘은 토스 공식 CDN(static.toss.im)에서만 로드. 무조건 토스 아이콘 사용.
+ * - 최소 24px 규칙 준수(토스 가이드). 24~40px만 사용. 아이콘 임의 수정 금지.
  */
-const TOSS_ICON_BASE = "/icons/svg"
+const TOSS_ICON_BASE = "https://static.toss.im/icons/svg"
 const MIN_ICON_SIZE = 24
 const MAX_ICON_SIZE = 40
 
@@ -52,7 +51,7 @@ export type TossIconName =
 
 interface TossIconProps {
   name: TossIconName
-  /** 24~40px (가이드 준수). 미만/초과 시 24 또는 40으로 클램프 */
+  /** 24~40px (토스 가이드 준수). 미만/초과 시 24 또는 40으로 클램프. */
   size?: number
   className?: string
   /**

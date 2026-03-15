@@ -2,8 +2,7 @@
 
 import * as React from 'react'
 import * as MenubarPrimitive from '@radix-ui/react-menubar'
-import { Check, ChevronRight, Circle } from 'lucide-react'
-
+import { TossIcon } from '@/components/toss-icon'
 import { cn } from '@/lib/utils'
 
 const MenubarMenu = MenubarPrimitive.Menu
@@ -62,7 +61,7 @@ const MenubarSubTrigger = React.forwardRef<
     {...props}
   >
     {children}
-    <ChevronRight className="ml-auto h-4 w-4" />
+    <span className="ml-auto"><TossIcon name="icon-arrow-right-small-mono" size={24} /></span>
   </MenubarPrimitive.SubTrigger>
 ))
 MenubarSubTrigger.displayName = MenubarPrimitive.SubTrigger.displayName
@@ -140,7 +139,7 @@ const MenubarCheckboxItem = React.forwardRef<
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <MenubarPrimitive.ItemIndicator>
-        <Check className="h-4 w-4" />
+        <TossIcon name="icon-check-mono" size={24} />
       </MenubarPrimitive.ItemIndicator>
     </span>
     {children}
@@ -162,7 +161,7 @@ const MenubarRadioItem = React.forwardRef<
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <MenubarPrimitive.ItemIndicator>
-        <Circle className="h-2 w-2 fill-current" />
+        <span className="h-2 w-2 rounded-full bg-current" />
       </MenubarPrimitive.ItemIndicator>
     </span>
     {children}

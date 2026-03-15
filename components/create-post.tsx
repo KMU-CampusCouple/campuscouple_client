@@ -332,10 +332,8 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                         <p className="text-[10px] text-muted-foreground">{f.university}</p>
                       </div>
                       {isSelected && (
-                        <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
-                            <polyline points="20 6 9 17 4 12" />
-                          </svg>
+                        <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center shrink-0">
+                          <TossIcon name="icon-check-mono" size={24} className="text-primary-foreground" />
                         </div>
                       )}
                     </button>
