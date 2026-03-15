@@ -92,7 +92,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
               <button
                 onClick={() => adjustPerSide(-1)}
                 disabled={perSide <= 1}
-                className="w-10 h-10 rounded-full bg-muted flex items-center justify-center transition-colors disabled:opacity-30"
+                className="w-11 h-11 rounded-full bg-muted flex items-center justify-center transition-colors disabled:opacity-30"
               >
                 <TossIcon name="icon-minus-mono" size={24} />
               </button>
@@ -103,7 +103,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
               <button
                 onClick={() => adjustPerSide(1)}
                 disabled={perSide >= 10}
-                className="w-10 h-10 rounded-full bg-muted flex items-center justify-center transition-colors disabled:opacity-30"
+                className="w-11 h-11 rounded-full bg-muted flex items-center justify-center transition-colors disabled:opacity-30"
               >
                 <TossIcon name="icon-plus-small-mono" size={24} />
               </button>
@@ -294,13 +294,13 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
             </p>
             {/* Friend search */}
             <div className="relative mb-3">
-              <TossIcon name="icon-search-bold-mono" size={24} className="absolute left-3 top-1/2 -translate-y-1/2 opacity-70" />
+              <TossIcon name="icon-search-bold-mono" size={24} className="absolute left-3.5 top-1/2 -translate-y-1/2 opacity-70" />
               <input
                 type="text"
                 placeholder="친구 이름으로 검색해보세요"
                 value={friendSearch}
                 onChange={(e) => setFriendSearch(e.target.value)}
-                className="w-full h-10 pl-9 pr-4 rounded-xl bg-muted border-0 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="w-full h-11 pl-11 pr-4 rounded-xl bg-muted border-0 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
             </div>
             <div className="flex flex-col gap-2 max-h-60 overflow-y-auto">

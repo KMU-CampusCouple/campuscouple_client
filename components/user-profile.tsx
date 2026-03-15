@@ -139,54 +139,54 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
 
         {/* Info */}
         <div className="bg-card rounded-2xl border border-border overflow-hidden">
-          <div className="flex items-center gap-3 px-4 py-3.5 border-b border-border">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+          <div className="flex items-center gap-3.5 px-4 py-4 border-b border-border">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
               <TossIcon name="icon-graduation-mono" size={24} />
             </div>
-            <div>
-              <p className="text-[10px] text-muted-foreground">{"대학교"}</p>
+            <div className="min-w-0">
+              <p className="text-xs text-muted-foreground">{"대학교"}</p>
               <p className="text-sm font-medium">{user.university}</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 px-4 py-3.5 border-b border-border">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+          <div className="flex items-center gap-3.5 px-4 py-4 border-b border-border">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
               <TossIcon name="icon-book-mono" size={24} />
             </div>
-            <div>
-              <p className="text-[10px] text-muted-foreground">{"학과"}</p>
+            <div className="min-w-0">
+              <p className="text-xs text-muted-foreground">{"학과"}</p>
               <p className="text-sm font-medium">{user.department}</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 px-4 py-3.5 border-b border-border">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+          <div className="flex items-center gap-3.5 px-4 py-4 border-b border-border">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
               <TossIcon name="icon-hash-mono" size={24} />
             </div>
-            <div>
-              <p className="text-[10px] text-muted-foreground">{"학번"}</p>
+            <div className="min-w-0">
+              <p className="text-xs text-muted-foreground">{"학번"}</p>
               <p className="text-sm font-medium">{user.studentYear}{"학번"}</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 px-4 py-3.5 border-b border-border">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+          <div className="flex items-center gap-3.5 px-4 py-4 border-b border-border">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
               <TossIcon name="icon-sparkles-mono" size={24} />
             </div>
-            <div>
-              <p className="text-[10px] text-muted-foreground">{"성별"}</p>
+            <div className="min-w-0">
+              <p className="text-xs text-muted-foreground">{"성별"}</p>
               <p className="text-sm font-medium">{user.gender === "male" ? "남성" : "여성"}</p>
             </div>
           </div>
 
           {/* Specs */}
           {user.specs && (
-            <div className="flex items-center gap-3 px-4 py-3.5 border-b border-border">
-              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+            <div className="flex items-center gap-3.5 px-4 py-4 border-b border-border">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                 <TossIcon name="icon-dumbbell-mono" size={24} />
               </div>
-              <div>
-                <p className="text-[10px] text-muted-foreground">{"신체/직업 스펙"}</p>
+              <div className="min-w-0">
+                <p className="text-xs text-muted-foreground">{"신체/직업 스펙"}</p>
                 <p className="text-sm font-medium">{user.specs}</p>
               </div>
             </div>
@@ -194,19 +194,19 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
 
           {/* Ideal type */}
           {user.idealType && (
-            <div className="flex items-center gap-3 px-4 py-3.5 border-b border-border">
-              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+            <div className="flex items-center gap-3.5 px-4 py-4 border-b border-border">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                 <TossIcon name="icon-heart-mono" size={24} />
               </div>
-              <div>
-                <p className="text-[10px] text-muted-foreground">{"이상형"}</p>
+              <div className="min-w-0">
+                <p className="text-xs text-muted-foreground">{"이상형"}</p>
                 <p className="text-sm font-medium">{user.idealType}</p>
               </div>
             </div>
           )}
 
           {/* SNS platforms - blurred if not matched */}
-          <div className="px-4 py-3.5">
+          <div className="px-4 py-4">
             <p className="text-[10px] text-muted-foreground mb-2">{"SNS 계정"}</p>
             {isMatched ? (
               <div className="flex flex-col gap-2">
@@ -246,9 +246,9 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
         </div>
 
         {!isMatched && (
-          <div className="bg-muted rounded-xl p-4 flex items-start gap-3">
+          <div className="bg-muted rounded-xl p-4 flex items-start gap-3.5">
             <TossIcon name="icon-lock-mono" size={24} className="mt-0.5 shrink-0 opacity-70" />
-            <p className="text-xs text-muted-foreground leading-relaxed">
+            <p className="text-sm text-muted-foreground leading-relaxed">
               {"SNS 아이디는 미팅 매칭 이후에 열람할 수 있어요."}
             </p>
           </div>

@@ -42,8 +42,8 @@ function PostCard({
       }`}
     >
       {/* Title + status row */}
-      <div className="flex items-start justify-between gap-2 mb-2">
-        <h3 className="font-semibold text-[15px] leading-snug flex-1">{post.title}</h3>
+      <div className="flex items-start justify-between gap-2.5 mb-2.5">
+        <h3 className="font-semibold text-base leading-snug flex-1">{post.title}</h3>
         {isClosed ? (
           <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-muted text-muted-foreground shrink-0">
             {"마감"}
@@ -60,7 +60,7 @@ function PostCard({
       </div>
 
       {/* Info row (가이드: 한 번에 하나의 아이콘만 사용) */}
-      <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
+      <div className="flex items-center gap-2.5 text-sm text-muted-foreground mb-4">
         <TossIcon name="icon-calendar-mono" size={24} className="shrink-0" />
         <span>
           {post.location || "미정"} · {post.date} · {post.time || "미정"}
@@ -68,12 +68,12 @@ function PostCard({
       </div>
 
       {/* Description preview */}
-      <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed mb-3">
+      <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed mb-3">
         {post.description}
       </p>
 
       {/* Author row */}
-      <div className="flex items-center gap-2 mt-1">
+      <div className="flex items-center gap-2.5 mt-1">
         <div
           role="button"
           onClick={(e) => {
@@ -84,15 +84,15 @@ function PostCard({
           <UserAvatar user={post.author} size="sm" />
         </div>
         <div className="flex flex-col">
-          <span className="text-xs text-muted-foreground">
+          <span className="text-sm text-muted-foreground">
             {post.author.name}
           </span>
-          <span className="text-[10px] text-muted-foreground/70">
+          <span className="text-xs text-muted-foreground/70">
             {post.author.university} {post.author.studentYear}
           </span>
         </div>
         {post.applications.length > 0 && (
-          <span className="ml-auto text-xs text-primary font-medium">
+          <span className="ml-auto text-sm text-primary font-medium">
             {post.applications.length}{"개 신청"}
           </span>
         )}
@@ -169,7 +169,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
                 className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
                 aria-label="검색"
               >
-                <TossIcon name="icon-search-bold-mono" size={24} className="opacity-90" invert />
+                <TossIcon name="icon-search-bold-mono" size={24} className="opacity-90" background="dark" />
               </button>
             </div>
             <button
@@ -191,7 +191,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
                 className="flex items-center gap-1 text-sm font-semibold text-primary-foreground"
               >
                 {sortLabels[sortBy]}
-                <TossIcon name="icon-arrow-down-mono" size={24} className={`shrink-0 transition-transform ${showSortDropdown ? "rotate-180" : ""}`} invert />
+                <TossIcon name="icon-arrow-down-mono" size={24} className={`shrink-0 transition-transform ${showSortDropdown ? "rotate-180" : ""}`} background="dark" />
               </button>
               {showSortDropdown && (
                 <div className="absolute top-full left-0 mt-1 bg-card rounded-xl border border-border shadow-lg z-10 min-w-[120px] py-1">
@@ -221,7 +221,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
               className="w-9 h-9 rounded-full flex items-center justify-center text-primary-foreground hover:bg-primary-foreground/10 transition-colors"
               aria-label="검색"
             >
-              <TossIcon name="icon-search-bold-mono" size={24} className="opacity-90" invert />
+              <TossIcon name="icon-search-bold-mono" size={24} className="opacity-90" background="dark" />
             </button>
           </div>
         )}
@@ -230,8 +230,8 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
       <main className="flex-1 px-4 pt-6 py-2 pb-6 flex flex-col gap-3">
         {filteredPosts.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
-            <TossIcon name="icon-users-mono" size={40} className="mb-3 opacity-30" />
-            <p className="text-sm">{"미팅이 올라오면 여기서 볼 수 있어요"}</p>
+            <TossIcon name="icon-users-mono" size={40} className="mb-4 opacity-30" />
+            <p className="text-base">{"미팅이 올라오면 여기서 볼 수 있어요"}</p>
           </div>
         ) : (
           filteredPosts.map((post) => (

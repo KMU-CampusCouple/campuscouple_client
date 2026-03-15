@@ -73,8 +73,8 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
       <main className="flex-1 px-4 pt-6 py-2 pb-6 flex flex-col gap-2">
         {notifications.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
-            <TossIcon name="icon-alarm-mono" size={40} className="mb-3 opacity-30" />
-            <p className="text-sm">{"알림이 오면 여기서 확인할 수 있어요"}</p>
+            <TossIcon name="icon-alarm-mono" size={40} className="mb-4 opacity-30" />
+            <p className="text-base">{"알림이 오면 여기서 확인할 수 있어요"}</p>
           </div>
         ) : (
           <>
@@ -97,10 +97,10 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
               <button
                 key={notif.id}
                 onClick={() => handleTapNotification(notif)}
-                className="flex items-center gap-3 bg-card rounded-xl p-3 border border-border text-left w-full shadow-sm"
+                className="flex items-center gap-3.5 bg-card rounded-xl p-4 border border-border text-left w-full shadow-sm"
               >
                 <div
-                  className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
+                  className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
                   style={{ background: getIconBg(notif.type), color: "white" }}
                 >
                   {getIcon(notif.type)}
@@ -124,11 +124,11 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
               <button
                 key={notif.id}
                 onClick={() => handleTapNotification(notif)}
-                className="flex items-center gap-3 rounded-xl p-3 border border-border/60 text-left w-full"
+                className="flex items-center gap-3.5 rounded-xl p-4 border border-border/60 text-left w-full"
                 style={{ background: "hsl(345, 25%, 95%)" }}
               >
                 <div
-                  className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 opacity-60"
+                  className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 opacity-60"
                   style={{ background: getIconBg(notif.type), color: "white" }}
                 >
                   {getIcon(notif.type)}

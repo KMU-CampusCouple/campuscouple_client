@@ -5,7 +5,7 @@
  * @see https://developers-apps-in-toss.toss.im/design/resources.md
  * - 아이콘은 화면에서 24~40px 크기로만 사용 (가이드 준수)
  * - static.toss.im/icons/svg/ URL 사용
- * - invert: 밝은 배경(헤더 등)에서 흰색으로 표시
+ * - background: 밝은 배경이면 회색, 어두운 배경이면 흰색으로 표시
  */
 const TOSS_ICON_BASE = "https://static.toss.im/icons/svg"
 const MIN_ICON_SIZE = 24
@@ -55,7 +55,12 @@ interface TossIconProps {
   /** 24~40px (가이드 준수). 미만/초과 시 24 또는 40으로 클램프 */
   size?: number
   className?: string
-  /** true면 흰색으로 표시 (헤더·어두운 배경용). mono 아이콘에 filter: invert 적용 */
+  /**
+   * 아이콘이 있는 배경: 'light'면 회색, 'dark'면 흰색으로 표시.
+   * @default 'light'
+   */
+  background?: "light" | "dark"
+  /** @deprecated background="dark" 사용 권장. true면 어두운 배경용(흰색 아이콘) */
   invert?: boolean
   "aria-hidden"?: boolean
 }
@@ -64,14 +69,17 @@ export function TossIcon({
   name,
   size = 24,
   className = "",
+  background,
   invert = false,
   "aria-hidden": ariaHidden = true,
 }: TossIconProps) {
+  const bg: "light" | "dark" = background ?? (invert ? "dark" : "light")
   const src = `${TOSS_ICON_BASE}/${name}.svg`
   const clampedSize = Math.min(MAX_ICON_SIZE, Math.max(MIN_ICON_SIZE, size))
   return (
     <span
-      className={`inline-flex items-center justify-center shrink-0 ${invert ? "invert" : ""} ${className}`}
+      className={`inline-flex items-center justify-center shrink-0 ${className}`}
+      data-toss-icon-bg={bg}
       aria-hidden={ariaHidden}
     >
       <img
