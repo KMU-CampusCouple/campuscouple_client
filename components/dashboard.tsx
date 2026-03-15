@@ -158,7 +158,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
     <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
       <header className="sticky top-0 z-30 bg-primary/80 backdrop-blur-lg px-4 pt-2 pb-2 shrink-0">
         {/* App logo bar */}
-        <div className="flex items-center gap-2 mb-3">
+        <div className="flex items-center gap-2 mt-2 mb-3">
           <img src="/logo.jpg" alt="Campus Couple" className="w-7 h-7 rounded-lg object-cover" />
           <span className="text-sm font-bold text-primary-foreground">{"캠퍼스커플"}</span>
         </div>

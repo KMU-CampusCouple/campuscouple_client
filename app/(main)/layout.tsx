@@ -29,7 +29,7 @@ export default function MainLayout({
         {children}
       </div>
       {!isUserProfile && (
-        <div className="shrink-0 w-full bg-background px-3 flex flex-col" style={{ height: "var(--bottom-nav-height)" }}>
+        <div className="shrink-0 w-full bg-background flex flex-col justify-end" style={{ height: "var(--bottom-nav-height)" }}>
           <BottomNav activeTab={activeTab} notificationCount={2} />
         </div>
       )}
