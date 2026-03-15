@@ -166,7 +166,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="우리 그룹을 소개해주세요!"
+            placeholder="우리 그룹을 소개해요!"
             className="w-full h-28 rounded-xl bg-card border border-border p-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
           />
         </div>
@@ -217,7 +217,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                 className="h-12 rounded-xl bg-card"
               />
               <p className="text-xs text-muted-foreground mt-1.5">
-                {"미입력시 "}<span className="font-medium text-foreground">{"상의 후 결정"}</span>{"으로 표기됩니다"}
+                {"안 쓰면 "}<span className="font-medium text-foreground">{"상의 후 결정"}</span>{"으로 표기돼요"}
               </p>
             </div>
           )}
@@ -268,7 +268,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                 </div>
               </div>
               <p className="text-xs text-muted-foreground mt-1.5">
-                {"미입력시 "}<span className="font-medium text-foreground">{"상의 후 결정"}</span>{"으로 표기됩니다"}
+                {"안 쓰면 "}<span className="font-medium text-foreground">{"상의 후 결정"}</span>{"으로 표기돼요"}
               </p>
             </div>
           )}
@@ -294,14 +294,14 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
             <div className="w-10 h-1 bg-muted rounded-full mx-auto mb-4" />
             <h3 className="text-lg font-bold mb-1">{"친구 선택"}</h3>
             <p className="text-xs text-muted-foreground mb-4">
-              {"최대 "}{maxFriends}{"명까지 선택 가능 (현재 "}{selectedFriends.length}{"명 선택됨)"}
+              {"최대 "}{maxFriends}{"명까지 고를 수 있어요 (지금 "}{selectedFriends.length}{"명 선택했어요)"}
             </p>
             {/* Friend search */}
             <div className="relative mb-3">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input
                 type="text"
-                placeholder="친구 이름으로 검색..."
+                placeholder="친구 이름으로 검색해보세요"
                 value={friendSearch}
                 onChange={(e) => setFriendSearch(e.target.value)}
                 className="w-full h-10 pl-9 pr-4 rounded-xl bg-muted border-0 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
@@ -311,7 +311,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
               {filteredFriends.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
                   <Search className="w-8 h-8 mb-2 opacity-30" />
-                  <p className="text-sm">{"검색 결과가 없어요"}</p>
+                  <p className="text-sm">{"검색 결과가 나오면 여기 표시돼요"}</p>
                 </div>
               ) : (
                 filteredFriends.map((f) => {

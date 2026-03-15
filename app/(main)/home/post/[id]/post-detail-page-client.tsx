@@ -16,7 +16,7 @@ export default function PostDetailPageClient({ id }: { id: string }) {
     <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain flex flex-col">
       {!post ? (
         <div className="flex flex-col items-center justify-center min-h-[50vh] text-muted-foreground flex-1">
-          <p className="text-sm">글을 찾을 수 없어요</p>
+          <p className="text-sm">해당 글은 볼 수 없어요</p>
           <button
             onClick={() => router.push("/home")}
             className="mt-4 text-sm text-primary font-medium"

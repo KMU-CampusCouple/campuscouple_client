@@ -44,7 +44,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
             <div className="text-center">
               <h1 className="text-xl font-bold mb-2">{"대학교 인증"}</h1>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                {"재학 중인 대학교 이메일을 입력해주세요."}
+                {"다니는 대학교 이메일을 입력해주세요."}
               </p>
             </div>
             <div className="w-full flex flex-col gap-3">
@@ -67,7 +67,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
               </Button>
             </div>
             <p className="text-xs text-muted-foreground text-center">
-              {"ac.kr 도메인의 이메일만 인증 가능합니다"}
+              {"ac.kr 이메일만 인증할 수 있어요"}
             </p>
           </div>
         )}
@@ -87,7 +87,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
             <div className="w-full flex flex-col gap-3">
               <Input
                 type="text"
-                placeholder="6자리 코드 입력"
+                placeholder="6자리 코드를 입력해주세요"
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
                 className="h-12 rounded-xl text-center text-lg tracking-widest bg-card border-border"
@@ -118,7 +118,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
             <div className="text-center">
               <h1 className="text-xl font-bold mb-2">{"인증 완료!"}</h1>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                {"대학생 인증이 완료되었어요."}
+                {"대학생 인증을 마쳤어요."}
               </p>
             </div>
             <Button

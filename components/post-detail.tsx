@@ -64,10 +64,10 @@ function ApplicationCard({
           }`}
         >
           {application.status === "pending"
-            ? "대기중"
+            ? "대기 중"
             : application.status === "accepted"
-            ? "수락됨"
-            : "거절됨"}
+            ? "수락했어요"
+            : "거절했어요"}
         </span>
         {isAuthor && (
           <button onClick={onDelete} className="text-muted-foreground hover:text-destructive transition-colors">
@@ -104,7 +104,7 @@ function ApplicationCard({
           className="w-full h-10 rounded-xl font-medium gap-2 text-destructive border-destructive/30 hover:bg-destructive/5"
         >
           <X className="w-4 h-4" />
-          {"취소하기"}
+          {"신청 취소"}
         </Button>
       )}
 
@@ -425,7 +425,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
             ) : (
               <div className="bg-card rounded-xl border border-border p-8 flex flex-col items-center text-muted-foreground">
                 <Users className="w-8 h-8 mb-2 opacity-30" />
-                <p className="text-sm">{"아직 신청이 없어요"}</p>
+                <p className="text-sm">{"신청이 오면 여기서 확인할 수 있어요"}</p>
               </div>
             )
           ) : (
@@ -453,7 +453,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                     {applications.length}{"개 그룹이 신청했어요"}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {"작성자만 신청 내용을 확인할 수 있어요"}
+                    {"작성자만 신청 내용을 볼 수 있어요"}
                   </p>
                 </div>
               </div>
@@ -508,7 +508,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                 variant="outline"
                 className="flex-1 h-10 rounded-xl"
               >
-                {"취소"}
+                {"닫기"}
               </Button>
               <Button
                 onClick={handleApply}
@@ -529,7 +529,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
           <div className="relative bg-card rounded-2xl p-6 w-full max-w-xs shadow-xl">
             <h3 className="text-lg font-bold mb-2">{"글 삭제"}</h3>
             <p className="text-sm text-muted-foreground mb-5">
-              {"이 글을 정말 삭제하시겠어요? 삭제된 글은 복구할 수 없습니다."}
+              {"이 글을 삭제할까요? 삭제하면 복구할 수 없어요."}
             </p>
             <div className="flex gap-2">
               <Button
@@ -537,7 +537,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                 variant="outline"
                 className="flex-1 h-10 rounded-xl"
               >
-                {"취소"}
+                {"닫기"}
               </Button>
               <Button
                 onClick={() => { setShowDeleteConfirm(false); onBack() }}
@@ -557,7 +557,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
           <div className="relative bg-card rounded-2xl p-6 w-full max-w-xs shadow-xl">
             <h3 className="text-lg font-bold mb-2">{"신청 삭제"}</h3>
             <p className="text-sm text-muted-foreground mb-5">
-              {"이 신청을 정말 삭제하시겠어요?"}
+              {"이 신청을 삭제할까요?"}
             </p>
             <div className="flex gap-2">
               <Button
@@ -565,7 +565,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                 variant="outline"
                 className="flex-1 h-10 rounded-xl"
               >
-                {"취소"}
+                {"닫기"}
               </Button>
               <Button
                 onClick={() => {
@@ -595,7 +595,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
             <div className="w-10 h-1 bg-muted rounded-full mx-auto mb-4" />
             <h3 className="text-lg font-bold mb-1">{"친구 선택"}</h3>
             <p className="text-xs text-muted-foreground mb-4">
-              {"이 자리에 함께할 친구를 선택하세요"}
+              {"이 자리에 함께할 친구를 골라주세요"}
             </p>
             <div className="flex flex-col gap-2 max-h-60 overflow-y-auto">
               {friends.filter((f) => !usedFriendIds.includes(f.id)).map((f) => (
@@ -613,8 +613,8 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
               ))}
               {friends.filter((f) => !usedFriendIds.includes(f.id)).length === 0 && (
                 <div className="py-8 text-center text-muted-foreground">
-                  <p className="text-sm">{"선택 가능한 친구가 없어요"}</p>
-                  <p className="text-xs mt-1">{"친구를 먼저 추가해주세요"}</p>
+                  <p className="text-sm">{"선택할 수 있는 친구가 아직 없어요"}</p>
+                  <p className="text-xs mt-1">{"친구를 먼저 추가하면 여기서 고를 수 있어요"}</p>
                 </div>
               )}
             </div>

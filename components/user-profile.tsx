@@ -221,7 +221,7 @@ export default function UserProfile({ user, isMatched, onBack }: UserProfileProp
                   )
                 })}
                 {!user.sns || Object.values(user.sns).every((v) => !v) ? (
-                  <p className="text-xs text-muted-foreground">{"등록된 SNS가 없어요"}</p>
+                  <p className="text-xs text-muted-foreground">{"SNS를 등록하면 여기서 볼 수 있어요"}</p>
                 ) : null}
               </div>
             ) : (

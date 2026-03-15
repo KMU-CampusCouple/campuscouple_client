@@ -50,12 +50,12 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
   const [showLocationPicker, setShowLocationPicker] = useState(false)
 
   const steps = [
-    { title: "프로필 사진", subtitle: "본인 사진을 등록해주세요" },
-    { title: "기본 정보", subtitle: "본인의 기본 정보를 입력해주세요" },
-    { title: "학교 정보", subtitle: "재학 중인 학교 정보를 입력해주세요" },
+    { title: "프로필 사진", subtitle: "본인 사진을 올려주세요" },
+    { title: "기본 정보", subtitle: "본인 정보를 입력해주세요" },
+    { title: "학교 정보", subtitle: "다니는 학교 정보를 입력해주세요" },
     { title: "스펙 & 이상형", subtitle: "나를 더 잘 알릴 수 있는 정보예요" },
-    { title: "거주 위치", subtitle: "거주 지역을 선택해주세요" },
-    { title: "소개 정보", subtitle: "마지막으로 자기소개를 작성해주세요" },
+    { title: "거주 위치", subtitle: "거주 지역을 골라주세요" },
+    { title: "소개 정보", subtitle: "마지막으로 자기소개를 써주세요" },
   ]
 
   const handleAddPhoto = () => {
@@ -136,7 +136,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
               <Input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                placeholder="이름을 입력해주세요"
+                placeholder="이름을 써주세요"
                 className="h-12 rounded-xl bg-card"
               />
             </div>
@@ -206,14 +206,14 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                 placeholder="예) 180cm / 대학생"
                 className="h-12 rounded-xl bg-card"
               />
-              <p className="text-xs text-muted-foreground mt-1">{"키, 직업 등 자유롭게 작성해주세요"}</p>
+              <p className="text-xs text-muted-foreground mt-1">{"키, 직업 등 자유롭게 써주세요"}</p>
             </div>
             <div>
               <label className="text-sm font-medium mb-1.5 block">{"이상형"}</label>
               <textarea
                 value={form.idealType}
                 onChange={(e) => setForm({ ...form, idealType: e.target.value })}
-                placeholder="어떤 사람이 이상형인지 자유롭게 작성해주세요"
+                placeholder="어떤 사람이 이상형인지 자유롭게 써주세요"
                 className="w-full h-24 rounded-xl bg-card border border-border p-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
               />
             </div>
@@ -238,7 +238,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                 <div className="absolute flex flex-col items-center gap-1">
                   <MapPin className="w-8 h-8 text-primary" />
                   <span className="text-xs font-medium bg-card px-2 py-0.5 rounded-md shadow-sm">
-                    {form.location || "지역을 선택해주세요"}
+                    {form.location || "지역을 골라주세요"}
                   </span>
                 </div>
               </div>
@@ -250,7 +250,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
             >
               <MapPin className="w-4 h-4 text-primary shrink-0" />
               <span className={`text-sm flex-1 ${form.location ? "text-foreground font-medium" : "text-muted-foreground"}`}>
-                {form.location || "거주 지역 선택"}
+                {form.location || "거주 지역 고르기"}
               </span>
             </button>
 
@@ -260,7 +260,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                 <div className="absolute inset-0 bg-foreground/30" onClick={() => setShowLocationPicker(false)} />
                 <div className="relative w-full max-w-[430px] bg-card rounded-t-3xl p-6 pb-10 animate-in slide-in-from-bottom duration-300">
                   <div className="w-10 h-1 bg-muted rounded-full mx-auto mb-4" />
-                  <h3 className="text-lg font-bold mb-4">{"거주 지역 선택"}</h3>
+                  <h3 className="text-lg font-bold mb-4">{"거주 지역 고르기"}</h3>
                   <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto">
                     {LOCATIONS.map((loc) => (
                       <button
@@ -321,7 +321,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
               <Input
                 value={form.bio}
                 onChange={(e) => setForm({ ...form, bio: e.target.value })}
-                placeholder="나를 한 줄로 소개해주세요"
+                placeholder="나를 한 줄로 소개해요"
                 className="h-12 rounded-xl bg-card"
               />
             </div>

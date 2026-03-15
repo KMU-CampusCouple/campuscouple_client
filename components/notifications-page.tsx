@@ -74,7 +74,7 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
         {notifications.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
             <Bell className="w-12 h-12 mb-3 opacity-30" />
-            <p className="text-sm">{"알림이 없어요"}</p>
+            <p className="text-sm">{"알림이 오면 여기서 확인할 수 있어요"}</p>
           </div>
         ) : (
           <>
@@ -85,13 +85,13 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
                   onClick={() => setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))}
                   className="text-xs text-primary font-medium"
                 >
-                  {"모두 읽음 처리"}
+                  {"모두 읽었어요"}
                 </button>
               )}
             </div>
             {unread.length === 0 ? (
               <div className="flex items-center justify-center py-8">
-                <p className="text-sm text-muted-foreground">{"새로운 알림이 없습니다."}</p>
+                <p className="text-sm text-muted-foreground">{"새로운 알림이 없어요"}</p>
               </div>
             ) : unread.map((notif) => (
               <button

@@ -3,10 +3,10 @@
 import { useEffect, useState, useRef } from "react"
 
 const taglines = [
-  "가장 안전하고 확실한 캠퍼스 매칭",
-  "오늘, 새로운 설렘의 등교.",
-  "다시, 설렐 시간",
-  "너를 만나는 캠퍼스",
+  "캠퍼스에서 안전하게 만나요",
+  "오늘, 새로운 설렘을 만나요",
+  "다시 설렐 시간을 보내요",
+  "캠퍼스에서 너를 만나요",
 ]
 
 export default function SplashScreen({ onComplete }: { onComplete: () => void }) {

@@ -453,8 +453,8 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
             </h3>
             <p className="text-sm text-muted-foreground mb-5">
               {showAccountDialog === "logout"
-                ? "정말 로그아웃 하시겠어요?"
-                : "탈퇴하면 모든 데이터가 삭제되며 복구할 수 없습니다. 정말 탈퇴하시겠어요?"}
+                ? "로그아웃할까요?"
+                : "탈퇴하면 모든 데이터가 삭제되고 복구할 수 없어요. 탈퇴할까요?"}
             </p>
             <div className="flex gap-2">
               <Button
@@ -462,7 +462,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
                 variant="outline"
                 className="flex-1 h-10 rounded-xl"
               >
-                {"취소"}
+                {"닫기"}
               </Button>
               <Button
                 onClick={() => {

@@ -11,7 +11,7 @@ export default function UserProfilePageClient({ id }: { id: string }) {
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] text-muted-foreground">
-        <p className="text-sm">프로필을 찾을 수 없어요</p>
+        <p className="text-sm">해당 프로필은 볼 수 없어요</p>
         <button
           onClick={() => router.back()}
           className="mt-4 text-sm text-primary font-medium"

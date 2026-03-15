@@ -169,7 +169,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
               <input
                 ref={searchInputRef}
                 type="text"
-                placeholder="미팅 검색..."
+                placeholder="미팅 검색해보세요"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full h-10 pl-3 pr-10 rounded-xl bg-primary-foreground/20 border-0 text-sm text-primary-foreground placeholder:text-primary-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary-foreground/30"
@@ -188,7 +188,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
               }}
               className="text-sm text-primary-foreground font-medium px-2"
             >
-              {"취소"}
+              {"닫기"}
             </button>
           </div>
         ) : (
@@ -240,7 +240,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
         {filteredPosts.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
             <Users className="w-12 h-12 mb-3 opacity-30" />
-            <p className="text-sm">{"미팅을 찾을 수 없어요"}</p>
+            <p className="text-sm">{"미팅이 올라오면 여기서 볼 수 있어요"}</p>
           </div>
         ) : (
           filteredPosts.map((post) => (

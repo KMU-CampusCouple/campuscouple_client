@@ -214,7 +214,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input
                 type="text"
-                placeholder="이름 또는 대학교로 검색..."
+                placeholder="이름이나 대학교로 검색해보세요"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full h-10 pl-9 pr-10 rounded-xl bg-muted border-0 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
@@ -230,7 +230,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
             {searchQuery && searchResults.length === 0 && (
               <div className="flex-1 flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <Users className="w-10 h-10 mb-2 opacity-30" />
-                <p className="text-sm">{"검색 결과가 없어요"}</p>
+                <p className="text-sm">{"검색 결과가 나오면 여기 표시돼요"}</p>
               </div>
             )}
             {searchResults.map((user) => (
@@ -266,7 +266,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
             {requests.length === 0 ? (
               <div className="flex-1 flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <UserPlus className="w-10 h-10 mb-2 opacity-30" />
-                <p className="text-sm">{"대기 중인 신청이 없어요"}</p>
+                <p className="text-sm">{"신청이 오면 여기서 확인할 수 있어요"}</p>
               </div>
             ) : (
               requests.map((req) => (
@@ -314,7 +314,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <input
                     type="text"
-                    placeholder="친구 검색..."
+                    placeholder="친구 검색해보세요"
                     value={friendsSearchQuery}
                     onChange={(e) => setFriendsSearchQuery(e.target.value)}
                     className="w-full h-10 pl-9 pr-4 rounded-xl bg-muted border-0 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
@@ -324,12 +324,12 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
               {friendsList.length === 0 ? (
                 <div className="flex-1 flex flex-col items-center justify-center py-16 text-muted-foreground">
                   <Users className="w-10 h-10 mb-2 opacity-30" />
-                  <p className="text-sm">{"아직 친구가 없어요"}</p>
+                  <p className="text-sm">{"친구를 추가하면 여기서 볼 수 있어요"}</p>
                 </div>
               ) : filtered.length === 0 ? (
                 <div className="flex-1 flex flex-col items-center justify-center py-16 text-muted-foreground">
                   <Search className="w-10 h-10 mb-2 opacity-30" />
-                  <p className="text-sm">{"검색 결과가 없어요"}</p>
+                  <p className="text-sm">{"검색 결과가 나오면 여기 표시돼요"}</p>
                 </div>
               ) : (
                 filtered.map((friend) => (
@@ -357,8 +357,8 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
             </h3>
             <p className="text-sm text-muted-foreground mb-5">
               {showConfirmDialog.type === "delete"
-                ? `${showConfirmDialog.userName}님을 친구 목록에서 삭제하시겠어요?`
-                : `${showConfirmDialog.userName}님을 차단하시겠어요? 차단하면 서로 검색되지 않습니다.`}
+                ? `${showConfirmDialog.userName}님을 친구 목록에서 삭제할까요?`
+                : `${showConfirmDialog.userName}님을 차단할까요? 차단하면 서로 검색되지 않아요.`}
             </p>
             <div className="flex gap-2">
               <Button
@@ -366,7 +366,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
                 variant="outline"
                 className="flex-1 h-10 rounded-xl"
               >
-                {"취소"}
+                {"닫기"}
               </Button>
               <Button
                 onClick={() => {

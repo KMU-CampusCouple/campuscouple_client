@@ -8,7 +8,7 @@ const notoSansKR = Noto_Sans_KR({ subsets: ['latin'], weight: ['300', '400', '50
 
 export const metadata: Metadata = {
   title: '캠퍼스커플',
-  description: '대학생 미팅 & 과팅 매칭 서비스',
+  description: '대학생 미팅·과팅 매칭 서비스예요',
   manifest: '/manifest.json',
 }
 
