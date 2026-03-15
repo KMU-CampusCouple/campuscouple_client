@@ -56,9 +56,11 @@ interface TossIconProps {
   size?: number
   className?: string
   /**
-   * 배경이 흰색일 때만 true. 회색 아이콘으로 표시. 생략 시 흰색 아이콘.
+   * 배경이 흰색일 때만 true면 연한 회색, 생략 시에도 연한 회색 통일.
    */
   background?: "white"
+  /** 선택 상태(예: 탭 활성)일 때 true. 컬러를 더 연하게 표시. */
+  active?: boolean
   "aria-hidden"?: boolean
 }
 
@@ -67,6 +69,7 @@ export function TossIcon({
   size = 24,
   className = "",
   background,
+  active = false,
   "aria-hidden": ariaHidden = true,
 }: TossIconProps) {
   const bg: "default" | "white" = background === "white" ? "white" : "default"
@@ -76,6 +79,8 @@ export function TossIcon({
     <span
       className={`inline-flex items-center justify-center shrink-0 ${className}`}
       data-toss-icon-bg={bg}
+      data-toss-icon-active={active ? "true" : "false"}
+      style={active ? ({ "--icon-mask": `url(${src})` } as React.CSSProperties) : undefined}
       aria-hidden={ariaHidden}
     >
       <img
