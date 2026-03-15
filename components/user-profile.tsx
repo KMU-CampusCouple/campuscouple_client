@@ -87,20 +87,20 @@ export default function UserProfile({ user, isMatched, onBack, friendStatus, onA
               {friendStatus === "friend" && (
                 <button
                   onClick={onRemoveFriend}
-                  className="text-sm font-medium text-muted-foreground hover:text-destructive transition-colors shrink-0 py-1 px-2"
+                  className="text-sm font-medium text-primary bg-primary/15 hover:bg-primary/25 rounded-full shrink-0 py-1.5 px-3 transition-colors"
                 >
                   {"친구삭제"}
                 </button>
               )}
               {friendStatus === "pending" && (
-                <span className="text-sm text-muted-foreground shrink-0 py-1 px-2">
+                <span className="text-sm font-medium text-muted-foreground bg-muted rounded-full shrink-0 py-1.5 px-3">
                   {"요청됨"}
                 </span>
               )}
               {friendStatus === "none" && (
                 <button
                   onClick={onAddFriend}
-                  className="text-sm font-medium text-primary shrink-0 py-1 px-2"
+                  className="text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-full shrink-0 py-1.5 px-3 transition-colors"
                 >
                   {"친구추가"}
                 </button>
