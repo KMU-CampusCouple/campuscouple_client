@@ -120,7 +120,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
           </div>
 
           <div
-            className="flex gap-3 overflow-x-auto py-2 pl-2 pr-2 snap-x snap-mandatory"
+            className="flex gap-3 overflow-x-auto py-2 pl-4 pr-4 snap-x snap-mandatory"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {/* Me */}
