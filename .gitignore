@@ -3,9 +3,53 @@ __v0_runtime_loader.js
 __v0_devtools.tsx
 __v0_jsx-dev-runtime.ts
 
-# Common ignores
+# Dependencies
 node_modules/
+.pnpm-store/
+
+# Next.js
 .next/
 out/
+
+# Environment & secrets
+.env
 .env*.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+
+# Build & cache
+dist/
+build/
+.turbo
+*.tsbuildinfo
+.cache/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
 .DS_Store
+Thumbs.db
+
+# IDE (optional; remove if you want to share settings)
+.idea/
+*.swp
+*.swo
+*~
+
+# Test / coverage
+coverage/
+
+# Vercel
+.vercel
+
+# Debug
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
