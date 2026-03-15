@@ -38,7 +38,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
       <div className="w-full max-w-sm">
         {step === "email" && (
           <div className="flex flex-col items-center gap-6 animate-in fade-in duration-500">
-            <div className="w-16 h-16 rounded-lg flex items-center justify-center bg-primary">
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-primary">
               <TossIcon name="icon-graduation-mono" size={32} onPrimary />
             </div>
             <div className="text-center">
@@ -55,13 +55,13 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
                   placeholder="example@university.ac.kr"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-11 h-12 rounded-lg bg-card border-border"
+                  className="pl-11 h-12 rounded-xl bg-card border-border"
                 />
               </div>
               <Button
                 onClick={handleSendCode}
                 disabled={!email.includes("@") || loading}
-                className="h-12 rounded-lg bg-primary text-primary-foreground font-semibold"
+                className="h-12 rounded-xl bg-primary text-primary-foreground font-semibold"
               >
                 {loading ? <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center"><span className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" /></span> : "인증 코드 보내기"}
               </Button>
@@ -74,7 +74,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
 
         {step === "code" && (
           <div className="flex flex-col items-center gap-6 animate-in fade-in duration-500">
-            <div className="w-16 h-16 rounded-lg flex items-center justify-center bg-primary">
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-primary">
               <TossIcon name="icon-mail-mono" size={32} onPrimary />
             </div>
             <div className="text-center">
@@ -90,13 +90,13 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
                 placeholder="6자리 코드를 입력해주세요"
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
-                className="h-12 rounded-lg text-center text-lg tracking-widest bg-card border-border"
+                className="h-12 rounded-xl text-center text-lg tracking-widest bg-card border-border"
                 maxLength={6}
               />
               <Button
                 onClick={handleVerify}
                 disabled={code.length < 4 || loading}
-                className="h-12 rounded-lg bg-primary text-primary-foreground font-semibold"
+                className="h-12 rounded-xl bg-primary text-primary-foreground font-semibold"
               >
                 {loading ? <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center"><span className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" /></span> : "인증하기"}
               </Button>
@@ -112,7 +112,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
 
         {step === "done" && (
           <div className="flex flex-col items-center gap-6 animate-in fade-in duration-500">
-            <div className="w-16 h-16 rounded-lg flex items-center justify-center bg-primary">
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-primary">
               <TossIcon name="icon-check-circle-mono" size={32} onPrimary />
             </div>
             <div className="text-center">
@@ -123,7 +123,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
             </div>
             <Button
               onClick={onComplete}
-              className="h-12 rounded-lg bg-primary text-primary-foreground font-semibold w-full gap-1.5 flex items-center justify-center"
+              className="h-12 rounded-xl bg-primary text-primary-foreground font-semibold w-full gap-1.5 flex items-center justify-center"
             >
               {"프로필 설정하기"}
               <TossIcon name="icon-arrow-right-mono" size={24} onPrimary />

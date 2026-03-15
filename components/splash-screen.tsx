@@ -50,7 +50,7 @@ export default function SplashScreen({ onComplete }: { onComplete: () => void })
 
       <div className="flex flex-col items-center">
         <div
-          className="w-24 h-24 rounded-2xl overflow-hidden shadow-lg"
+          className="w-24 h-24 rounded-3xl overflow-hidden shadow-lg"
           style={{
             animation: mounted ? "logoScale 0.6s ease-out forwards, pulse 2s 0.6s ease-in-out infinite" : "none",
           }}
