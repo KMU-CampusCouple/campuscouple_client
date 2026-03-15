@@ -142,9 +142,9 @@ function SlotPicker({
             {i > 0 && (
               <button
                 onClick={() => onRemoveSlot(i)}
-                className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center z-10"
+                className="absolute -top-2 -right-2.5 w-6 h-6 rounded-full bg-foreground/50 text-background flex items-center justify-center z-10"
               >
-                <TossIcon name="icon-chip-x-mono" size={24} background="white" />
+                <TossIcon name="icon-chip-x-mono" size={24} onPrimary />
               </button>
             )}
             <button onClick={() => onViewProfile(user)}>
