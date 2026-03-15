@@ -275,20 +275,18 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
                     <p className="text-sm font-semibold truncate">{req.from.name}</p>
                     <p className="text-xs text-muted-foreground">{req.from.university}</p>
                   </button>
-                  <div className="flex gap-1.5">
+                  <div className="flex items-center gap-1.5 shrink-0">
                     <button
                       onClick={() => handleAccept(req)}
-                      className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shrink-0"
-                      aria-label="수락"
+                      className="text-xs font-medium text-primary py-1.5 px-2.5 rounded-lg bg-primary/10"
                     >
-                      <TossIcon name="icon-check-mono" size={24} onPrimary />
+                      {"수락"}
                     </button>
                     <button
                       onClick={() => handleReject(req.id)}
-                      className="w-10 h-10 rounded-full bg-muted text-foreground flex items-center justify-center shrink-0"
-                      aria-label="거절"
+                      className="text-xs font-medium text-muted-foreground py-1.5 px-2.5 rounded-lg bg-muted"
                     >
-                      <TossIcon name="icon-chip-x-mono" size={24} background="white" />
+                      {"거절"}
                     </button>
                   </div>
                 </div>

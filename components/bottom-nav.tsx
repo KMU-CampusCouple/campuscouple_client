@@ -21,7 +21,7 @@ interface BottomNavProps {
 export default function BottomNav({ activeTab, notificationCount = 0 }: BottomNavProps) {
   return (
     <nav
-      className="w-full min-w-0 h-full min-h-[72px] bg-card rounded-2xl shadow-lg border border-border flex items-center justify-around pt-3 pb-[max(0.5rem,env(safe-area-inset-bottom))]"
+      className="w-full min-w-0 h-full min-h-[56px] bg-card rounded-2xl shadow-lg border border-border flex items-center justify-around pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]"
       role="navigation"
       aria-label="메인 네비게이션"
     >
@@ -31,7 +31,7 @@ export default function BottomNav({ activeTab, notificationCount = 0 }: BottomNa
             <Link
               key={tab.id}
               href={tab.href}
-              className={`relative flex flex-col items-center gap-1 px-4 pt-0 pb-3 rounded-xl transition-colors ${
+              className={`relative flex flex-col items-center gap-0.5 px-4 pt-0 pb-2 rounded-xl transition-colors ${
                 isActive ? "text-primary" : "text-muted-foreground"
               }`}
               aria-label={tab.label}

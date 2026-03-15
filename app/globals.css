@@ -48,7 +48,7 @@
     --safe-area-inset-top: env(safe-area-inset-top, 0px);
     --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
     /* 하단 네비 높이: 스크롤 영역 pb와 동기화 (절대 겹치지 않도록) */
-    --bottom-nav-height: calc(76px + max(0.5rem, env(safe-area-inset-bottom, 0px)));
+    --bottom-nav-height: calc(60px + max(0.5rem, env(safe-area-inset-bottom, 0px)));
     --background: 345 20% 97.5%;
     --foreground: 0 0% 12%;
     --card: 0 0% 100%;
