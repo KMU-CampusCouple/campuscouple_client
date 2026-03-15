@@ -309,7 +309,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
                   <TossIcon name="icon-search-bold-mono" size={24} background="white" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   <input
                     type="text"
-                    placeholder="친구 검색해보세요"
+                    placeholder="친구를 검색해보세요"
                     value={friendsSearchQuery}
                     onChange={(e) => setFriendsSearchQuery(e.target.value)}
                     className="w-full h-11 pl-11 pr-4 rounded-xl bg-muted border-0 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"

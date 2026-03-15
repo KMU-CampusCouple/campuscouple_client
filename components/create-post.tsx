@@ -120,25 +120,25 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
           </div>
 
           <div
-            className="flex gap-3 overflow-x-auto py-2 pl-4 pr-4 snap-x snap-mandatory"
+            className="flex gap-3 overflow-x-auto pt-3 pb-2 pl-5 pr-4 snap-x snap-mandatory"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {/* Me */}
-            <div className="shrink-0 snap-start flex flex-col items-center gap-1.5 p-2.5 rounded-xl bg-primary/10 ring-2 ring-primary w-[72px] min-w-[72px]">
-              <UserAvatar user={currentUser} size="md" />
-              <span className="text-[11px] font-medium">{"나"}</span>
+            <div className="shrink-0 snap-start flex flex-col items-center gap-2 p-3 rounded-xl bg-primary/10 border-2 border-primary w-[88px] min-w-[88px]">
+              <UserAvatar user={currentUser} size="lg" />
+              <span className="text-xs font-medium">{"나"}</span>
             </div>
             {/* Selected friends */}
             {selectedFriends.map((f) => (
-              <div key={f.id} className="shrink-0 snap-start relative flex flex-col items-center gap-1.5 p-2.5 rounded-xl bg-muted w-[72px] min-w-[72px]">
+              <div key={f.id} className="shrink-0 snap-start relative flex flex-col items-center gap-2 p-3 rounded-xl bg-muted w-[88px] min-w-[88px]">
                 <button
                   onClick={() => toggleFriend(f)}
-                  className="absolute -top-0.5 -right-0.5 text-[10px] font-medium text-destructive hover:underline z-10"
+                  className="absolute -top-2 -right-2.5 w-7 h-7 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center z-10"
                 >
-                  {"삭제"}
+                  <TossIcon name="icon-chip-x-mono" size={24} background="white" />
                 </button>
-                <UserAvatar user={f} size="md" />
-                <span className="text-[11px] font-medium truncate w-full text-center">{f.name}</span>
+                <UserAvatar user={f} size="lg" />
+                <span className="text-xs font-medium truncate w-full text-center">{f.name}</span>
               </div>
             ))}
             {/* Open slot buttons - totalSlots - 1 (excluding me) minus selected friends */}
@@ -146,12 +146,12 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
               <button
                 key={`slot-${i}`}
                 onClick={() => setShowFriendPicker(true)}
-                className="shrink-0 snap-start flex flex-col items-center gap-1.5 p-2.5 rounded-xl border-2 border-dashed border-border w-[72px] min-w-[72px]"
+                className="shrink-0 snap-start flex flex-col items-center gap-2 p-3 rounded-xl border-2 border-dashed border-border w-[88px] min-w-[88px]"
               >
-                <div className="w-10 aspect-square rounded-md bg-muted flex items-center justify-center">
-                  <TossIcon name="icon-plus-small-mono" size={24} background="white" className="opacity-70" />
+                <div className="w-12 aspect-square rounded-md bg-muted flex items-center justify-center">
+                  <TossIcon name="icon-plus-small-mono" size={28} background="white" className="opacity-70" />
                 </div>
-                <span className="text-[11px] text-muted-foreground">{"추가"}</span>
+                <span className="text-xs text-muted-foreground">{"추가"}</span>
               </button>
             ))}
           </div>
@@ -238,7 +238,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="h-12 rounded-xl bg-card"
+                    className="h-12 rounded-xl bg-card [&::-webkit-calendar-picker-indicator]:hidden"
                   />
                 </div>
                 <div className="flex-1">
@@ -246,7 +246,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                     type="time"
                     value={time}
                     onChange={(e) => setTime(e.target.value)}
-                    className="h-12 rounded-xl bg-card"
+                    className="h-12 rounded-xl bg-card [&::-webkit-calendar-picker-indicator]:hidden"
                   />
                 </div>
               </div>
