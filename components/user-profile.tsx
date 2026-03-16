@@ -15,19 +15,23 @@ const SNS_PLATFORMS = [
   { key: "telegram", label: "Telegram" },
 ] as const
 
-export type FriendStatus = "none" | "pending" | "friend"
+export type FriendStatus = "none" | "pending" | "friend" | "received_request"
 
 interface UserProfileProps {
   user: UserProfileType
   isMatched: boolean
-  onBack: () => void
+  /** 네비 바 외 뒤로가기 제거로 미사용. 호환용 유지 */
+  onBack?: () => void
   /** 내 프로필이면 없음. 남의 프로필일 때만 전달 */
   friendStatus?: FriendStatus
   onAddFriend?: () => void
   onRemoveFriend?: () => void
+  /** 상대가 나한테 친구요청을 보낸 상태일 때 수락/거절 */
+  onAcceptRequest?: () => void
+  onRejectRequest?: () => void
 }
 
-export default function UserProfile({ user, isMatched, onBack, friendStatus, onAddFriend, onRemoveFriend }: UserProfileProps) {
+export default function UserProfile({ user, isMatched, onBack, friendStatus, onAddFriend, onRemoveFriend, onAcceptRequest, onRejectRequest }: UserProfileProps) {
   const [photoIndex, setPhotoIndex] = useState(0)
   const photos = user.photos.slice(0, 6)
   const hasPhotos = photos.length > 0
@@ -78,9 +82,6 @@ export default function UserProfile({ user, isMatched, onBack, friendStatus, onA
     <div className="flex flex-col flex-1 min-h-0 overflow-y-auto overscroll-contain pb-6">
       <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3">
         <div className="flex items-center gap-3 min-h-[2rem]">
-          <button onClick={onBack} className="text-foreground flex items-center justify-center p-1 -m-1">
-            <TossIcon name="icon-arrow-left-mono" size={24} background="white" />
-          </button>
           <h1 className="text-lg font-bold flex-1 text-foreground leading-tight">{"프로필"}</h1>
           {friendStatus !== undefined && (
             <>
@@ -97,6 +98,22 @@ export default function UserProfile({ user, isMatched, onBack, friendStatus, onA
                   {"요청됨"}
                 </span>
               )}
+              {friendStatus === "received_request" && onAcceptRequest && onRejectRequest && (
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={onRejectRequest}
+                    className="text-sm font-medium text-muted-foreground bg-muted hover:bg-muted/80 rounded-full py-1.5 px-3 transition-colors"
+                  >
+                    {"거절"}
+                  </button>
+                  <button
+                    onClick={onAcceptRequest}
+                    className="text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-full py-1.5 px-3 transition-colors"
+                  >
+                    {"수락"}
+                  </button>
+                </div>
+              )}
               {friendStatus === "none" && (
                 <button
                   onClick={onAddFriend}
@@ -110,9 +127,9 @@ export default function UserProfile({ user, isMatched, onBack, friendStatus, onA
         </div>
       </header>
 
-      <main className="flex-1 px-4 py-6 flex flex-col gap-4">
+      <main className="flex-1 px-2 py-6 flex flex-col gap-4">
         {/* Photo carousel or avatar */}
-        <div className="bg-card rounded-2xl border border-border overflow-hidden">
+        <div className="bg-card rounded-2xl border border-border/60 overflow-hidden">
           <div
             className="relative w-full aspect-square flex items-center justify-center overflow-hidden select-none"
             style={{ background: hasPhotos ? undefined : `hsl(345, 40%, 90%)` }}
@@ -169,7 +186,7 @@ export default function UserProfile({ user, isMatched, onBack, friendStatus, onA
         </div>
 
         {/* Info */}
-        <div className="bg-card rounded-2xl border border-border overflow-hidden">
+        <div className="bg-card rounded-2xl border border-border/60 overflow-hidden">
           <div className="flex items-center gap-3.5 px-4 py-4 border-b border-border">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
               <TossIcon name="icon-graduation-mono" size={24} background="white" className="opacity-80" />

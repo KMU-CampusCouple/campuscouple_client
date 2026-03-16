@@ -8,9 +8,11 @@ export function generateStaticParams() {
 
 export default async function UserProfilePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>
+  searchParams: { from?: string }
 }) {
   const { id } = await params
-  return <UserProfilePageClient id={id} />
+  return <UserProfilePageClient id={id} from={searchParams.from} />
 }

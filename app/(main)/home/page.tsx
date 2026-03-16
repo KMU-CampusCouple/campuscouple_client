@@ -14,7 +14,7 @@ export default function HomeRoute() {
   }
 
   const handleViewProfile = (user: UserProfile) => {
-    router.push(`/user/${user.id}`)
+    router.push(`/user/${user.id}?from=home`)
   }
 
   return (

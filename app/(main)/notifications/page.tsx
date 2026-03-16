@@ -11,11 +11,13 @@ export default function NotificationsRoute() {
   const { refreshKey } = useRefresh()
 
   const handleNavigate = (notification: Notification) => {
-    if (notification.type === "friend_request") {
+    if (notification.type === "friend_request" && notification.fromUser) {
+      router.push(`/user/${notification.fromUser.id}?from=notifications`)
+    } else if (notification.type === "friend_request") {
       router.push("/friends")
     } else if (notification.type === "application" || notification.type === "matched") {
       const post = getPostById(notification.relatedId)
-      if (post) router.push(`/home/post/${post.id}`)
+      if (post) router.push(`/home/post/${post.id}?from=notifications`)
     }
   }
 
