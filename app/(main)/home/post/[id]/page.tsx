@@ -7,9 +7,11 @@ export function generateStaticParams() {
 
 export default async function PostDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>
+  searchParams: { from?: string }
 }) {
   const { id } = await params
-  return <PostDetailPageClient id={id} />
+  return <PostDetailPageClient id={id} from={searchParams.from} />
 }

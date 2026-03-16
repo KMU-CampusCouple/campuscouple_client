@@ -51,6 +51,7 @@ export type TossIconName =
   | "icon-dumbbell-mono"
   | "icon-sparkles-mono"
   | "icon-loader-mono"
+  | "icon-edit-mono"
 
 interface TossIconProps {
   name: TossIconName

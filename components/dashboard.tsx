@@ -1,7 +1,6 @@
 "use client"
 
 import { TossIcon } from "@/components/toss-icon"
-import UserAvatar from "@/components/user-avatar"
 import type { MeetingPost, UserProfile } from "@/lib/store"
 import { mockPosts } from "@/lib/store"
 import { useState, useRef, useEffect } from "react"
@@ -15,10 +14,19 @@ interface DashboardProps {
   onViewProfile: (user: UserProfile) => void
 }
 
+function formatDateShort(dateStr: string): string | null {
+  if (!dateStr || dateStr === "미정") return null
+  const d = new Date(dateStr)
+  if (Number.isNaN(d.getTime())) return null
+  const y = d.getFullYear() % 100
+  const m = String(d.getMonth() + 1).padStart(2, "0")
+  const day = String(d.getDate()).padStart(2, "0")
+  return `${y}-${m}-${day}`
+}
+
 function PostCard({
   post,
   onClick,
-  onAvatarClick,
 }: {
   post: MeetingPost
   onClick: () => void
@@ -28,66 +36,52 @@ function PostCard({
   const currentCount = post.participants.length
   const totalCount = post.perSide * 2
 
+  const locationPart = post.location && post.location !== "미정" ? post.location : null
+  const datePart = formatDateShort(post.date)
+  const timePart = post.time && post.time !== "미정" ? post.time : null
+  const infoParts = [locationPart, datePart, timePart].filter(Boolean)
+
   return (
     <button
       onClick={onClick}
-      className={`w-full bg-card rounded-2xl p-5 border border-border text-left transition-shadow hover:shadow-sm ${
+      className={`w-full bg-card rounded-xl p-3 border border-border/60 text-left ${
         isClosed ? "opacity-50" : ""
       }`}
     >
       {/* Title + status row */}
-      <div className="flex items-start justify-between gap-2.5 mb-2.5">
-        <h3 className="font-semibold text-base leading-snug flex-1">{post.title}</h3>
-        {isClosed ? (
-          <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-muted text-muted-foreground shrink-0">
-            {"마감"}
-          </span>
-        ) : post.status === "matched" ? (
-          <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-primary/10 text-primary shrink-0">
-            {"매칭완료"}
-          </span>
-        ) : (
-          <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-primary/10 text-primary shrink-0">
-            {currentCount}/{totalCount}
-          </span>
-        )}
+      <div className="flex items-start justify-between gap-2 mb-1.5">
+        <h3 className="font-medium text-sm leading-snug flex-1">{post.title}</h3>
+        <div className="flex items-center gap-1.5 shrink-0">
+          {isClosed ? (
+            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
+              {"마감"}
+            </span>
+          ) : post.status === "matched" ? (
+            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+              {"매칭완료"}
+            </span>
+          ) : (
+            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+              {currentCount}/{totalCount}
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* Info row (가이드: 한 번에 하나의 아이콘만 사용) */}
-      <div className="flex items-center gap-2.5 text-xs text-muted-foreground mb-4">
-        <span>
-          {post.location || "미정"} · {post.date} · {post.time || "미정"}
-        </span>
-      </div>
-
-      {/* Description preview */}
-      <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed mb-3">
+      {/* 한줄 미리보기 */}
+      <p className="text-xs text-muted-foreground line-clamp-1 leading-relaxed mb-1">
         {post.description}
       </p>
 
-      {/* Author row */}
-      <div className="flex items-center gap-2.5 mt-1">
-        <div
-          role="button"
-          onClick={(e) => {
-            e.stopPropagation()
-            onAvatarClick(post.author)
-          }}
-        >
-          <UserAvatar user={post.author} size="sm" />
-        </div>
-        <div className="flex flex-col">
-          <span className="text-sm text-muted-foreground">
-            {post.author.name}
-          </span>
-          <span className="text-xs text-muted-foreground/70">
-            {post.author.university} {post.author.studentYear}
-          </span>
-        </div>
+      {/* Info row: N팀 신청 + 미정인 항목은 숨김, 날짜는 26-03-02 형식 */}
+      <div className="flex items-center gap-2 text-[11px] text-muted-foreground flex-wrap">
         {post.applications.length > 0 && (
-          <span className="ml-auto text-sm text-primary font-medium">
-            {post.applications.length}{"개 신청"}
+          <span className="text-[11px] text-primary">
+            {post.applications.length}팀 신청
           </span>
+        )}
+        {infoParts.length > 0 && (
+          <span>{infoParts.join(" · ")}</span>
         )}
       </div>
     </button>
@@ -145,7 +139,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
             placeholder="미팅을 검색해보세요"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-10 pl-3 pr-10 rounded-xl bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="w-full h-10 pl-3 pr-10 rounded-xl bg-card border border-border/60 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
           />
           <span
             className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center pointer-events-none text-muted-foreground"
@@ -156,7 +150,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
         </div>
       </MainHeader>
       <div className="flex flex-col min-h-full">
-      <main className="flex-1 px-4 pt-6 pb-6 flex flex-col gap-3">
+      <main className="flex-1 px-2 pt-3 pb-6 flex flex-col gap-2">
         {filteredPosts.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
             <TossIcon name="icon-users-mono" size={40} background="white" className="mb-4 opacity-30" />
@@ -179,9 +173,9 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
     <div className="fixed bottom-[calc(var(--bottom-nav-height)+0.75rem)] z-30 w-full max-w-[430px] left-1/2 -translate-x-1/2 flex justify-end px-4 pointer-events-none">
       <button
         onClick={onCreatePost}
-        className="h-10 px-5 rounded-full bg-primary/80 text-primary-foreground shadow-lg flex items-center justify-center transition-transform hover:scale-105 active:scale-95 font-medium text-xs pointer-events-auto"
+        className="h-9 px-4 rounded-xl bg-primary/80 text-primary-foreground flex items-center justify-center transition-transform hover:scale-105 active:scale-95 font-medium text-xs pointer-events-auto"
       >
-        {"글쓰기 +"}
+        {"글작성하기"}
       </button>
     </div>
     </>

@@ -54,6 +54,7 @@ const ICON_NAMES = [
   "icon-dumbbell-mono",
   "icon-sparkles-mono",
   "icon-loader-mono",
+  "icon-edit-mono",
 ]
 
 /** 앱 이름 → 토스 SVG에 있는 이름 (SVG 403/404 시 대체 시도용) */

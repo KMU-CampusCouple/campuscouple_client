@@ -252,7 +252,7 @@ export const currentUser: UserProfile = {
 
 export const friends: UserProfile[] = [mockUsers[0], mockUsers[2], mockUsers[4]]
 
-export const allUsers: UserProfile[] = mockUsers
+export const allUsers: UserProfile[] = [currentUser, ...mockUsers]
 
 export const mockPosts: MeetingPost[] = [
   {
@@ -445,6 +445,121 @@ export const mockPosts: MeetingPost[] = [
     status: "open",
     views: 25,
   },
+  // ---- 내가 쓴 글 / 내가 신청한 글 / 매칭된 글 더미 ----
+  {
+    id: "p10",
+    title: "주말 신촌 2:2 소개팅 구해요",
+    author: currentUser,
+    participants: [currentUser],
+    perSide: 2,
+    location: "신촌역",
+    description: "친구 한 명이랑 같이 2대2로 편하게 만나요! 장소는 신촌 근처로 정할게요.",
+    date: "2026-03-08",
+    time: "14:00",
+    createdAt: "2026-02-14T10:00:00",
+    applications: [
+      {
+        id: "a10",
+        applicants: [mockUsers[0], mockUsers[2]],
+        message: "저희 둘 다 신촌 가까워요! 재밌게 놀아요~",
+        status: "pending",
+        contactInfo: "010-1234-5678",
+        createdAt: "2026-02-14T11:00:00",
+      },
+      {
+        id: "a10-2",
+        applicants: [mockUsers[1], mockUsers[4]],
+        message: "주말에 시간 맞춰요. 편하게 연락 주세요!",
+        status: "pending",
+        contactInfo: "010-3456-7890",
+        createdAt: "2026-02-14T14:00:00",
+      },
+      {
+        id: "a10-3",
+        applicants: [mockUsers[3], mockUsers[5]],
+        message: "2대2 좋아요! 신촌 쪽 자주 가요.",
+        status: "pending",
+        contactInfo: "010-5678-9012",
+        createdAt: "2026-02-14T16:00:00",
+      },
+    ],
+    status: "open",
+    views: 15,
+  },
+  {
+    id: "p11",
+    title: "이번 주말 강남 3:3 미팅",
+    author: mockUsers[0],
+    participants: [mockUsers[0], mockUsers[2], mockUsers[4]],
+    perSide: 3,
+    location: "강남역",
+    description: "여자 3명 모였어요! 남자분 3명 구합니다. 분위기 좋은 데서 저녁 먹어요.",
+    date: "2026-03-07",
+    time: "19:00",
+    createdAt: "2026-02-14T09:00:00",
+    applications: [
+      {
+        id: "a11",
+        applicants: [currentUser, mockUsers[1], mockUsers[3]],
+        message: "저희 셋이서 신청해요! 강남 쪽 좋아요.",
+        status: "pending",
+        contactInfo: "010-9012-3456",
+        createdAt: "2026-02-14T12:00:00",
+      },
+    ],
+    status: "open",
+    views: 31,
+  },
+  {
+    id: "p12",
+    title: "홍대 보드게임 2:2",
+    author: mockUsers[2],
+    participants: [mockUsers[2], mockUsers[4]],
+    perSide: 2,
+    location: "홍대",
+    description: "보드게임 카페에서 2대2로 만나요!",
+    date: "2026-02-28",
+    time: "15:00",
+    createdAt: "2026-02-12T16:00:00",
+    applications: [
+      {
+        id: "a12",
+        applicants: [currentUser, mockUsers[1]],
+        message: "보드게임 좋아해요! 저희 둘 신청합니다.",
+        status: "accepted",
+        contactInfo: "010-9012-3456",
+        createdAt: "2026-02-12T17:00:00",
+      },
+    ],
+    status: "matched",
+    matchedApplicationId: "a12",
+    views: 44,
+  },
+  {
+    id: "p13",
+    title: "건대 맛집 3:3 모집 (매칭 완료)",
+    author: currentUser,
+    participants: [currentUser, mockUsers[0], mockUsers[2]],
+    perSide: 3,
+    location: "건대입구역",
+    description: "맛있는 거 먹으면서 친해져요!",
+    date: "2026-03-01",
+    time: "18:00",
+    createdAt: "2026-02-10T10:00:00",
+    applications: [
+      {
+        id: "a13",
+        applicants: [mockUsers[1], mockUsers[3], mockUsers[5]],
+        message: "저희 셋 신청해요! 건대 좋아요.",
+        status: "accepted",
+        contactInfo: "010-2345-6789",
+        createdAt: "2026-02-10T11:00:00",
+      },
+    ],
+    status: "matched",
+    matchedApplicationId: "a13",
+    views: 52,
+  },
 ]
 
 export const mockNotifications: Notification[] = [
@@ -461,7 +576,7 @@ export const mockNotifications: Notification[] = [
   {
     id: "n2",
     type: "application",
-    title: "새 미팅 신청",
+    title: "미팅 신청",
     message: "'건대 맛집 투어 미팅'에 새로운 신청이 왔어요",
     relatedId: "p5",
     read: false,
@@ -470,8 +585,8 @@ export const mockNotifications: Notification[] = [
   {
     id: "n3",
     type: "matched",
-    title: "매칭됐어요!",
-    message: "'이태원 분위기 좋은 미팅'에서 매칭했어요",
+    title: "매칭",
+    message: "'이태원 분위기 좋은 미팅'에서 매칭됐어요",
     relatedId: "p3",
     read: true,
     createdAt: "2026-02-11T15:00:00",

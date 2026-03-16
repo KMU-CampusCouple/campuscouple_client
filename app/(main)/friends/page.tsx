@@ -10,7 +10,7 @@ export default function FriendsRoute() {
   const { refreshKey } = useRefresh()
 
   const handleViewProfile = (user: UserProfile) => {
-    router.push(`/user/${user.id}`)
+    router.push(`/user/${user.id}?from=friends`)
   }
 
   return (

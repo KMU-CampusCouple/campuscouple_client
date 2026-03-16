@@ -18,12 +18,10 @@ function SwipeableFriendRow({
   friend,
   onViewProfile,
   onDelete,
-  onBlock,
 }: {
   friend: UserProfile
   onViewProfile: () => void
   onDelete: () => void
-  onBlock: () => void
 }) {
   const rowRef = useRef<HTMLDivElement>(null)
   const startXRef = useRef(0)
@@ -40,13 +38,13 @@ function SwipeableFriendRow({
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
     const diff = e.touches[0].clientX - startXRef.current
-    const newOffset = Math.max(-140, Math.min(0, currentXRef.current + diff))
+    const newOffset = Math.max(-70, Math.min(0, currentXRef.current + diff))
     setOffset(newOffset)
   }, [])
 
   const handleTouchEnd = useCallback(() => {
     if (offset < -60) {
-      setOffset(-140)
+      setOffset(-70)
       setSwiped(true)
     } else {
       setOffset(0)
@@ -65,7 +63,7 @@ function SwipeableFriendRow({
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (!isDraggingRef.current) return
     const diff = e.clientX - startXRef.current
-    const newOffset = Math.max(-140, Math.min(0, currentXRef.current + diff))
+    const newOffset = Math.max(-70, Math.min(0, currentXRef.current + diff))
     setOffset(newOffset)
   }, [])
 
@@ -73,7 +71,7 @@ function SwipeableFriendRow({
     if (!isDraggingRef.current) return
     isDraggingRef.current = false
     if (offset < -60) {
-      setOffset(-140)
+      setOffset(-70)
       setSwiped(true)
     } else {
       setOffset(0)
@@ -85,7 +83,7 @@ function SwipeableFriendRow({
     if (!isDraggingRef.current) return
     isDraggingRef.current = false
     if (offset < -60) {
-      setOffset(-140)
+      setOffset(-70)
       setSwiped(true)
     } else {
       setOffset(0)
@@ -104,21 +102,15 @@ function SwipeableFriendRow({
       <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
         <button
           onClick={() => { handleReset(); onDelete() }}
-          className="w-12 h-12 rounded-xl bg-muted text-foreground flex items-center justify-center shrink-0"
-        >
-          <TossIcon name="icon-trash-mono" size={24} background="white" />
-        </button>
-        <button
-          onClick={() => { handleReset(); onBlock() }}
           className="w-12 h-12 rounded-xl bg-destructive text-destructive-foreground flex items-center justify-center shrink-0"
         >
-          <TossIcon name="icon-ban-mono" size={24} background="white" />
+          <TossIcon name="icon-trash-mono" size={24} background="white" />
         </button>
       </div>
       {/* Foreground row */}
       <div
         ref={rowRef}
-        className="relative bg-card border border-border rounded-xl flex items-center gap-3.5 p-3.5 select-none"
+        className="relative bg-card border border-border/60 rounded-xl flex items-center gap-3.5 p-3.5 select-none"
         style={{ transform: `translateX(${offset}px)`, transition: isDraggingRef.current ? 'none' : 'transform 0.2s ease-out' }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -152,13 +144,16 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
   const [showConfirmDialog, setShowConfirmDialog] = useState<{ type: "delete" | "block"; userId: string; userName: string } | null>(null)
   const [friendsSearchQuery, setFriendsSearchQuery] = useState("")
 
-  const searchResults = allUsers.filter(
-    (u) =>
-      !friendsList.find((f) => f.id === u.id) &&
-      !blockedUsers.includes(u.id) &&
-      (u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        u.university.toLowerCase().includes(searchQuery.toLowerCase()))
-  )
+  const searchResults =
+    !searchQuery.trim()
+      ? []
+      : allUsers.filter(
+          (u) =>
+            !friendsList.find((f) => f.id === u.id) &&
+            !blockedUsers.includes(u.id) &&
+            (u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              u.university.toLowerCase().includes(searchQuery.toLowerCase()))
+        )
 
   const handleAccept = (request: FriendRequest) => {
     setFriendsList((prev) => [...prev, request.from])
@@ -195,7 +190,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
               key={t}
               onClick={() => setTab(t)}
               className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                tab === t ? "bg-primary-foreground text-primary shadow-sm" : "text-primary-foreground/70"
+                tab === t ? "bg-primary-foreground text-primary" : "text-primary-foreground/70"
               }`}
             >
               {t === "friends" ? `내 친구 (${friendsList.length})` : t === "requests" ? `신청 (${requests.length})` : "검색"}
@@ -204,34 +199,39 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
         </div>
       </MainHeader>
       <div className="flex flex-col min-h-full">
-        <main className="flex-1 px-4 pt-6 pb-6 flex flex-col gap-3">
+        <main className="flex-1 px-2 pt-3 pb-6 flex flex-col gap-2">
         {tab === "search" && (
           <>
             <div className="relative">
-              <TossIcon name="icon-search-bold-mono" size={24} background="white" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="이름이나 대학교로 검색해보세요"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-11 pl-11 pr-10 rounded-xl bg-muted border-0 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="w-full h-11 pl-4 pr-10 rounded-xl bg-muted border-0 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
                 autoFocus
               />
               <button
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors"
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
                 aria-label="검색"
               >
                 <TossIcon name="icon-search-bold-mono" size={24} background="white" className="text-primary" />
               </button>
             </div>
-            {searchQuery && searchResults.length === 0 && (
+            {!searchQuery.trim() && (
               <div className="flex-1 flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <TossIcon name="icon-users-mono" size={40} background="white" className="mb-4 opacity-30" />
-                <p className="text-base">{"검색 결과가 나오면 여기서 볼 수 있어요"}</p>
+                <p className="text-sm text-muted-foreground/70">{"이름이나 대학교로 검색해보세요"}</p>
               </div>
             )}
-            {searchResults.map((user) => (
-              <div key={user.id} className="flex items-center gap-3.5 bg-card rounded-xl border border-border p-3.5">
+            {searchQuery.trim() && searchResults.length === 0 && (
+              <div className="flex-1 flex flex-col items-center justify-center py-16 text-muted-foreground">
+                <TossIcon name="icon-users-mono" size={40} background="white" className="mb-4 opacity-30" />
+                <p className="text-sm text-muted-foreground/70">{"검색 결과가 없어요"}</p>
+              </div>
+            )}
+            {searchQuery.trim() && searchResults.map((user) => (
+              <div key={user.id} className="flex items-center gap-3.5 bg-card rounded-xl border border-border/60 p-3.5">
                 <button onClick={() => onViewProfile(user)}>
                   <UserAvatar user={user} size="md" />
                 </button>
@@ -244,14 +244,12 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
                     {"신청됨"}
                   </span>
                 ) : (
-                  <Button
+                  <button
                     onClick={() => handleSendRequest(user.id)}
-                    size="sm"
-                    className="rounded-lg bg-primary text-primary-foreground h-8 px-3 gap-1"
+                    className="text-xs font-medium text-primary py-1.5 px-2.5 rounded-lg bg-primary/10"
                   >
-                    <TossIcon name="icon-user-plus-mono" size={24} onPrimary />
-                    <span className="text-xs">{"추가"}</span>
-                  </Button>
+                    {"추가"}
+                  </button>
                 )}
               </div>
             ))}
@@ -263,11 +261,11 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
             {requests.length === 0 ? (
               <div className="flex-1 flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <TossIcon name="icon-user-plus-mono" size={40} className="mb-4 opacity-30" />
-                <p className="text-base">{"신청이 오면 여기서 확인할 수 있어요"}</p>
+                <p className="text-sm text-muted-foreground/70">{"신청이 오면 여기서 확인할 수 있어요"}</p>
               </div>
             ) : (
               requests.map((req) => (
-                <div key={req.id} className="flex items-center gap-3.5 bg-card rounded-xl border border-border p-3.5">
+                <div key={req.id} className="flex items-center gap-3.5 bg-card rounded-xl border border-border/60 p-3.5">
                   <button onClick={() => onViewProfile(req.from)}>
                     <UserAvatar user={req.from} size="md" />
                   </button>
@@ -306,13 +304,12 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
             <>
               {friendsList.length > 0 && (
                 <div className="relative">
-                  <TossIcon name="icon-search-bold-mono" size={24} background="white" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   <input
                     type="text"
                     placeholder="친구를 검색해보세요"
                     value={friendsSearchQuery}
                     onChange={(e) => setFriendsSearchQuery(e.target.value)}
-                    className="w-full h-11 pl-11 pr-4 rounded-xl bg-muted border-0 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className="w-full h-11 pl-4 pr-4 rounded-xl bg-muted border-0 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
                   />
                 </div>
               )}
@@ -333,7 +330,6 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
                     friend={friend}
                     onViewProfile={() => onViewProfile(friend)}
                     onDelete={() => setShowConfirmDialog({ type: "delete", userId: friend.id, userName: friend.name })}
-                    onBlock={() => setShowConfirmDialog({ type: "block", userId: friend.id, userName: friend.name })}
                   />
                 ))
               )}
@@ -346,7 +342,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
       {showConfirmDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-foreground/30" onClick={() => setShowConfirmDialog(null)} />
-          <div className="relative bg-card rounded-2xl p-6 w-full max-w-xs shadow-xl">
+          <div className="relative bg-card rounded-2xl p-6 w-full max-w-xs">
             <h3 className="text-lg font-bold mb-2">
               {showConfirmDialog.type === "delete" ? "친구 삭제" : "사용자 차단"}
             </h3>

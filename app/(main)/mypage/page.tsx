@@ -14,7 +14,7 @@ export default function MypageRoute() {
   }
 
   const handleViewProfile = (user: UserProfile) => {
-    router.push(`/user/${user.id}`)
+    router.push(`/user/${user.id}?from=mypage`)
   }
 
   const handleLogout = () => {
@@ -27,7 +27,6 @@ export default function MypageRoute() {
       onViewPost={handleViewPost}
       onViewProfile={handleViewProfile}
       onLogout={handleLogout}
-      onBack={() => router.back()}
     />
   )
 }

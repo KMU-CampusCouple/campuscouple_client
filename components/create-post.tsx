@@ -9,11 +9,10 @@ import { friends, currentUser, formatMeetingType } from "@/lib/store"
 import type { UserProfile } from "@/lib/store"
 
 interface CreatePostProps {
-  onBack: () => void
   onSubmit: () => void
 }
 
-export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
+export default function CreatePost({ onSubmit }: CreatePostProps) {
   const [title, setTitle] = useState("")
   const [perSide, setPerSide] = useState(3)
   const [location, setLocation] = useState("")
@@ -62,14 +61,11 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
       <div className="flex flex-col min-h-full">
         <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3 shrink-0">
           <div className="flex items-center gap-3 min-h-[2rem]">
-            <button onClick={onBack} className="text-foreground flex items-center justify-center p-1 -m-1">
-              <TossIcon name="icon-arrow-left-mono" size={24} background="white" />
-            </button>
             <h1 className="text-lg font-bold flex-1 text-foreground leading-tight">{"미팅 모집글 작성"}</h1>
           </div>
         </header>
 
-        <main className="flex-1 px-4 py-4 pb-6 flex flex-col gap-5">
+        <main className="flex-1 px-2 py-4 pb-6 flex flex-col gap-5">
         {/* Title - required */}
         <div>
           <label className="text-sm font-medium mb-1.5 block">
@@ -87,7 +83,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
         {/* Meeting size */}
         <div>
           <label className="text-sm font-medium mb-2 block">{"미팅 인원"}</label>
-          <div className="bg-card rounded-xl border border-border p-4">
+          <div className="bg-card rounded-xl border border-border/60 p-4">
             <div className="flex items-center justify-center gap-5">
               <button
                 onClick={() => adjustPerSide(-1)}
@@ -124,7 +120,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {/* Me */}
-            <div className="shrink-0 snap-start flex flex-col items-center gap-1.5 p-2.5 rounded-xl bg-primary/10 ring-2 ring-primary w-[72px] min-w-[72px]">
+            <div className="shrink-0 snap-start flex flex-col items-center gap-1.5 p-2.5 rounded-xl bg-primary/10 border-2 border-primary w-[72px] min-w-[72px]">
               <UserAvatar user={currentUser} size="md" />
               <span className="text-[11px] font-medium">{"나"}</span>
             </div>
@@ -167,7 +163,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="우리 그룹을 소개해요!"
-            className="w-full h-28 rounded-xl bg-card border border-border p-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+            className="w-full h-28 rounded-xl bg-card border border-border/60 p-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
           />
         </div>
 
@@ -306,7 +302,7 @@ export default function CreatePost({ onBack, onSubmit }: CreatePostProps) {
                       onClick={() => !isDisabled && toggleFriend(f)}
                       className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${
                         isSelected
-                          ? "bg-primary/10 ring-1 ring-primary"
+                          ? "bg-primary/10 border border-primary"
                           : isDisabled
                           ? "bg-muted opacity-40"
                           : "bg-muted"

@@ -68,7 +68,7 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
     <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
       <MainHeader />
       <div className="flex flex-col min-h-full">
-      <main className="flex-1 px-4 pt-6 pb-6 flex flex-col gap-2">
+      <main className="flex-1 px-2 pt-6 pb-6 flex flex-col gap-1.5">
         {notifications.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
             <TossIcon name="icon-alarm-mono" size={40} background="white" className="mb-4 opacity-50" />
@@ -83,38 +83,38 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
                   onClick={() => setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))}
                   className="text-xs text-primary font-medium"
                 >
-                  {"모두 읽었어요"}
+                  {"모두 읽기"}
                 </button>
               )}
             </div>
             {unread.length === 0 ? (
               <div className="flex items-center justify-center py-8">
-                <p className="text-sm text-muted-foreground">{"새 알림이 오면 여기서 확인할 수 있어요"}</p>
+                <p className="text-xs text-muted-foreground">{"새 알림이 오면 여기서 확인할 수 있어요"}</p>
               </div>
             ) : unread.map((notif) => (
               <div
                 key={notif.id}
-                className="flex items-center gap-3.5 bg-card rounded-xl p-4 border border-border w-full shadow-sm"
+                className="flex items-center gap-3.5 rounded-xl p-3 border border-border/60 w-full"
               >
                 <button
                   onClick={() => handleTapNotification(notif)}
                   className="flex items-center gap-3.5 flex-1 min-w-0 text-left"
                 >
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
-                    style={{ background: getIconBg(notif.type), color: "white" }}
-                  >
-                    {getIcon(notif.type)}
-                  </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <p className="text-sm font-semibold">{notif.title}</p>
-                        <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                      </div>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <p
+                        className="text-xs font-semibold px-2 py-0.5 rounded-md"
+                        style={{
+                          backgroundColor: getIconBg(notif.type).replace(")", ", 0.15)"),
+                          color: getIconBg(notif.type),
+                        }}
+                      >
+                        {notif.title}
+                      </p>
                       <p className="text-[10px] text-muted-foreground shrink-0">{getTimeAgo(notif.createdAt)}</p>
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
                     </div>
-                    <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed truncate">{notif.message}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed truncate pl-1">{notif.message}</p>
                   </div>
                   {notif.type !== "friend_request" && (
                     <TossIcon name="icon-arrow-right-small-mono" size={24} background="white" className="opacity-80 shrink-0" />
@@ -146,27 +146,28 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
             ))}
 
             {read.length > 0 && (
-              <p className="text-xs text-muted-foreground font-medium mt-3 mb-1">{"이전 알림"}</p>
+              <p className="text-xs text-muted-foreground font-medium mt-5 mb-1">{"이전 알림"}</p>
             )}
             {read.map((notif) => (
               <button
                 key={notif.id}
                 onClick={() => handleTapNotification(notif)}
-                className="flex items-center gap-3.5 rounded-xl p-4 border border-border/60 text-left w-full"
-                style={{ background: "hsl(345, 25%, 95%)" }}
+                className="flex items-center gap-3.5 rounded-xl p-3 border border-border/60 text-left w-full"
               >
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 opacity-60"
-                  style={{ background: getIconBg(notif.type), color: "white" }}
-                >
-                  {getIcon(notif.type)}
-                </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2">
-                    <p className="text-sm font-medium text-muted-foreground">{notif.title}</p>
+                  <div className="flex items-center gap-2 min-w-0">
+                    <p
+                      className="text-xs font-semibold px-2 py-0.5 rounded-md"
+                      style={{
+                        backgroundColor: getIconBg(notif.type).replace(")", ", 0.15)"),
+                        color: getIconBg(notif.type),
+                      }}
+                    >
+                      {notif.title}
+                    </p>
                     <p className="text-[10px] text-muted-foreground shrink-0">{getTimeAgo(notif.createdAt)}</p>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed truncate">{notif.message}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed truncate pl-1">{notif.message}</p>
                 </div>
                 <TossIcon name="icon-arrow-right-small-mono" size={24} background="white" className="opacity-70 shrink-0" />
               </button>

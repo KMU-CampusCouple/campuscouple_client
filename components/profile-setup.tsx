@@ -243,7 +243,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                 value={form.idealType}
                 onChange={(e) => setForm({ ...form, idealType: e.target.value })}
                 placeholder="어떤 사람이 이상형인지 자유롭게 써주세요"
-                className="w-full h-24 rounded-xl bg-card border border-border p-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+                className="w-full h-24 rounded-xl bg-card border border-border/60 p-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
               />
             </div>
           </div>
@@ -262,7 +262,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                     className={`h-9 rounded-lg text-xs font-medium transition-colors ${
                       form.mbti === type
                         ? "bg-primary text-primary-foreground"
-                        : "bg-card text-foreground border border-border"
+                        : "bg-card text-foreground border border-border/60"
                     }`}
                   >
                     {type}
@@ -274,7 +274,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                 className={`w-full h-9 rounded-lg text-xs font-medium transition-colors mt-2 ${
                   form.mbti === "미공개"
                     ? "bg-primary text-primary-foreground"
-                    : "bg-card text-muted-foreground border border-border"
+                    : "bg-card text-muted-foreground border border-border/60"
                 }`}
               >
                 {"미공개"}

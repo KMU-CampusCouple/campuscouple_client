@@ -21,18 +21,23 @@ function ParticipantCard({
   onTap: () => void
 }) {
   return (
-    <button onClick={onTap} className="flex flex-col items-center gap-1 w-full">
-      <UserAvatar user={user} size="md" />
-      <span className="text-[10px] font-medium text-center leading-tight truncate w-full">{user.name}</span>
-      <span className="text-[9px] text-muted-foreground">
-        {user.university.slice(0, 4)} {user.studentYear}
-      </span>
+    <button
+      onClick={onTap}
+      className="rounded-lg p-2 flex flex-col items-center gap-1.5 bg-muted/50 hover:bg-muted/70 transition-colors w-full"
+    >
+      <UserAvatar user={user} size="sm" />
+      <div className="text-center w-full min-w-0">
+        <p className="text-[11px] font-semibold truncate">{user.name}</p>
+        <p className="text-[9px] text-muted-foreground mt-0.5 truncate">{user.university}</p>
+        <p className="text-[9px] text-muted-foreground">{user.studentYear}{"학번"}</p>
+      </div>
     </button>
   )
 }
 
 function ApplicationCard({
   application,
+  perSide,
   isAuthor,
   isApplicant,
   onAccept,
@@ -41,6 +46,7 @@ function ApplicationCard({
   onViewProfile,
 }: {
   application: MeetingApplication
+  perSide: number
   isAuthor: boolean
   isApplicant: boolean
   onAccept: () => void
@@ -50,52 +56,54 @@ function ApplicationCard({
 }) {
   if (!isAuthor && !isApplicant) return null
   const isAccepted = application.status === "accepted"
+  const representative = application.applicants[0]
+  const showAcceptButton = isAuthor && application.status === "pending"
 
   return (
-    <div className="bg-card rounded-xl border border-border p-4">
-      <div className="flex items-center justify-end gap-2 mb-3">
-        <span
-          className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-            application.status === "pending"
-              ? "bg-secondary text-secondary-foreground"
-              : application.status === "accepted"
-              ? "bg-primary/15 text-primary"
-              : "bg-muted text-muted-foreground"
-          }`}
-        >
-          {application.status === "pending"
-            ? "대기 중"
-            : application.status === "accepted"
-            ? "수락했어요"
-            : "거절했어요"}
-        </span>
-        {isAuthor && (
-          <button onClick={onDelete} className="text-muted-foreground hover:text-destructive transition-colors">
-            <TossIcon name="icon-trash-mono" size={24} background="white" />
+    <div className="p-4 pb-4 border-b border-border">
+      {/* 미팅 신청 대표자 프로필 + 수락 버튼(2:2 뱃지) */}
+      {representative && (
+        <div className="flex items-center gap-2 w-full py-1 mb-3">
+          <button
+            type="button"
+            onClick={() => onViewProfile(representative)}
+            className="flex items-center gap-2 text-left flex-1 min-w-0"
+          >
+            <UserAvatar user={representative} size="sm" />
+            <div className="min-w-0 flex-1">
+              <p className="font-semibold text-xs truncate">{representative.name}</p>
+              <p className="text-[10px] text-muted-foreground truncate">
+                {representative.university} {representative.department} · {representative.studentYear}학번
+              </p>
+            </div>
           </button>
-        )}
-      </div>
+          {showAcceptButton ? (
+            <button
+              type="button"
+              onClick={onAccept}
+              className="text-xs font-semibold px-2 py-1 rounded-full bg-primary/20 text-primary shrink-0 hover:bg-primary/30 transition-colors"
+              aria-label="수락하기"
+            >
+              {"수락"}
+            </button>
+          ) : (
+            <span className="text-xs font-semibold px-2 py-1 rounded-full bg-primary/20 text-primary shrink-0">
+              {formatMeetingType(perSide)}
+            </span>
+          )}
+        </div>
+      )}
 
-      {/* 5 per row grid */}
+      <p className="text-sm text-foreground leading-relaxed mb-3">
+        {application.message}
+      </p>
+
+      {/* 신청자 카드 */}
       <div className="grid grid-cols-5 gap-2 mb-3">
         {application.applicants.map((a) => (
           <ParticipantCard key={a.id} user={a} onTap={() => onViewProfile(a)} />
         ))}
       </div>
-
-      <p className="text-sm text-foreground leading-relaxed mb-3 bg-muted rounded-lg p-3">
-        {application.message}
-      </p>
-
-      {isAuthor && application.status === "pending" && (
-        <Button
-          onClick={onAccept}
-          className="w-full h-10 rounded-xl bg-primary text-primary-foreground font-medium gap-2"
-        >
-          <TossIcon name="icon-check-mono" size={24} onPrimary />
-          {"수락하기"}
-        </Button>
-      )}
 
       {isApplicant && (
         <Button
@@ -184,21 +192,21 @@ function ParticipantSwiper({
   const touchStartX = useRef(0)
   const touchDelta = useRef(0)
 
+  const cardWidthRatio = 0.18
   const handleScrollSnap = (dir: number) => {
     if (!scrollRef.current) return
-    const cardWidth = scrollRef.current.offsetWidth * 0.42
+    const cardWidth = scrollRef.current.offsetWidth * cardWidthRatio
     scrollRef.current.scrollBy({ left: dir * cardWidth, behavior: "smooth" })
   }
 
   return (
-    <div className="bg-card rounded-xl border border-border p-4">
-      <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-        <TossIcon name="icon-users-mono" size={24} background="white" />
-        {"참여자 ("}{participants.length}/{total}{")"}
+    <div className="flex flex-col">
+      <h3 className="text-xs font-medium mb-2 text-foreground/90">
+        {"참여인원 ("}{participants.length}/{total}{")"}
       </h3>
       <div
         ref={scrollRef}
-        className="flex gap-3 overflow-x-auto scrollbar-hide select-none snap-x snap-mandatory pb-1"
+        className="flex gap-1.5 overflow-x-auto scrollbar-hide select-none snap-x snap-mandatory pb-1"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; touchDelta.current = 0 }}
         onTouchMove={(e) => { touchDelta.current = e.touches[0].clientX - touchStartX.current }}
@@ -208,25 +216,25 @@ function ParticipantSwiper({
           <button
             key={p.id}
             onClick={() => onViewProfile(p)}
-            className="shrink-0 w-[42%] snap-start bg-muted rounded-2xl p-4 flex flex-col items-center gap-2.5 hover:bg-accent transition-colors"
+            className="shrink-0 w-[18%] snap-start bg-muted/50 rounded-lg p-2 flex flex-col items-center gap-1.5 hover:bg-muted/70 transition-colors"
           >
-            <UserAvatar user={p} size="lg" />
-            <div className="text-center w-full">
-              <p className="text-sm font-semibold truncate">{p.name}</p>
-              <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{p.university}</p>
-              <p className="text-[11px] text-muted-foreground">{p.studentYear}{"학번"}</p>
+            <UserAvatar user={p} size="sm" />
+            <div className="text-center w-full min-w-0">
+              <p className="text-[11px] font-semibold truncate">{p.name}</p>
+              <p className="text-[9px] text-muted-foreground mt-0.5 truncate">{p.university}</p>
+              <p className="text-[9px] text-muted-foreground">{p.studentYear}{"학번"}</p>
             </div>
           </button>
         ))}
         {Array.from({ length: openSlots }).map((_, i) => (
           <div
             key={`empty-${i}`}
-            className="shrink-0 w-[42%] snap-start bg-muted/50 rounded-2xl p-4 flex flex-col items-center gap-2.5 border-2 border-dashed border-border"
+            className="shrink-0 w-[18%] snap-start bg-muted/50 rounded-lg p-2 flex flex-col items-center gap-1.5"
           >
-            <div className="w-12 h-12 rounded-full border-2 border-dashed border-muted-foreground/30 flex items-center justify-center">
-              <TossIcon name="icon-plus-small-mono" size={24} background="white" className="opacity-40" />
+            <div className="w-7 h-7 rounded-full border-2 border-dashed border-muted-foreground/30 flex items-center justify-center">
+              <TossIcon name="icon-plus-small-mono" size={14} background="white" className="opacity-40" />
             </div>
-            <p className="text-xs text-muted-foreground">{"모집중"}</p>
+            <p className="text-[9px] text-muted-foreground">{"모집중"}</p>
           </div>
         ))}
       </div>
@@ -240,7 +248,6 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
   const [applyMessage, setApplyMessage] = useState("")
   const [showFriendPicker, setShowFriendPicker] = useState(false)
   const [activeSlotIndex, setActiveSlotIndex] = useState<number | null>(null)
-  const [showPostMenu, setShowPostMenu] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [showAppDeleteConfirm, setShowAppDeleteConfirm] = useState<string | null>(null)
 
@@ -310,83 +317,52 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
 
   return (
     <div className="flex flex-col min-h-full">
-      <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3 shrink-0">
-        <div className="flex items-center gap-3 min-h-[2rem]">
-          <button onClick={onBack} className="text-foreground flex items-center justify-center p-1 -m-1">
-            <TossIcon name="icon-arrow-left-mono" size={24} background="white" />
-          </button>
-          <h1 className="text-lg font-bold truncate flex-1 text-foreground leading-tight">{post.title}</h1>
-          <span className="text-xs font-semibold px-2 py-1 rounded-full bg-primary/10 text-primary">
-            {formatMeetingType(post.perSide)}
-          </span>
-        </div>
-      </header>
-
-      <main className="flex-1 px-4 py-4 pb-6 flex flex-col gap-4">
-        {/* Author */}
-        <div className="flex items-center gap-3">
+      <main className="flex-1 px-2 py-4 pb-6 flex flex-col gap-4">
+        {/* 작성자 프로필 (에타 스타일) + 미팅 타입 뱃지 */}
+        <div className="flex items-center gap-2 w-full py-1 -mt-1">
           <button
+            type="button"
             onClick={() => onViewProfile(post.author)}
-            className="flex items-center gap-3 text-left flex-1 min-w-0"
+            className="flex items-center gap-2 text-left flex-1 min-w-0"
           >
-            <UserAvatar user={post.author} size="md" />
-            <div>
-              <p className="font-semibold text-sm">{post.author.name}</p>
-              <p className="text-xs text-muted-foreground">
-                {post.author.university} {post.author.department} {post.author.studentYear}
+            <UserAvatar user={post.author} size="sm" />
+            <div className="min-w-0 flex-1">
+              <p className="font-semibold text-xs truncate">{post.author.name}</p>
+              <p className="text-[10px] text-muted-foreground truncate">
+                {post.author.university} {post.author.department} · {post.author.studentYear}학번
               </p>
             </div>
           </button>
-          {isAuthor && (
-            <div className="relative">
-              <button
-                onClick={() => setShowPostMenu(!showPostMenu)}
-                className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-muted transition-colors"
-              >
-                <TossIcon name="icon-more-vertical-mono" size={24} background="white" className="opacity-70" />
-              </button>
-              {showPostMenu && (
-                <div className="absolute right-0 top-full mt-1 bg-card rounded-xl border border-border shadow-lg z-20 min-w-[120px] py-1">
-                  <button
-                    onClick={() => { setShowPostMenu(false); setShowDeleteConfirm(true) }}
-                    className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-destructive hover:bg-muted transition-colors"
-                  >
-                    <TossIcon name="icon-trash-mono" size={24} background="white" />
-                    {"삭제"}
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
+          <span className="text-xs font-semibold px-2 py-1 rounded-full bg-primary/20 text-primary shrink-0">
+            {formatMeetingType(post.perSide)}
+          </span>
         </div>
 
+        {/* 글 제목 + 장소·날짜·시간 (간격 축소) */}
+        <div className="flex flex-col gap-1">
+          <h1 className="text-[15px] font-medium leading-tight text-foreground/85">{post.title}</h1>
+          <div className="text-sm text-foreground/90">
+            <span>{displayLocation} · {post.date} {displayTime}</span>
+          </div>
+        </div>
+
+        {/* 본문 */}
+        <p className="text-sm leading-relaxed text-foreground/80">{post.description}</p>
+
         {/* Participants - swipeable cards */}
+        <div className="mt-3">
         <ParticipantSwiper
           participants={post.participants}
           openSlots={openSlots}
           total={post.perSide * 2}
           onViewProfile={onViewProfile}
         />
-
-        {/* Info (가이드: 한 번에 하나의 아이콘만 사용) */}
-        <div className="bg-card rounded-xl border border-border p-4 flex flex-col gap-3">
-          <div className="flex items-center gap-2 text-sm">
-            <TossIcon name="icon-calendar-mono" size={24} background="white" className="shrink-0" />
-            <span>{displayLocation} · {post.date} {displayTime}</span>
-          </div>
-          <div className="border-t border-border pt-3">
-            <p className="text-sm leading-relaxed">{post.description}</p>
-          </div>
         </div>
 
         {/* Applications section */}
-        <div className="flex flex-col gap-3 mt-6">
-          <h3 className="text-sm font-semibold flex items-center gap-2">
-            <TossIcon name="icon-message-mono" size={24} background="white" />
+        <div className="flex flex-col gap-2 mt-6">
+          <h3 className="text-xs font-medium mb-1 text-foreground/90">
             {"미팅 신청"}
-            <span className="ml-auto text-xs text-muted-foreground">
-              {applications.length}{"개 신청"}
-            </span>
           </h3>
 
           {isAuthor ? (
@@ -395,6 +371,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                 <ApplicationCard
                   key={app.id}
                   application={app}
+                  perSide={post.perSide}
                   isAuthor={isAuthor}
                   isApplicant={app.applicants.some((a) => a.id === currentUser.id)}
                   onAccept={() => handleAccept(app.id)}
@@ -404,7 +381,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                 />
               ))
             ) : (
-              <div className="bg-card rounded-xl border border-border p-8 flex flex-col items-center text-muted-foreground">
+              <div className="bg-card rounded-xl border border-border/60 p-8 flex flex-col items-center text-muted-foreground">
                 <TossIcon name="icon-users-mono" size={32} background="white" className="mb-2 opacity-30" />
                 <p className="text-sm">{"신청이 오면 여기서 확인할 수 있어요"}</p>
               </div>
@@ -418,6 +395,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                   <ApplicationCard
                     key={app.id}
                     application={app}
+                    perSide={post.perSide}
                     isAuthor={false}
                     isApplicant={true}
                     onAccept={() => {}}
@@ -427,7 +405,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                   />
                 ))
               }
-              <div className="bg-card rounded-xl border border-border p-4 flex items-center gap-3">
+              <div className="bg-card rounded-xl border border-border/60 p-4 flex items-center gap-3">
                 <TossIcon name="icon-lock-mono" size={24} background="white" className="opacity-70" />
                 <div>
                   <p className="text-sm font-medium">
@@ -455,7 +433,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
 
         {/* Apply form */}
         {showApplyForm && (
-          <div className="bg-card rounded-xl border border-border p-4 flex flex-col gap-4">
+          <div className="bg-card rounded-xl border border-border/60 p-4 flex flex-col gap-4">
             <h3 className="text-sm font-semibold">{"우리 그룹으로 신청하기"}</h3>
 
             <div>
@@ -507,7 +485,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-foreground/30" onClick={() => setShowDeleteConfirm(false)} />
-          <div className="relative bg-card rounded-2xl p-6 w-full max-w-xs shadow-xl">
+          <div className="relative bg-card rounded-2xl p-6 w-full max-w-xs">
             <h3 className="text-lg font-bold mb-2">{"글 삭제"}</h3>
             <p className="text-sm text-muted-foreground mb-5">
               {"이 글을 삭제할까요? 삭제하면 복구할 수 없어요."}
@@ -535,7 +513,7 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
       {showAppDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-foreground/30" onClick={() => setShowAppDeleteConfirm(null)} />
-          <div className="relative bg-card rounded-2xl p-6 w-full max-w-xs shadow-xl">
+          <div className="relative bg-card rounded-2xl p-6 w-full max-w-xs">
             <h3 className="text-lg font-bold mb-2">{"신청 삭제"}</h3>
             <p className="text-sm text-muted-foreground mb-5">
               {"이 신청을 삭제할까요?"}
@@ -599,12 +577,11 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
               )}
             </div>
             <Button
-              variant="outline"
               onClick={() => {
                 setShowFriendPicker(false)
                 setActiveSlotIndex(null)
               }}
-              className="w-full h-10 rounded-xl mt-4"
+              className="w-full h-10 rounded-xl mt-4 bg-primary text-primary-foreground hover:bg-primary/90"
             >
               {"닫기"}
             </Button>
