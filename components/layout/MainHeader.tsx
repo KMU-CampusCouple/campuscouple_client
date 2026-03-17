@@ -10,6 +10,8 @@ interface MainHeaderProps {
   searchVisible?: boolean
   /** 지정 시 로고+캠퍼스커플 대신 이 내용을 헤더 첫 행에 표시 (예: 게시글 상세 제목) */
   titleContent?: ReactNode
+  /** 기본 로고 행을 유지하면서 오른쪽에 액션 버튼 등을 배치할 때 사용 */
+  rightSlot?: ReactNode
 }
 
 const HEADER_PADDING = "px-4 pt-5 pb-3.5"
@@ -17,7 +19,7 @@ const HEADER_PADDING_NO_CHILDREN = "px-4 pt-5 pb-5"
 const HEADER_HEIGHT_SINGLE_ROW = "h-[4.25rem]" /* 68px - 로고 헤더와 제목 헤더 동일 */
 const LOGO_ROW_GAP = "mb-3"
 
-export function MainHeader({ children, searchVisible = true, titleContent }: MainHeaderProps) {
+export function MainHeader({ children, searchVisible = true, titleContent, rightSlot }: MainHeaderProps) {
   const paddingClass = children != null && titleContent == null ? HEADER_PADDING : HEADER_PADDING_NO_CHILDREN
   const showDefaultLogo = titleContent == null
   return (
@@ -43,6 +45,8 @@ export function MainHeader({ children, searchVisible = true, titleContent }: Mai
           <>
             <img src="/logo.jpg" alt="Campus Couple" className="w-7 h-7 rounded-lg object-cover" />
             <span className="text-sm font-bold text-primary-foreground">캠퍼스커플</span>
+            {rightSlot && <div className="flex-1" />}
+            {rightSlot}
           </>
         ) : (
           titleContent

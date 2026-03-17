@@ -126,7 +126,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
       <MainHeader />
       <div className="flex flex-col min-h-full">
       <main className="flex-1 px-2 pt-6 pb-6 flex flex-col gap-6">
-        <div className="py-4">
+        <div className="p-4 rounded-xl border border-border/60 bg-card">
           <div className="flex items-center gap-4">
             <UserAvatar user={currentUser} size="lg" />
             <div className="flex-1 min-w-0">

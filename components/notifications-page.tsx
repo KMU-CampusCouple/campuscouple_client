@@ -101,7 +101,7 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
                   className="flex items-center gap-3.5 flex-1 min-w-0 text-left"
                 >
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 min-w-0">
+                    <div className="flex items-center gap-2.5 min-w-0">
                       <p
                         className="text-xs font-semibold px-2 py-0.5 rounded-md"
                         style={{
@@ -114,7 +114,7 @@ export default function NotificationsPage({ onNavigate }: NotificationsPageProps
                       <p className="text-[10px] text-muted-foreground shrink-0">{getTimeAgo(notif.createdAt)}</p>
                       <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
                     </div>
-                    <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed truncate pl-1">{notif.message}</p>
+                    <p className="text-xs text-muted-foreground mt-1 leading-relaxed truncate pl-1">{notif.message}</p>
                   </div>
                   {notif.type !== "friend_request" && (
                     <TossIcon name="icon-arrow-right-small-mono" size={24} background="white" className="opacity-80 shrink-0" />

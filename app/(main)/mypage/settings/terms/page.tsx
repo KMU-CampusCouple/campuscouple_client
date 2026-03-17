@@ -62,7 +62,7 @@ export default function TermsPage() {
           </section>
 
           <p className="text-xs text-muted-foreground pt-4">
-            시행일: 2025년 1월 1일
+            시행일: 2026년 3월 16일
           </p>
         </div>
       </div>
