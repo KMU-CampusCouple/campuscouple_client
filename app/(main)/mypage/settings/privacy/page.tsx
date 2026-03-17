@@ -62,7 +62,7 @@ export default function PrivacyPage() {
           </section>
 
           <p className="text-xs text-muted-foreground pt-4">
-            시행일: 2025년 1월 1일 (개정 시 서비스 내 공지 후 적용)
+            시행일: 2026년 3월 16일 (개정 시 서비스 내 공지 후 적용)
           </p>
         </div>
       </div>

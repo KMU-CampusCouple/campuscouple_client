@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useCallback } from "react"
+import { useState, useRef, useCallback, useEffect } from "react"
 import { TossIcon } from "@/components/toss-icon"
 import { Button } from "@/components/ui/button"
 import UserAvatar from "@/components/user-avatar"
@@ -143,6 +143,24 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
   const [blockedUsers, setBlockedUsers] = useState<string[]>([])
   const [showConfirmDialog, setShowConfirmDialog] = useState<{ type: "delete" | "block"; userId: string; userName: string } | null>(null)
   const [friendsSearchQuery, setFriendsSearchQuery] = useState("")
+  const [recentViewedFromSearch, setRecentViewedFromSearch] = useState<UserProfile[]>([])
+
+  // 친구 검색 히스토리: 로컬스토리지에 저장/복원
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem("cc_friends_search_history")
+      if (!raw) return
+      const parsed = JSON.parse(raw) as { id: string }[]
+      const users = parsed
+        .map((item) => allUsers.find((u) => u.id === item.id))
+        .filter((u): u is UserProfile => !!u)
+      if (users.length > 0) {
+        setRecentViewedFromSearch(users.slice(0, 5))
+      }
+    } catch {
+      // 무시
+    }
+  }, [])
 
   const searchResults =
     !searchQuery.trim()
@@ -154,6 +172,23 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
             (u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
               u.university.toLowerCase().includes(searchQuery.toLowerCase()))
         )
+
+  const handleViewProfileFromSearch = (user: UserProfile) => {
+    setRecentViewedFromSearch((prev) => {
+      const without = prev.filter((u) => u.id !== user.id)
+      const next = [user, ...without].slice(0, 5)
+      try {
+        window.localStorage.setItem(
+          "cc_friends_search_history",
+          JSON.stringify(next.map((u) => ({ id: u.id })))
+        )
+      } catch {
+        // 무시
+      }
+      return next
+    })
+    onViewProfile(user)
+  }
 
   const handleAccept = (request: FriendRequest) => {
     setFriendsList((prev) => [...prev, request.from])
@@ -219,10 +254,51 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
               </button>
             </div>
             {!searchQuery.trim() && (
-              <div className="flex-1 flex flex-col items-center justify-center py-16 text-muted-foreground">
-                <TossIcon name="icon-users-mono" size={40} background="white" className="mb-4 opacity-30" />
-                <p className="text-sm text-muted-foreground/70">{"이름이나 대학교로 검색해보세요"}</p>
-              </div>
+              <>
+                {recentViewedFromSearch.length > 0 && (
+                  <div className="mt-3 space-y-2">
+                    <div className="flex items-center justify-between px-0.5">
+                      <p className="text-xs text-muted-foreground font-medium">{"최근에 본 프로필"}</p>
+                      <button
+                        onClick={() => {
+                          setRecentViewedFromSearch([])
+                          try {
+                            window.localStorage.removeItem("cc_friends_search_history")
+                          } catch {
+                            // 무시
+                          }
+                        }}
+                        className="text-[11px] text-primary font-medium underline-offset-2 hover:underline"
+                      >
+                        {"지우기"}
+                      </button>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      {recentViewedFromSearch.map((user) => (
+                        <button
+                          key={user.id}
+                          onClick={() => handleViewProfileFromSearch(user)}
+                          className="flex items-center gap-3.5 bg-card rounded-xl border border-border/60 p-3.5 text-left"
+                        >
+                          <UserAvatar user={user} size="md" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold truncate">{user.name}</p>
+                            <p className="text-xs text-muted-foreground truncate">
+                              {user.university} {user.department}
+                            </p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {recentViewedFromSearch.length === 0 && (
+                  <div className="flex-1 flex flex-col items-center justify-center py-16 text-muted-foreground">
+                    <TossIcon name="icon-users-mono" size={40} background="white" className="mb-4 opacity-30" />
+                    <p className="text-sm text-muted-foreground/70">{"이름이나 대학교로 검색해보세요"}</p>
+                  </div>
+                )}
+              </>
             )}
             {searchQuery.trim() && searchResults.length === 0 && (
               <div className="flex-1 flex flex-col items-center justify-center py-16 text-muted-foreground">
@@ -230,29 +306,33 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
                 <p className="text-sm text-muted-foreground/70">{"검색 결과가 없어요"}</p>
               </div>
             )}
-            {searchQuery.trim() && searchResults.map((user) => (
-              <div key={user.id} className="flex items-center gap-3.5 bg-card rounded-xl border border-border/60 p-3.5">
-                <button onClick={() => onViewProfile(user)}>
-                  <UserAvatar user={user} size="md" />
-                </button>
-                <button onClick={() => onViewProfile(user)} className="flex-1 min-w-0 text-left">
-                  <p className="text-sm font-semibold truncate">{user.name}</p>
-                  <p className="text-xs text-muted-foreground">{user.university} {user.department}</p>
-                </button>
-                {sentRequests.includes(user.id) ? (
-                  <span className="text-xs text-muted-foreground font-medium px-3 py-1.5 rounded-lg bg-muted">
-                    {"신청됨"}
-                  </span>
-                ) : (
-                  <button
-                    onClick={() => handleSendRequest(user.id)}
-                    className="text-xs font-medium text-primary py-1.5 px-2.5 rounded-lg bg-primary/10"
-                  >
-                    {"추가"}
-                  </button>
-                )}
+            {searchQuery.trim() && searchResults.length > 0 && (
+              <div className="mt-3 flex flex-col gap-2">
+                {searchResults.map((user) => (
+                  <div key={user.id} className="flex items-center gap-3.5 bg-card rounded-xl border border-border/60 p-3.5">
+                    <button onClick={() => handleViewProfileFromSearch(user)}>
+                      <UserAvatar user={user} size="md" />
+                    </button>
+                    <button onClick={() => handleViewProfileFromSearch(user)} className="flex-1 min-w-0 text-left">
+                      <p className="text-sm font-semibold truncate">{user.name}</p>
+                      <p className="text-xs text-muted-foreground">{user.university} {user.department}</p>
+                    </button>
+                    {sentRequests.includes(user.id) ? (
+                      <span className="text-xs text-muted-foreground font-medium px-3 py-1.5 rounded-lg bg-muted">
+                        {"신청됨"}
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => handleSendRequest(user.id)}
+                        className="text-xs font-medium text-primary py-1.5 px-2.5 rounded-lg bg-primary/10"
+                      >
+                        {"추가"}
+                      </button>
+                    )}
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </>
         )}
 

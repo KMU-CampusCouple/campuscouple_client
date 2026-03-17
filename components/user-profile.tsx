@@ -80,52 +80,6 @@ export default function UserProfile({ user, isMatched, onBack, friendStatus, onA
 
   return (
     <div className="flex flex-col flex-1 min-h-0 overflow-y-auto overscroll-contain pb-6">
-      <header className="sticky top-0 z-30 bg-background backdrop-blur-lg px-4 pt-10 pb-3">
-        <div className="flex items-center gap-3 min-h-[2rem]">
-          <h1 className="text-lg font-bold flex-1 text-foreground leading-tight">{"프로필"}</h1>
-          {friendStatus !== undefined && (
-            <>
-              {friendStatus === "friend" && (
-                <button
-                  onClick={onRemoveFriend}
-                  className="text-sm font-medium text-primary bg-primary/15 hover:bg-primary/25 rounded-full shrink-0 py-1.5 px-3 transition-colors"
-                >
-                  {"친구삭제"}
-                </button>
-              )}
-              {friendStatus === "pending" && (
-                <span className="text-sm font-medium text-muted-foreground bg-muted rounded-full shrink-0 py-1.5 px-3">
-                  {"요청됨"}
-                </span>
-              )}
-              {friendStatus === "received_request" && onAcceptRequest && onRejectRequest && (
-                <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    onClick={onRejectRequest}
-                    className="text-sm font-medium text-muted-foreground bg-muted hover:bg-muted/80 rounded-full py-1.5 px-3 transition-colors"
-                  >
-                    {"거절"}
-                  </button>
-                  <button
-                    onClick={onAcceptRequest}
-                    className="text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-full py-1.5 px-3 transition-colors"
-                  >
-                    {"수락"}
-                  </button>
-                </div>
-              )}
-              {friendStatus === "none" && (
-                <button
-                  onClick={onAddFriend}
-                  className="text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-full shrink-0 py-1.5 px-3 transition-colors"
-                >
-                  {"친구추가"}
-                </button>
-              )}
-            </>
-          )}
-        </div>
-      </header>
 
       <main className="flex-1 px-2 py-6 flex flex-col gap-4">
         {/* Photo carousel or avatar */}
@@ -174,9 +128,11 @@ export default function UserProfile({ user, isMatched, onBack, friendStatus, onA
           </div>
           <div className="p-5 flex flex-col items-center">
             <h2 className="text-xl font-bold">{user.name}</h2>
-            <span className={`text-xs font-medium px-3 py-1 rounded-full mt-2 ${
-              user.mbti === "미공개" ? "bg-muted text-muted-foreground" : "bg-primary/10 text-primary"
-            }`}>
+            <span
+              className={`text-xs font-medium px-3 py-1 rounded-full mt-2 ${
+                user.mbti === "미공개" ? "bg-muted text-muted-foreground" : "bg-primary/10 text-primary"
+              }`}
+            >
               {user.mbti === "미공개" ? "MBTI 미공개" : user.mbti}
             </span>
             <p className="text-sm text-muted-foreground mt-3 text-center leading-relaxed">
