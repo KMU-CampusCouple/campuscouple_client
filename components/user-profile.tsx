@@ -81,7 +81,7 @@ export default function UserProfile({ user, isMatched, onBack, friendStatus, onA
   return (
     <div className="flex flex-col flex-1 min-h-0 overflow-y-auto overscroll-contain pb-6">
 
-      <main className="flex-1 px-2 py-6 flex flex-col gap-4">
+      <main className="flex-1 px-4 py-6 flex flex-col gap-4">
         {/* Photo carousel or avatar */}
         <div className="bg-card rounded-2xl border border-border/60 overflow-hidden">
           <div
@@ -128,13 +128,6 @@ export default function UserProfile({ user, isMatched, onBack, friendStatus, onA
           </div>
           <div className="p-5 flex flex-col items-center">
             <h2 className="text-xl font-bold">{user.name}</h2>
-            <span
-              className={`text-xs font-medium px-3 py-1 rounded-full mt-2 ${
-                user.mbti === "미공개" ? "bg-muted text-muted-foreground" : "bg-primary/10 text-primary"
-              }`}
-            >
-              {user.mbti === "미공개" ? "MBTI 미공개" : user.mbti}
-            </span>
             <p className="text-sm text-muted-foreground mt-3 text-center leading-relaxed">
               {user.bio}
             </p>
@@ -192,6 +185,21 @@ export default function UserProfile({ user, isMatched, onBack, friendStatus, onA
               <div className="min-w-0">
                 <p className="text-xs text-muted-foreground">{"신체/직업 스펙"}</p>
                 <p className="text-sm font-medium">{user.specs}</p>
+              </div>
+            </div>
+          )}
+
+          {/* MBTI (신체/직업 스펙 바로 아래) */}
+          {user.mbti && (
+            <div className="flex items-center gap-3.5 px-4 py-4 border-b border-border">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                <TossIcon name="icon-sparkles-mono" size={24} background="white" className="opacity-80" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs text-muted-foreground">{"MBTI"}</p>
+                <p className="text-sm font-medium">
+                  {user.mbti === "미공개" ? "MBTI 미공개" : user.mbti}
+                </p>
               </div>
             </div>
           )}

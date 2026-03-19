@@ -52,11 +52,7 @@ function PostCard({
       <div className="flex items-start justify-between gap-2 mb-1.5">
         <h3 className="font-medium text-sm leading-snug flex-1">{post.title}</h3>
         <div className="flex items-center gap-1.5 shrink-0">
-          {isClosed ? (
-            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
-              {"마감"}
-            </span>
-          ) : post.status === "matched" ? (
+          {post.status === "matched" ? (
             <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary">
               {"매칭완료"}
             </span>
@@ -88,7 +84,10 @@ function PostCard({
   )
 }
 
-const SCROLL_THRESHOLD = 60
+// 스크롤 시 검색 영역이 흔들리며(true/false 반복) 토글되는 문제를 막기 위해
+// "숨김"과 "표시" 임계값을 분리합니다. (히스테리시스)
+const HIDE_THRESHOLD = 60
+const SHOW_THRESHOLD = 40
 
 export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: DashboardProps) {
   const [searchQuery, setSearchQuery] = useState("")
@@ -99,13 +98,22 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
   useEffect(() => {
     const el = scrollContainerRef.current
     if (!el) return
+    // 초기 스크롤 위치를 기준으로 잡아, 첫 이벤트에서 불필요한 토글을 줄입니다.
+    lastScrollY.current = el.scrollTop
     const handleScroll = () => {
       const y = el.scrollTop
-      if (y > lastScrollY.current && y > SCROLL_THRESHOLD) {
-        setHeaderVisible(false)
-      } else if (y <= SCROLL_THRESHOLD || y < lastScrollY.current) {
-        setHeaderVisible(true)
+      const isScrollingDown = y > lastScrollY.current
+      const isScrollingUp = y < lastScrollY.current
+
+      // 아래로 내릴 때 충분히 내려갔을 때만 숨김
+      if (isScrollingDown) {
+        if (y > HIDE_THRESHOLD) setHeaderVisible(false)
       }
+      // 위로 다시 충분히 올렸을 때만 표시
+      if (isScrollingUp) {
+        if (y < SHOW_THRESHOLD) setHeaderVisible(true)
+      }
+
       lastScrollY.current = y
     }
     el.addEventListener("scroll", handleScroll, { passive: true })
@@ -150,11 +158,11 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
         </div>
       </MainHeader>
       <div className="flex flex-col min-h-full">
-      <main className="flex-1 px-2 pt-3 pb-6 flex flex-col gap-2">
+      <main className="flex-1 px-4 pt-3 pb-6 flex flex-col gap-2">
         {filteredPosts.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
             <TossIcon name="icon-users-mono" size={40} background="white" className="mb-4 opacity-30" />
-            <p className="text-base">{"미팅이 올라오면 여기서 볼 수 있어요"}</p>
+            <p className="text-sm text-muted-foreground/70">{"미팅이 올라오면 여기서 볼 수 있어요"}</p>
           </div>
         ) : (
           filteredPosts.map((post) => (

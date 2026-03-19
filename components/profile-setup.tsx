@@ -20,6 +20,8 @@ const MBTI_TYPES = [
 export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
   const [step, setStep] = useState(0)
   const [photos, setPhotos] = useState<string[]>([])
+  // 대표사진은 첫 번째 사진으로 고정하지 않고, 사용자가 선택할 수 있게 인덱스로 관리합니다.
+  const [representativeIndex, setRepresentativeIndex] = useState<number>(0)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [form, setForm] = useState({
     name: "",
@@ -81,19 +83,34 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
     const reader = new FileReader()
     reader.onload = () => {
       const dataUrl = reader.result as string
-      if (dataUrl) setPhotos((prev) => [...prev, dataUrl])
+      if (!dataUrl) return
+      setPhotos((prev) => {
+        const next = [...prev, dataUrl]
+        // 첫 사진이 추가될 때 대표사진을 0으로 맞춥니다.
+        if (prev.length === 0) setRepresentativeIndex(0)
+        return next
+      })
     }
     reader.readAsDataURL(blob)
     e.target.value = ""
   }
 
   const handleRemovePhoto = (index: number) => {
-    setPhotos(photos.filter((_, i) => i !== index))
+    setPhotos((prev) => {
+      const next = prev.filter((_, i) => i !== index)
+      setRepresentativeIndex((current) => {
+        if (next.length === 0) return 0
+        if (index === current) return Math.min(index, next.length - 1)
+        if (index < current) return Math.max(current - 1, 0)
+        return current
+      })
+      return next
+    })
   }
 
   return (
     <div className="min-h-[100dvh] flex flex-col bg-background max-h-[100dvh]">
-      <div className="shrink-0 px-6 pt-10 pb-3">
+      <div className="shrink-0 px-4 pt-10 pb-3">
         <div className="flex items-center gap-3 mb-4">
           {step > 0 && (
             <button onClick={() => setStep(step - 1)} className="text-foreground">
@@ -114,7 +131,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-y-auto px-6 py-4">
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 py-4">
         {/* Step 0: Photos - 세로4 가로3, bigger size */}
         {step === 0 && (
           <div className="flex flex-col gap-4 animate-in fade-in duration-300">
@@ -137,10 +154,19 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                   >
                     <TossIcon name="icon-chip-x-mono" size={24} onPrimary />
                   </button>
-                  {i === 0 && (
+                  {i === representativeIndex && (
                     <span className="absolute bottom-2 left-2 text-[10px] bg-primary text-primary-foreground px-2 py-0.5 rounded-md font-medium">
                       {"대표"}
                     </span>
+                  )}
+                  {i !== representativeIndex && (
+                    <button
+                      type="button"
+                      onClick={() => setRepresentativeIndex(i)}
+                      className="absolute bottom-2 left-2 text-[10px] bg-foreground/50 text-background px-2 py-0.5 rounded-md font-medium transition-colors hover:bg-foreground/70"
+                    >
+                      {""}대표사진 선택
+                    </button>
                   )}
                 </div>
               ))}
@@ -317,7 +343,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
         )}
       </div>
 
-      <div className="shrink-0 px-6 pt-4 pb-[max(2rem,env(safe-area-inset-bottom,0px))]">
+      <div className="shrink-0 px-4 pt-4 pb-[max(2rem,env(safe-area-inset-bottom,0px))]">
         <Button
           onClick={() => {
             if (step < steps.length - 1) setStep(step + 1)

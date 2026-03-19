@@ -34,7 +34,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 bg-background">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 bg-background">
       <div className="w-full max-w-sm">
         {step === "email" && (
           <div className="flex flex-col items-center gap-6 animate-in fade-in duration-500">
