@@ -125,7 +125,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
     <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
       <MainHeader />
       <div className="flex flex-col min-h-full">
-      <main className="flex-1 px-2 pt-6 pb-6 flex flex-col gap-6">
+      <main className="flex-1 px-4 pt-6 pb-6 flex flex-col gap-6">
         <div className="p-4 rounded-xl border border-border/60 bg-card">
           <div className="flex items-center gap-4">
             <UserAvatar user={currentUser} size="lg" />
@@ -241,7 +241,7 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
 
       {/* Account dialog */}
       {showAccountDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
           <div className="absolute inset-0 bg-foreground/30" onClick={() => setShowAccountDialog(null)} />
           <div className="relative bg-card rounded-2xl p-6 w-full max-w-xs">
             <h3 className="text-lg font-bold mb-2">

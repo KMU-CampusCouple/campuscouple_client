@@ -161,7 +161,7 @@ export default function MyPageList({ type, onViewPost }: MyPageListProps) {
         </header>
       </div>
       <div className="flex flex-col min-h-full">
-        <main className="flex-1 px-2 pt-6 py-2 pb-6 flex flex-col gap-3">
+        <main className="flex-1 px-4 pt-6 py-2 pb-6 flex flex-col gap-3">
           {list.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
               <TossIcon name="icon-document-mono" size={40} background="white" className="mb-2 opacity-30" />

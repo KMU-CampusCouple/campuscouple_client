@@ -73,7 +73,7 @@ export default function UserProfilePageClient({ id, from }: { id: string; from?:
               {friendStatus === "friend" && (
                 <button
                   onClick={() => removeFriend(user.id)}
-                  className="ml-auto text-xs font-medium text-primary bg-white hover:bg-primary-foreground/90 hover:text-primary-foreground rounded-full shrink-0 py-1.5 px-3 transition-colors"
+                  className="ml-auto text-sm font-medium text-primary-foreground bg-primary-foreground/20 rounded-lg px-3 py-1.5"
                 >
                   {"친구삭제"}
                 </button>
@@ -95,13 +95,13 @@ export default function UserProfilePageClient({ id, from }: { id: string; from?:
                 <div className="ml-auto flex items-center gap-1.5">
                   <button
                     onClick={() => rejectRequest(user.id)}
-                    className="text-xs font-medium text-muted-foreground bg-white/90 hover:bg-white rounded-full shrink-0 py-1.5 px-3 transition-colors"
+                    className="text-sm font-medium text-primary-foreground bg-primary-foreground/20 rounded-lg px-3 py-1.5"
                   >
                     {"삭제"}
                   </button>
                   <button
                     onClick={() => acceptRequest(user.id)}
-                    className="text-xs font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-full shrink-0 py-1.5 px-3 transition-colors"
+                    className="text-sm font-semibold text-primary-foreground bg-primary-foreground/20 rounded-lg px-3 py-1.5"
                   >
                     {"수락"}
                   </button>

@@ -234,7 +234,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
         </div>
       </MainHeader>
       <div className="flex flex-col min-h-full">
-        <main className="flex-1 px-2 pt-3 pb-6 flex flex-col gap-2">
+        <main className="flex-1 px-4 pt-3 pb-6 flex flex-col gap-2">
         {tab === "search" && (
           <>
             <div className="relative">
@@ -420,7 +420,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
 
       {/* Confirm dialog */}
       {showConfirmDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
           <div className="absolute inset-0 bg-foreground/30" onClick={() => setShowConfirmDialog(null)} />
           <div className="relative bg-card rounded-2xl p-6 w-full max-w-xs">
             <h3 className="text-lg font-bold mb-2">

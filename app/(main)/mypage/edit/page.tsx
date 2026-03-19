@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { TossIcon } from "@/components/toss-icon"
 import { Input } from "@/components/ui/input"
@@ -18,6 +18,9 @@ const MBTI_TYPES = [
 export default function ProfileEditPage() {
   const router = useRouter()
   const [editPhotos, setEditPhotos] = useState<string[]>([])
+  const [representativePhotoIndex, setRepresentativePhotoIndex] = useState<number>(0)
+  // 대표 SNS는 항상 1개가 존재하도록 유지합니다.
+  const [representativeSnsKey, setRepresentativeSnsKey] = useState<string>("instagram")
   const editFileInputRef = useRef<HTMLInputElement>(null)
   const [editForm, setEditForm] = useState({
     name: currentUser.name,
@@ -35,6 +38,39 @@ export default function ProfileEditPage() {
     line: currentUser.sns?.line || "",
     telegram: currentUser.sns?.telegram || "",
   })
+
+  const SNS_KEYS = ["instagram", "kakao", "facebook", "twitter", "threads", "line", "telegram"] as const
+  type SnsKey = (typeof SNS_KEYS)[number]
+
+  const getSnsValue = (key: SnsKey) => String(editForm[key] ?? "").trim()
+  const firstFilledSnsKey = (): SnsKey | null => {
+    for (const k of SNS_KEYS) {
+      if (getSnsValue(k).length > 0) return k
+    }
+    return null
+  }
+
+  // 대표는 항상 1개. (입력된 SNS가 있으면 그 중 하나로, 없으면 기본값 유지)
+  useEffect(() => {
+    const filled = firstFilledSnsKey()
+    const repHasValue = getSnsValue(representativeSnsKey as SnsKey).length > 0
+    if (filled && (!repHasValue || !SNS_KEYS.includes(representativeSnsKey as SnsKey))) {
+      setRepresentativeSnsKey(filled)
+    }
+    if (!filled && !SNS_KEYS.includes(representativeSnsKey as SnsKey)) {
+      setRepresentativeSnsKey("instagram")
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    editForm.instagram,
+    editForm.kakao,
+    editForm.facebook,
+    editForm.twitter,
+    editForm.threads,
+    editForm.line,
+    editForm.telegram,
+    representativeSnsKey,
+  ])
 
   const handleAddPhoto = () => {
     if (editPhotos.length >= 6) return
@@ -68,7 +104,14 @@ export default function ProfileEditPage() {
     const reader = new FileReader()
     reader.onload = () => {
       const dataUrl = reader.result as string
-      if (dataUrl) setEditPhotos((prev) => [...prev, dataUrl])
+      if (dataUrl) {
+        setEditPhotos((prev) => {
+          const next = [...prev, dataUrl]
+          // 첫 장 추가될 때만 대표를 0으로 유지
+          if (next.length === 1) setRepresentativePhotoIndex(0)
+          return next
+        })
+      }
     }
     reader.readAsDataURL(blob)
     e.target.value = ""
@@ -76,6 +119,11 @@ export default function ProfileEditPage() {
 
   const handleRemovePhoto = (index: number) => {
     setEditPhotos((prev) => prev.filter((_, i) => i !== index))
+    setRepresentativePhotoIndex((prevIndex) => {
+      if (index === prevIndex) return 0
+      if (index < prevIndex) return Math.max(0, prevIndex - 1)
+      return prevIndex
+    })
   }
 
   const handleSave = () => {
@@ -112,7 +160,7 @@ export default function ProfileEditPage() {
           </>
         }
       />
-      <main className="flex-1 px-2 py-6 flex flex-col gap-5 pb-20">
+      <main className="flex-1 px-4 py-6 flex flex-col gap-5 pb-20">
         <div>
           <input
             ref={editFileInputRef}
@@ -125,7 +173,7 @@ export default function ProfileEditPage() {
           <label className="text-sm font-medium mb-2 block">{"프로필 사진 (최대 6장)"}</label>
           <div className="grid grid-cols-2 gap-3">
             {editPhotos.map((url, i) => (
-              <div key={i} className="relative aspect-square rounded-2xl overflow-hidden">
+              <div key={`${url}-${i}`} className="relative aspect-square rounded-2xl overflow-hidden">
                 <img src={url} alt="" className="w-full h-full object-cover" />
                 <button
                   type="button"
@@ -134,10 +182,20 @@ export default function ProfileEditPage() {
                 >
                   <TossIcon name="icon-chip-x-mono" size={24} onPrimary />
                 </button>
-                {i === 0 && (
+                {representativePhotoIndex === i ? (
                   <span className="absolute bottom-2 left-2 text-[10px] bg-primary text-primary-foreground px-2 py-0.5 rounded-md font-medium">
                     {"대표"}
                   </span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRepresentativePhotoIndex(i)
+                    }}
+                    className="absolute bottom-2 left-2 text-[10px] bg-foreground/50 text-background px-2 py-0.5 rounded-md font-medium transition-colors hover:bg-foreground/70"
+                  >
+                    {"대표사진 선택"}
+                  </button>
                 )}
               </div>
             ))}
@@ -159,7 +217,7 @@ export default function ProfileEditPage() {
           <Input
             value={editForm.name}
             onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-            className="h-12 rounded-xl bg-card"
+            className="h-12 rounded-xl bg-card text-sm"
           />
         </div>
         <div>
@@ -167,7 +225,7 @@ export default function ProfileEditPage() {
           <Input
             value={editForm.department}
             onChange={(e) => setEditForm({ ...editForm, department: e.target.value })}
-            className="h-12 rounded-xl bg-card"
+            className="h-12 rounded-xl bg-card text-sm"
           />
         </div>
         <div>
@@ -205,7 +263,7 @@ export default function ProfileEditPage() {
           <Input
             value={editForm.bio}
             onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
-            className="h-12 rounded-xl bg-card"
+            className="h-12 rounded-xl bg-card text-sm"
           />
         </div>
         <div>
@@ -214,7 +272,7 @@ export default function ProfileEditPage() {
             value={editForm.specs}
             onChange={(e) => setEditForm({ ...editForm, specs: e.target.value })}
             placeholder="예) 180cm / 대학생"
-            className="h-12 rounded-xl bg-card"
+            className="h-12 rounded-xl bg-card text-sm"
           />
         </div>
         <div>
@@ -223,7 +281,7 @@ export default function ProfileEditPage() {
             value={editForm.idealType}
             onChange={(e) => setEditForm({ ...editForm, idealType: e.target.value })}
             placeholder="예) 밝고 긍정적인 사람"
-            className="h-12 rounded-xl bg-card"
+            className="h-12 rounded-xl bg-card text-sm"
           />
         </div>
         <div>
@@ -239,13 +297,54 @@ export default function ProfileEditPage() {
               { key: "telegram", label: "Telegram", placeholder: "@telegram_id" },
             ].map((sns) => (
               <div key={sns.key} className="flex items-center gap-3">
-                <span className="text-xs text-muted-foreground w-20 shrink-0">{sns.label}</span>
+                <span className="w-20 shrink-0 flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <img
+                    alt=""
+                    width={16}
+                    height={16}
+                    className="w-4 h-4 rounded-none opacity-80"
+                    src={`https://www.google.com/s2/favicons?sz=64&domain=${
+                      sns.key === "instagram"
+                        ? "instagram.com"
+                        : sns.key === "kakao"
+                        ? "kakaocorp.com"
+                        : sns.key === "facebook"
+                        ? "facebook.com"
+                        : sns.key === "twitter"
+                        ? "x.com"
+                        : sns.key === "threads"
+                        ? "threads.net"
+                        : sns.key === "line"
+                        ? "line.me"
+                        : "telegram.org"
+                    }`}
+                  />
+                  <span className="truncate">{sns.label}</span>
+                </span>
                 <Input
                   value={editForm[sns.key as keyof typeof editForm]}
                   onChange={(e) => setEditForm({ ...editForm, [sns.key]: e.target.value })}
                   placeholder={sns.placeholder}
                   className="h-10 rounded-xl bg-card flex-1"
                 />
+                <div className="w-[44px] shrink-0 flex justify-end">
+                  {String(editForm[sns.key as keyof typeof editForm] ?? "").trim().length > 0 ? (
+                    <button
+                      type="button"
+                      aria-pressed={representativeSnsKey === sns.key}
+                      onClick={() => setRepresentativeSnsKey(sns.key)}
+                      className={`text-[10px] whitespace-nowrap px-2.5 py-1 rounded-md font-medium transition-colors ${
+                        representativeSnsKey === sns.key
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-foreground/50 text-background hover:bg-foreground/70"
+                      }`}
+                    >
+                      {"대표"}
+                    </button>
+                  ) : (
+                    <div aria-hidden className="h-[23px]" />
+                  )}
+                </div>
               </div>
             ))}
           </div>
