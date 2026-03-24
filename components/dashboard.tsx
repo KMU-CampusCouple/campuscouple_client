@@ -3,7 +3,7 @@
 import { TossIcon } from "@/components/toss-icon"
 import type { MeetingPost, UserProfile } from "@/lib/store"
 import { mockPosts } from "@/lib/store"
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useMemo } from "react"
 import { useRefresh } from "@/contexts/RefreshContext"
 import { PullToRefresh } from "@/components/layout/PullToRefresh"
 import { MainHeader } from "@/components/layout/MainHeader"
@@ -32,7 +32,6 @@ function PostCard({
   onClick: () => void
   onAvatarClick: (user: UserProfile) => void
 }) {
-  const isClosed = post.status === "closed"
   const currentCount = post.participants.length
   const totalCount = post.perSide * 2
 
@@ -44,9 +43,7 @@ function PostCard({
   return (
     <button
       onClick={onClick}
-      className={`w-full bg-card rounded-xl p-3 border border-border/60 text-left ${
-        isClosed ? "opacity-50" : ""
-      }`}
+      className="w-full bg-card rounded-xl p-3 border border-border/60 text-left"
     >
       {/* Title + status row */}
       <div className="flex items-start justify-between gap-2 mb-1.5">
@@ -88,12 +85,15 @@ function PostCard({
 // "숨김"과 "표시" 임계값을 분리합니다. (히스테리시스)
 const HIDE_THRESHOLD = 60
 const SHOW_THRESHOLD = 40
+const POSTS_PAGE_SIZE = 10
 
 export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: DashboardProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [headerVisible, setHeaderVisible] = useState(true)
+  const [visiblePostCount, setVisiblePostCount] = useState(POSTS_PAGE_SIZE)
   const lastScrollY = useRef(0)
   const scrollContainerRef = useRef<HTMLDivElement | null>(null)
+  const loadMoreSentinelRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     const el = scrollContainerRef.current
@@ -120,15 +120,50 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
     return () => el.removeEventListener("scroll", handleScroll)
   }, [])
 
-  const filteredPosts = mockPosts
-    .filter((post) => {
-      if (!searchQuery) return true
-      return (
-        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.location.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    })
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+  const filteredPosts = useMemo(
+    () =>
+      mockPosts
+        .filter((post) => {
+          if (!searchQuery) return true
+          return (
+            post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            post.location.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+        })
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+    [searchQuery]
+  )
+
+  useEffect(() => {
+    setVisiblePostCount(POSTS_PAGE_SIZE)
+  }, [searchQuery])
+
+  const displayedPosts = useMemo(
+    () => filteredPosts.slice(0, visiblePostCount),
+    [filteredPosts, visiblePostCount]
+  )
+
+  const hasMorePosts = visiblePostCount < filteredPosts.length
+
+  const filteredTotalRef = useRef(filteredPosts.length)
+  filteredTotalRef.current = filteredPosts.length
+
+  useEffect(() => {
+    const root = scrollContainerRef.current
+    const target = loadMoreSentinelRef.current
+    if (!target || !hasMorePosts) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setVisiblePostCount((c) => Math.min(c + POSTS_PAGE_SIZE, filteredTotalRef.current))
+        }
+      },
+      { root: root ?? undefined, rootMargin: "120px", threshold: 0 }
+    )
+    observer.observe(target)
+    return () => observer.disconnect()
+  }, [hasMorePosts, searchQuery])
 
   const { triggerRefresh } = useRefresh()
 
@@ -165,14 +200,25 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
             <p className="text-sm text-muted-foreground/70">{"미팅이 올라오면 여기서 볼 수 있어요"}</p>
           </div>
         ) : (
-          filteredPosts.map((post) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              onClick={() => onViewPost(post)}
-              onAvatarClick={onViewProfile}
-            />
-          ))
+          <>
+            {displayedPosts.map((post) => (
+              <PostCard
+                key={post.id}
+                post={post}
+                onClick={() => onViewPost(post)}
+                onAvatarClick={onViewProfile}
+              />
+            ))}
+            {hasMorePosts && (
+              <div
+                ref={loadMoreSentinelRef}
+                className="h-12 flex items-center justify-center text-[11px] text-muted-foreground"
+                aria-hidden
+              >
+                {"더 불러오는 중…"}
+              </div>
+            )}
+          </>
         )}
       </main>
       </div>
@@ -183,7 +229,7 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
         onClick={onCreatePost}
         className="h-9 px-4 rounded-xl bg-primary/80 text-primary-foreground flex items-center justify-center transition-transform hover:scale-105 active:scale-95 font-medium text-xs pointer-events-auto"
       >
-        {"글작성하기"}
+        {"글 작성하기"}
       </button>
     </div>
     </>

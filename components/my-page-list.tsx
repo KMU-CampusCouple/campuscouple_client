@@ -97,14 +97,16 @@ function SwipeablePostItem({
             <p className="text-sm font-semibold truncate">{post.title}</p>
             <p className="text-xs text-muted-foreground">{formatMeetingType(post.perSide)} {post.location || "상의 후 결정"}</p>
           </div>
-          <span className={`text-xs font-medium px-2 py-0.5 rounded-full shrink-0 ${
-            post.status === "closed"
-              ? "bg-muted text-muted-foreground"
-              : post.status === "matched"
-              ? "bg-primary/15 text-primary"
-              : "bg-primary/10 text-primary"
-          }`}>
-            {post.status === "open" ? `${post.participants.length}/${post.perSide * 2}` : post.status === "closed" ? "마감" : "매칭완료"}
+          <span
+            className={`text-xs font-medium px-2 py-0.5 rounded-full shrink-0 ${
+              post.status === "matched"
+                ? "bg-primary/15 text-primary"
+                : "bg-primary/10 text-primary"
+            }`}
+          >
+            {post.status === "open"
+              ? `${post.participants.length}/${post.perSide * 2}`
+              : "매칭완료"}
           </span>
         </button>
       </div>

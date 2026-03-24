@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { Children } from "react"
 import { motion } from "framer-motion"
+import { showErrorToast } from "@/lib/show-error-toast"
 
 const PULL_THRESHOLD = 80
 const MAX_PULL = 240
@@ -52,7 +53,7 @@ export function PullToRefresh({
         await new Promise((r) => setTimeout(r, 400))
       }
     } catch {
-      // timeout or reject: still hide indicator
+      showErrorToast()
     } finally {
       const minDisplay = 400
       const elapsed = Date.now() - start

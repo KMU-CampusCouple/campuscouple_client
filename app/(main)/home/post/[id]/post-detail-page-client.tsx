@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation"
 import PostDetail from "@/components/post-detail"
 import { MainHeader } from "@/components/layout/MainHeader"
-import { getPostById } from "@/lib/store"
+import { deletePostById, getPostById } from "@/lib/store"
 import type { UserProfile } from "@/lib/store"
 
 export default function PostDetailPageClient({ id, from }: { id: string; from?: string }) {
@@ -32,6 +32,11 @@ export default function PostDetailPageClient({ id, from }: { id: string; from?: 
           post={post}
           onBack={handleBack}
           onViewProfile={handleViewProfile}
+          onEditPost={() => router.push(`/home/post/${id}/edit`)}
+          onDeletePost={() => {
+            deletePostById(id)
+            router.replace("/home")
+          }}
         />
       )}
       </div>

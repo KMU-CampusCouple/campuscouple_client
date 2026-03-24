@@ -3,6 +3,12 @@
 import { useState, useRef, useCallback } from "react"
 import { TossIcon } from "@/components/toss-icon"
 import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import UserAvatar from "@/components/user-avatar"
 import type { MeetingPost, MeetingApplication, UserProfile } from "@/lib/store"
 import { currentUser, friends, formatMeetingType } from "@/lib/store"
@@ -11,6 +17,8 @@ interface PostDetailProps {
   post: MeetingPost
   onBack: () => void
   onViewProfile: (user: UserProfile) => void
+  onEditPost?: () => void
+  onDeletePost?: () => void
 }
 
 function ParticipantCard({
@@ -265,7 +273,13 @@ function ParticipantSwiper({
   )
 }
 
-export default function PostDetail({ post, onBack, onViewProfile }: PostDetailProps) {
+export default function PostDetail({
+  post,
+  onBack,
+  onViewProfile,
+  onEditPost,
+  onDeletePost,
+}: PostDetailProps) {
   const [applications, setApplications] = useState(post.applications)
   const [showApplyForm, setShowApplyForm] = useState(false)
   const [applyMessage, setApplyMessage] = useState("")
@@ -393,7 +407,50 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
 
         {/* 글 제목 + 장소·날짜·시간 (간격 축소) */}
         <div className="flex flex-col gap-3">
-          <h1 className="text-[15px] font-medium leading-tight text-foreground/85">{post.title}</h1>
+          <div className="flex items-start gap-2 min-w-0">
+            <h1 className="text-[15px] font-medium leading-tight text-foreground/85 flex-1 min-w-0">
+              {post.title}
+            </h1>
+            {isAuthor && (onEditPost || onDeletePost) ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    className="shrink-0 p-1.5 rounded-lg -mr-1 -mt-0.5 text-muted-foreground hover:bg-muted/70 transition-colors"
+                    aria-label="더보기"
+                  >
+                    <span
+                      className="inline-flex items-center justify-center shrink-0 w-6 h-6 object-contain pointer-events-none"
+                      aria-hidden
+                    >
+                      <img
+                        src="/icons/svg/tabler-dots.svg"
+                        alt=""
+                        width={24}
+                        height={24}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-6 h-6 object-contain"
+                      />
+                    </span>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="min-w-[9rem]">
+                  {onEditPost ? (
+                    <DropdownMenuItem onClick={() => onEditPost()}>{"수정하기"}</DropdownMenuItem>
+                  ) : null}
+                  {onDeletePost ? (
+                    <DropdownMenuItem
+                      className="text-destructive focus:text-destructive"
+                      onClick={() => setShowDeleteConfirm(true)}
+                    >
+                      {"삭제하기"}
+                    </DropdownMenuItem>
+                  ) : null}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : null}
+          </div>
           <div className="flex flex-wrap items-center gap-2.5 text-[11px] text-foreground/90">
             <span className="px-2 py-0.5 rounded-full bg-muted/50 text-muted-foreground">
               {displayLocation}
@@ -428,18 +485,6 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
 
           {isAuthor ? (
             <>
-              <div className="bg-card rounded-xl border border-border/60 p-4 flex items-center gap-3">
-                <TossIcon name="icon-lock-mono" size={24} background="white" className="opacity-70" />
-                <div>
-                  <p className="text-sm font-medium">
-                    {applications.length}{"개 그룹이 신청했어요"}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {"작성자만 신청 내용을 볼 수 있어요"}
-                  </p>
-                </div>
-              </div>
-
               {applications.map((app) => (
                 <ApplicationCard
                   key={app.id}
@@ -579,7 +624,11 @@ export default function PostDetail({ post, onBack, onViewProfile }: PostDetailPr
                 {"닫기"}
               </Button>
               <Button
-                onClick={() => { setShowDeleteConfirm(false); onBack() }}
+                onClick={() => {
+                  setShowDeleteConfirm(false)
+                  if (onDeletePost) onDeletePost()
+                  else onBack()
+                }}
                 className="flex-1 h-10 rounded-xl bg-destructive text-destructive-foreground"
               >
                 {"삭제"}

@@ -9,6 +9,14 @@ interface VerifyPageProps {
   onComplete: () => void
 }
 
+/** @example foo@snu.ac.kr, bar@mail.kaist.ac.kr */
+function isCampusAcKrEmail(value: string): boolean {
+  const t = value.trim().toLowerCase()
+  if (!t.includes("@")) return false
+  const domain = t.split("@").pop() ?? ""
+  return /\.ac\.kr$/i.test(domain)
+}
+
 export default function VerifyPage({ onComplete }: VerifyPageProps) {
   const [step, setStep] = useState<"email" | "code" | "done">("email")
   const [email, setEmail] = useState("")
@@ -16,7 +24,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
   const [loading, setLoading] = useState(false)
 
   const handleSendCode = () => {
-    if (!email.includes("@") || !email.includes("ac.kr")) return
+    if (!isCampusAcKrEmail(email)) return
     setLoading(true)
     setTimeout(() => {
       setLoading(false)
@@ -44,7 +52,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
             <div className="text-center">
               <h1 className="text-xl font-bold mb-2">{"대학교 인증"}</h1>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                {"다니는 대학교 이메일을 입력해주세요."}
+                {"재학중인 대학교 이메일을 입력해주세요."}
               </p>
             </div>
             <div className="w-full flex flex-col gap-3">
@@ -60,7 +68,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
               </div>
               <Button
                 onClick={handleSendCode}
-                disabled={!email.includes("@") || loading}
+                disabled={!isCampusAcKrEmail(email) || loading}
                 className="h-12 rounded-xl bg-primary text-primary-foreground font-semibold"
               >
                 {loading ? <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center"><span className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" /></span> : "인증 코드 보내기"}
@@ -81,7 +89,7 @@ export default function VerifyPage({ onComplete }: VerifyPageProps) {
               <h1 className="text-xl font-bold mb-2">{"인증 코드 입력"}</h1>
               <p className="text-muted-foreground text-sm leading-relaxed">
                 <span className="font-medium text-foreground">{email}</span>
-                {"(으)로 인증 코드를 보냈어요"}
+                {"로 인증 코드를 보냈어요"}
               </p>
             </div>
             <div className="w-full flex flex-col gap-3">
