@@ -4,6 +4,7 @@ import { useState, useRef } from "react"
 import { TossIcon } from "@/components/toss-icon"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { showErrorToast } from "@/lib/show-error-toast"
 
 interface ProfileSetupProps {
   onComplete: () => void
@@ -16,6 +17,14 @@ const MBTI_TYPES = [
   "ISTP", "ISFP", "ESTP", "ESFP",
   "미공개",
 ]
+
+const MAX_NAME = 10
+const MAX_UNIVERSITY = 30
+const MAX_DEPARTMENT = 30
+const MAX_SPECS = 100
+const MAX_IDEAL_TYPE = 300
+const MAX_BIO = 100
+const MAX_SNS_FIELD = 100
 
 export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
   const [step, setStep] = useState(0)
@@ -77,6 +86,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
         const converted = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.92 })
         blob = Array.isArray(converted) ? converted[0] : converted
       } catch {
+        showErrorToast()
         return
       }
     }
@@ -187,11 +197,17 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
         {step === 1 && (
           <div className="flex flex-col gap-5 animate-in fade-in duration-300">
             <div>
-              <label className="text-sm font-medium mb-1.5 block">{"이름"}</label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-sm font-medium block">{"이름"}</label>
+                <span className="text-[11px] text-muted-foreground tabular-nums">
+                  {form.name.length}/{MAX_NAME}
+                </span>
+              </div>
               <Input
                 value={form.name}
+                maxLength={MAX_NAME}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                placeholder="이름을 써주세요"
+                placeholder="예) 홍길동"
                 className="h-12 rounded-xl bg-card"
               />
             </div>
@@ -220,18 +236,30 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
         {step === 2 && (
           <div className="flex flex-col gap-5 animate-in fade-in duration-300">
             <div>
-              <label className="text-sm font-medium mb-1.5 block">{"대학교"}</label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-sm font-medium block">{"대학교"}</label>
+                <span className="text-[11px] text-muted-foreground tabular-nums">
+                  {form.university.length}/{MAX_UNIVERSITY}
+                </span>
+              </div>
               <Input
                 value={form.university}
+                maxLength={MAX_UNIVERSITY}
                 onChange={(e) => setForm({ ...form, university: e.target.value })}
                 placeholder="예) 서울대학교"
                 className="h-12 rounded-xl bg-card"
               />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1.5 block">{"학과"}</label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-sm font-medium block">{"학과"}</label>
+                <span className="text-[11px] text-muted-foreground tabular-nums">
+                  {form.department.length}/{MAX_DEPARTMENT}
+                </span>
+              </div>
               <Input
                 value={form.department}
+                maxLength={MAX_DEPARTMENT}
                 onChange={(e) => setForm({ ...form, department: e.target.value })}
                 placeholder="예) 컴퓨터공학과"
                 className="h-12 rounded-xl bg-card"
@@ -254,9 +282,15 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
         {step === 3 && (
           <div className="flex flex-col gap-5 animate-in fade-in duration-300">
             <div>
-              <label className="text-sm font-medium mb-1.5 block">{"신체/직업 스펙"}</label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-sm font-medium block">{"신체/직업 스펙"}</label>
+                <span className="text-[11px] text-muted-foreground tabular-nums">
+                  {form.specs.length}/{MAX_SPECS}
+                </span>
+              </div>
               <Input
                 value={form.specs}
+                maxLength={MAX_SPECS}
                 onChange={(e) => setForm({ ...form, specs: e.target.value })}
                 placeholder="예) 180cm / 대학생"
                 className="h-12 rounded-xl bg-card"
@@ -264,12 +298,18 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
               <p className="text-xs text-muted-foreground mt-1">{"키, 직업 등 자유롭게 써주세요"}</p>
             </div>
             <div>
-              <label className="text-sm font-medium mb-1.5 block">{"이상형"}</label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-sm font-medium block">{"이상형"}</label>
+                <span className="text-[11px] text-muted-foreground tabular-nums">
+                  {form.idealType.length}/{MAX_IDEAL_TYPE}
+                </span>
+              </div>
               <textarea
                 value={form.idealType}
+                maxLength={MAX_IDEAL_TYPE}
                 onChange={(e) => setForm({ ...form, idealType: e.target.value })}
                 placeholder="어떤 사람이 이상형인지 자유롭게 써주세요"
-                className="w-full h-24 rounded-xl bg-card border border-border/60 p-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+                className="w-full min-h-[120px] rounded-xl bg-card border border-border/60 p-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
               />
             </div>
           </div>
@@ -307,16 +347,23 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
               </button>
             </div>
             <div>
-              <label className="text-sm font-medium mb-1.5 block">{"한 줄 소개"}</label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-sm font-medium block">{"한 줄 소개"}</label>
+                <span className="text-[11px] text-muted-foreground tabular-nums">
+                  {form.bio.length}/{MAX_BIO}
+                </span>
+              </div>
               <Input
                 value={form.bio}
+                maxLength={MAX_BIO}
                 onChange={(e) => setForm({ ...form, bio: e.target.value })}
-                placeholder="나를 한 줄로 소개해요"
+                placeholder="본인을 한 줄로 소개해주세요"
                 className="h-12 rounded-xl bg-card"
               />
             </div>
             <div>
               <label className="text-sm font-semibold mb-3 block">{"SNS 계정"}</label>
+              <p className="text-[11px] text-muted-foreground mb-2">{"각 항목 최대 "}{MAX_SNS_FIELD}{"자"}</p>
               <div className="flex flex-col gap-3">
                 {[
                   { key: "instagram", label: "Instagram", placeholder: "@instagram_id" },
@@ -330,7 +377,8 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                   <div key={sns.key} className="flex items-center gap-3">
                     <span className="text-xs text-muted-foreground w-20 shrink-0">{sns.label}</span>
                     <Input
-                      value={form[sns.key as keyof typeof form]}
+                      value={String(form[sns.key as keyof typeof form] ?? "")}
+                      maxLength={MAX_SNS_FIELD}
                       onChange={(e) => setForm({ ...form, [sns.key]: e.target.value })}
                       placeholder={sns.placeholder}
                       className="h-10 rounded-xl bg-card flex-1"

@@ -46,7 +46,7 @@ export interface MeetingPost {
   time: string
   createdAt: string
   applications: MeetingApplication[]
-  status: "open" | "closed" | "matched"
+  status: "open" | "matched"
   matchedApplicationId?: string
   views: number
 }
@@ -335,7 +335,7 @@ export const mockPosts: MeetingPost[] = [
     time: "18:00",
     createdAt: "2026-02-13T11:00:00",
     applications: [],
-    status: "closed",
+    status: "open",
     views: 55,
   },
   {
@@ -610,6 +610,33 @@ export const friendRequests: FriendRequest[] = [
 
 export function getPostById(id: string): MeetingPost | undefined {
   return mockPosts.find((p) => p.id === id)
+}
+
+export type PostEditableFields = Pick<
+  MeetingPost,
+  "title" | "description" | "location" | "date" | "time"
+>
+
+export function updatePostFields(id: string, patch: PostEditableFields): boolean {
+  const idx = mockPosts.findIndex((p) => p.id === id)
+  if (idx === -1) return false
+  const cur = mockPosts[idx]
+  mockPosts[idx] = {
+    ...cur,
+    title: patch.title,
+    description: patch.description,
+    location: patch.location,
+    date: patch.date,
+    time: patch.time,
+  }
+  return true
+}
+
+export function deletePostById(id: string): boolean {
+  const idx = mockPosts.findIndex((p) => p.id === id)
+  if (idx === -1) return false
+  mockPosts.splice(idx, 1)
+  return true
 }
 
 export function getUserById(id: string): UserProfile | undefined {

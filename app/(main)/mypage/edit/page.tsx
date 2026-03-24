@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { TossIcon } from "@/components/toss-icon"
 import { Input } from "@/components/ui/input"
 import { MainHeader } from "@/components/layout/MainHeader"
+import { showErrorToast } from "@/lib/show-error-toast"
 import { currentUser } from "@/lib/store"
 
 const MBTI_TYPES = [
@@ -98,6 +99,7 @@ export default function ProfileEditPage() {
         const converted = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.92 })
         blob = Array.isArray(converted) ? converted[0] : converted
       } catch {
+        showErrorToast()
         return
       }
     }
@@ -217,6 +219,7 @@ export default function ProfileEditPage() {
           <Input
             value={editForm.name}
             onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+            placeholder="예) 홍길동"
             className="h-12 rounded-xl bg-card text-sm"
           />
         </div>

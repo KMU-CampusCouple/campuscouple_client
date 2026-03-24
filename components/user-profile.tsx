@@ -79,9 +79,9 @@ export default function UserProfile({ user, isMatched, onBack, friendStatus, onA
   }, [photos.length])
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 overflow-y-auto overscroll-contain pb-6">
+    <div className="flex flex-col w-full pb-6">
 
-      <main className="flex-1 px-4 py-6 flex flex-col gap-4">
+      <main className="px-4 py-6 flex flex-col gap-4">
         {/* Photo carousel or avatar */}
         <div className="bg-card rounded-2xl border border-border/60 overflow-hidden">
           <div

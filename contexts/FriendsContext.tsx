@@ -9,6 +9,8 @@ interface FriendsContextValue {
   /** 내게 친구요청을 보낸 유저 id (수락/거절 대기) */
   receivedRequestIds: Set<string>
   sendRequest: (userId: string) => void
+  /** 보낸 친구 신청 철회 */
+  cancelSentRequest: (userId: string) => void
   removeFriend: (userId: string) => void
   acceptRequest: (userId: string) => void
   rejectRequest: (userId: string) => void
@@ -29,6 +31,14 @@ export function FriendsProvider({ children }: { children: ReactNode }) {
 
   const sendRequest = useCallback((userId: string) => {
     setSentRequestIds((prev) => new Set(prev).add(userId))
+  }, [])
+
+  const cancelSentRequest = useCallback((userId: string) => {
+    setSentRequestIds((prev) => {
+      const next = new Set(prev)
+      next.delete(userId)
+      return next
+    })
   }, [])
 
   const removeFriend = useCallback((userId: string) => {
@@ -77,11 +87,12 @@ export function FriendsProvider({ children }: { children: ReactNode }) {
       sentRequestIds,
       receivedRequestIds,
       sendRequest,
+      cancelSentRequest,
       removeFriend,
       acceptRequest,
       rejectRequest,
     }),
-    [friendIds, sentRequestIds, receivedRequestIds, sendRequest, removeFriend, acceptRequest, rejectRequest]
+    [friendIds, sentRequestIds, receivedRequestIds, sendRequest, cancelSentRequest, removeFriend, acceptRequest, rejectRequest]
   )
 
   return (
@@ -100,6 +111,7 @@ export function useFriends(): FriendsContextValue {
       sentRequestIds: emptySet,
       receivedRequestIds: emptySet,
       sendRequest: () => {},
+      cancelSentRequest: () => {},
       removeFriend: () => {},
       acceptRequest: () => {},
       rejectRequest: () => {},

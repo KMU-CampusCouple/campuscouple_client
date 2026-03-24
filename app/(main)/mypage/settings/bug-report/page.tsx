@@ -1,19 +1,22 @@
 "use client"
 
 import { useState } from "react"
+import { toast } from "@/hooks/use-toast"
 import { MainHeader } from "@/components/layout/MainHeader"
 
 export default function BugReportPage() {
   const [type, setType] = useState<"bug" | "idea">("bug")
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
-  const [submitted, setSubmitted] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!title.trim() || !content.trim()) return
     // 실제 서비스에서는 서버로 전송하는 로직이 들어갑니다.
-    setSubmitted(true)
+    toast({
+      title: "소중한 의견 감사합니다!",
+      description: "확인 후 서비스 개선에 반영하겠습니다.",
+    })
     setTitle("")
     setContent("")
   }
@@ -29,12 +32,6 @@ export default function BugReportPage() {
               사용 중 불편한 점이나 개선 아이디어가 있다면 편하게 남겨주세요. 빠르게 확인해볼게요.
             </p>
           </div>
-
-          {submitted && (
-            <div className="rounded-xl bg-emerald-50 text-emerald-900 border border-emerald-200 px-3 py-2 text-xs">
-              소중한 의견 감사합니다! 확인 후 서비스 개선에 반영하겠습니다.
-            </div>
-          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex gap-1 rounded-xl bg-muted p-0.5 text-xs">

@@ -433,7 +433,7 @@ export default function CreatePost({ onSubmit }: CreatePostProps) {
             className="absolute inset-0 bg-foreground/30"
             onClick={() => { setShowFriendPicker(false); setFriendSearch("") }}
           />
-          <div className="relative w-full max-w-[430px] bg-card rounded-t-3xl p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] max-h-[85vh] flex flex-col animate-in slide-in-from-bottom duration-300">
+          <div className="relative w-full max-w-[430px] bg-card rounded-t-3xl p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] min-h-[min(85vh,520px)] max-h-[85vh] flex flex-col animate-in slide-in-from-bottom duration-300">
             <div className="w-10 h-1 bg-muted rounded-full mx-auto mb-4 shrink-0" />
             <h3 className="text-lg font-bold mb-1 shrink-0">{"친구 선택"}</h3>
             <p className="text-xs text-muted-foreground mb-4 shrink-0">
