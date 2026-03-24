@@ -2,8 +2,9 @@
 
 import { TossIcon } from "@/components/toss-icon"
 import type { MeetingPost, UserProfile } from "@/lib/store"
-import { mockPosts } from "@/lib/store"
-import { useState, useRef, useEffect, useMemo } from "react"
+import { useState, useRef, useEffect, useMemo, useCallback } from "react"
+import { getMeetings } from "@/lib/api"
+import { meetingItemToPost } from "@/lib/meeting-mapper"
 import { useRefresh } from "@/contexts/RefreshContext"
 import { PullToRefresh } from "@/components/layout/PullToRefresh"
 import { MainHeader } from "@/components/layout/MainHeader"
@@ -68,9 +69,9 @@ function PostCard({
 
       {/* Info row: N팀 신청 + 미정인 항목은 숨김, 날짜는 26-03-02 형식 */}
       <div className="flex items-center gap-2 text-[11px] text-muted-foreground flex-wrap">
-        {post.applications.length > 0 && (
+        {(post.totalGroupCount ?? post.applications.length) > 0 && (
           <span className="text-[11px] text-primary">
-            {post.applications.length}팀 신청
+            {post.totalGroupCount ?? post.applications.length}팀 신청
           </span>
         )}
         {infoParts.length > 0 && (
@@ -89,11 +90,20 @@ const POSTS_PAGE_SIZE = 10
 
 export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: DashboardProps) {
   const [searchQuery, setSearchQuery] = useState("")
+  const [debouncedSearch, setDebouncedSearch] = useState("")
   const [headerVisible, setHeaderVisible] = useState(true)
-  const [visiblePostCount, setVisiblePostCount] = useState(POSTS_PAGE_SIZE)
+  const [posts, setPosts] = useState<MeetingPost[]>([])
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [listLoading, setListLoading] = useState(true)
   const lastScrollY = useRef(0)
   const scrollContainerRef = useRef<HTMLDivElement | null>(null)
   const loadMoreSentinelRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(searchQuery.trim()), 350)
+    return () => clearTimeout(t)
+  }, [searchQuery])
 
   useEffect(() => {
     const el = scrollContainerRef.current
@@ -120,52 +130,53 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
     return () => el.removeEventListener("scroll", handleScroll)
   }, [])
 
-  const filteredPosts = useMemo(
-    () =>
-      mockPosts
-        .filter((post) => {
-          if (!searchQuery) return true
-          return (
-            post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            post.location.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-        })
-        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
-    [searchQuery]
-  )
+  const loadPage = useCallback(async (pageNum: number, q: string) => {
+    setListLoading(true)
+    try {
+      const res = await getMeetings({
+        page: pageNum,
+        limit: POSTS_PAGE_SIZE,
+        search: q || undefined,
+      })
+      setTotalPages(res.totalPages)
+      const mapped = res.meetings.map(meetingItemToPost)
+      if (pageNum === 1) setPosts(mapped)
+      else setPosts((prev) => [...prev, ...mapped])
+    } catch {
+      if (pageNum === 1) setPosts([])
+    } finally {
+      setListLoading(false)
+    }
+  }, [])
+
+  const { refreshKey, triggerRefresh } = useRefresh()
 
   useEffect(() => {
-    setVisiblePostCount(POSTS_PAGE_SIZE)
-  }, [searchQuery])
+    setPage(1)
+  }, [debouncedSearch, refreshKey])
 
-  const displayedPosts = useMemo(
-    () => filteredPosts.slice(0, visiblePostCount),
-    [filteredPosts, visiblePostCount]
-  )
+  useEffect(() => {
+    void loadPage(page, debouncedSearch)
+  }, [page, debouncedSearch, loadPage, refreshKey])
 
-  const hasMorePosts = visiblePostCount < filteredPosts.length
-
-  const filteredTotalRef = useRef(filteredPosts.length)
-  filteredTotalRef.current = filteredPosts.length
+  const hasMorePosts = page < totalPages
 
   useEffect(() => {
     const root = scrollContainerRef.current
     const target = loadMoreSentinelRef.current
-    if (!target || !hasMorePosts) return
+    if (!target || !hasMorePosts || listLoading) return
 
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0]?.isIntersecting) {
-          setVisiblePostCount((c) => Math.min(c + POSTS_PAGE_SIZE, filteredTotalRef.current))
+          setPage((p) => p + 1)
         }
       },
       { root: root ?? undefined, rootMargin: "120px", threshold: 0 }
     )
     observer.observe(target)
     return () => observer.disconnect()
-  }, [hasMorePosts, searchQuery])
-
-  const { triggerRefresh } = useRefresh()
+  }, [hasMorePosts, listLoading, debouncedSearch, posts.length])
 
   return (
     <>
@@ -194,14 +205,14 @@ export default function Dashboard({ onCreatePost, onViewPost, onViewProfile }: D
       </MainHeader>
       <div className="flex flex-col min-h-full">
       <main className="flex-1 px-4 pt-3 pb-6 flex flex-col gap-2">
-        {filteredPosts.length === 0 ? (
+        {posts.length === 0 && !listLoading ? (
           <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
             <TossIcon name="icon-users-mono" size={40} background="white" className="mb-4 opacity-30" />
             <p className="text-sm text-muted-foreground/70">{"미팅이 올라오면 여기서 볼 수 있어요"}</p>
           </div>
         ) : (
           <>
-            {displayedPosts.map((post) => (
+            {posts.map((post) => (
               <PostCard
                 key={post.id}
                 post={post}

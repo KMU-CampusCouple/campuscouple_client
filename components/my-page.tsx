@@ -1,13 +1,15 @@
 "use client"
 
-import { useState, useRef, useCallback } from "react"
+import { useState, useRef, useCallback, useEffect } from "react"
 import Link from "next/link"
 import { TossIcon, type TossIconName } from "@/components/toss-icon"
 import { Button } from "@/components/ui/button"
 import UserAvatar from "@/components/user-avatar"
-import { currentUser, mockPosts, formatMeetingType } from "@/lib/store"
+import { currentUser, formatMeetingType } from "@/lib/store"
 import type { MeetingPost, UserProfile } from "@/lib/store"
 import { useRefresh } from "@/contexts/RefreshContext"
+import { getMyProfile } from "@/lib/api"
+import { getStoredProfileId } from "@/lib/auth-tokens"
 import { PullToRefresh } from "@/components/layout/PullToRefresh"
 import { MainHeader } from "@/components/layout/MainHeader"
 interface MyPageProps {
@@ -120,8 +122,33 @@ function SwipeablePostItem({
 }
 
 export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPageProps) {
-  const { triggerRefresh } = useRefresh()
+  const { triggerRefresh, refreshKey } = useRefresh()
   const [showAccountDialog, setShowAccountDialog] = useState<"logout" | "withdraw" | null>(null)
+  const [me, setMe] = useState<UserProfile>(currentUser)
+
+  useEffect(() => {
+    void getMyProfile()
+      .then((p) => {
+        const pid = getStoredProfileId() ?? String(p.userId)
+        setMe({
+          id: pid,
+          name: p.name,
+          photos: p.profileImages ?? [],
+          university: p.univ,
+          department: "",
+          studentYear: "",
+          mbti: "",
+          bio: "",
+          snsId: "",
+          sns: p.snsAccounts ?? {},
+          contactInfo: "",
+          gender: "male",
+          specs: "",
+          idealType: "",
+        })
+      })
+      .catch(() => {})
+  }, [refreshKey])
 
   return (
     <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
@@ -130,11 +157,11 @@ export default function MyPage({ onViewPost, onViewProfile, onLogout }: MyPagePr
       <main className="flex-1 px-4 pt-6 pb-6 flex flex-col gap-6">
         <div className="p-4 rounded-xl border border-border/60 bg-card">
           <div className="flex items-center gap-4">
-            <UserAvatar user={currentUser} size="lg" />
+            <UserAvatar user={me} size="lg" />
             <div className="flex-1 min-w-0">
-              <h2 className="text-base font-bold">{currentUser.name}</h2>
+              <h2 className="text-base font-bold">{me.name}</h2>
               <p className="text-sm text-muted-foreground truncate mt-0">
-                {currentUser.university} {currentUser.department} {currentUser.studentYear}
+                {me.university} {me.department} {me.studentYear}
               </p>
             </div>
             <Link

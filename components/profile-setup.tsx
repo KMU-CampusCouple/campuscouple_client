@@ -5,6 +5,9 @@ import { TossIcon } from "@/components/toss-icon"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { showErrorToast } from "@/lib/show-error-toast"
+import { createUserProfile } from "@/lib/api"
+import { clearEmailTempToken } from "@/lib/auth-tokens"
+import { useMyProfile } from "@/contexts/MyProfileContext"
 
 interface ProfileSetupProps {
   onComplete: () => void
@@ -26,8 +29,16 @@ const MAX_IDEAL_TYPE = 300
 const MAX_BIO = 100
 const MAX_SNS_FIELD = 100
 
+async function dataUrlToFile(dataUrl: string, idx: number): Promise<File> {
+  const res = await fetch(dataUrl)
+  const blob = await res.blob()
+  return new File([blob], `photo-${idx}.jpg`, { type: blob.type || "image/jpeg" })
+}
+
 export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
+  const { setLocalProfileId } = useMyProfile()
   const [step, setStep] = useState(0)
+  const [submitting, setSubmitting] = useState(false)
   const [photos, setPhotos] = useState<string[]>([])
   // 대표사진은 첫 번째 사진으로 고정하지 않고, 사용자가 선택할 수 있게 인덱스로 관리합니다.
   const [representativeIndex, setRepresentativeIndex] = useState<number>(0)
@@ -393,13 +404,81 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
 
       <div className="shrink-0 px-4 pt-4 pb-[max(2rem,env(safe-area-inset-bottom,0px))]">
         <Button
-          onClick={() => {
-            if (step < steps.length - 1) setStep(step + 1)
-            else onComplete()
+          onClick={async () => {
+            if (step < steps.length - 1) {
+              setStep(step + 1)
+              return
+            }
+            if (!form.name.trim() || !form.gender || !form.university.trim() || !form.department.trim()) {
+              showErrorToast("필수 정보를 입력해 주세요.")
+              return
+            }
+            if (photos.length === 0) {
+              showErrorToast("프로필 사진을 한 장 이상 올려주세요.")
+              return
+            }
+            setSubmitting(true)
+            try {
+              const fd = new FormData()
+              fd.append("name", form.name.trim())
+              fd.append("gender", form.gender === "male" ? "MALE" : "FEMALE")
+              fd.append("univ", form.university.trim())
+              fd.append("major", form.department.trim())
+              fd.append("studentId", form.studentYear.trim() || "00")
+              fd.append("mbti", form.mbti === "미공개" ? "ENFP" : form.mbti)
+              fd.append("region", "")
+              const introParts = [form.bio.trim(), form.specs.trim()]
+              if (form.idealType.trim()) introParts.push(`이상형: ${form.idealType.trim()}`)
+              fd.append("intro", introParts.filter(Boolean).join("\n\n"))
+              fd.append("representativeImageIndex", String(representativeIndex))
+              const snsAccounts: Record<string, string> = {}
+              if (form.instagram.trim()) snsAccounts.insta = form.instagram.trim()
+              if (form.kakao.trim()) snsAccounts.kakao = form.kakao.trim()
+              if (form.facebook.trim()) snsAccounts.facebook = form.facebook.trim()
+              if (form.twitter.trim()) snsAccounts.twitter = form.twitter.trim()
+              if (form.threads.trim()) snsAccounts.threads = form.threads.trim()
+              if (form.line.trim()) snsAccounts.line = form.line.trim()
+              if (form.telegram.trim()) snsAccounts.telegram = form.telegram.trim()
+              fd.append("snsAccounts", JSON.stringify(snsAccounts))
+              const primaryContact =
+                form.instagram.trim()
+                  ? "insta"
+                  : form.kakao.trim()
+                    ? "kakao"
+                    : form.facebook.trim()
+                      ? "facebook"
+                      : form.twitter.trim()
+                        ? "twitter"
+                        : form.threads.trim()
+                          ? "threads"
+                          : form.line.trim()
+                            ? "line"
+                            : form.telegram.trim()
+                              ? "telegram"
+                              : "insta"
+              fd.append("primaryContact", primaryContact)
+              for (let i = 0; i < photos.length; i++) {
+                const file = await dataUrlToFile(photos[i], i)
+                fd.append("images", file)
+              }
+              const { profileId } = await createUserProfile(fd)
+              clearEmailTempToken()
+              setLocalProfileId(profileId)
+              onComplete()
+            } catch (e) {
+              showErrorToast(e instanceof Error ? e.message : undefined)
+            } finally {
+              setSubmitting(false)
+            }
           }}
+          disabled={submitting}
           className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-semibold"
         >
-          {step < steps.length - 1 ? "다음" : "완료하고 메인으로"}
+          {submitting
+            ? "등록 중…"
+            : step < steps.length - 1
+              ? "다음"
+              : "완료하고 메인으로"}
         </Button>
       </div>
     </div>

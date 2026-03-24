@@ -1,11 +1,14 @@
 "use client"
 
-import { useState, useRef, useCallback } from "react"
+import { useState, useRef, useCallback, useEffect } from "react"
 import { TossIcon } from "@/components/toss-icon"
 import UserAvatar from "@/components/user-avatar"
-import { currentUser, mockPosts, formatMeetingType } from "@/lib/store"
+import { formatMeetingType } from "@/lib/store"
 import type { MeetingPost } from "@/lib/store"
 import { useRefresh } from "@/contexts/RefreshContext"
+import { deleteMeeting, getMyMatchedMeetings, getMyMeetings, getMyParticipations } from "@/lib/api"
+import { meetingSummaryToPost } from "@/lib/meeting-mapper"
+import { showErrorToast } from "@/lib/show-error-toast"
 import { PullToRefresh } from "@/components/layout/PullToRefresh"
 import { MainHeader } from "@/components/layout/MainHeader"
 
@@ -114,22 +117,6 @@ function SwipeablePostItem({
   )
 }
 
-const myPosts = () =>
-  mockPosts.filter((p) => p.author.id === currentUser.id)
-const myApplications = () =>
-  mockPosts.filter((p) =>
-    p.applications.some((a) => a.applicants.some((ap) => ap.id === currentUser.id))
-  )
-const myMatches = () =>
-  mockPosts.filter(
-    (p) =>
-      p.status === "matched" &&
-      (p.participants.some((par) => par.id === currentUser.id) ||
-        p.applications.some(
-          (a) => a.status === "accepted" && a.applicants.some((ap) => ap.id === currentUser.id)
-        ))
-  )
-
 interface MyPageListProps {
   type: MyPageListType
   onViewPost: (post: MeetingPost) => void
@@ -142,13 +129,31 @@ const TITLES: Record<MyPageListType, string> = {
 }
 
 export default function MyPageList({ type, onViewPost }: MyPageListProps) {
-  const { triggerRefresh } = useRefresh()
-  const list =
-    type === "my-posts"
-      ? myPosts()
-      : type === "applied"
-      ? myApplications()
-      : myMatches()
+  const { triggerRefresh, refreshKey } = useRefresh()
+  const [list, setList] = useState<MeetingPost[]>([])
+
+  useEffect(() => {
+    let cancelled = false
+    const run = async () => {
+      try {
+        const rows =
+          type === "my-posts"
+            ? await getMyMeetings()
+            : type === "applied"
+              ? await getMyParticipations()
+              : await getMyMatchedMeetings()
+        if (cancelled) return
+        setList(rows.map(meetingSummaryToPost))
+      } catch {
+        if (!cancelled) setList([])
+      }
+    }
+    void run()
+    return () => {
+      cancelled = true
+    }
+  }, [type, refreshKey])
+
   const title = TITLES[type]
 
   // PullToRefresh는 자식 2개만 사용: [0]=고정 헤더, [1]=스크롤 메인. 3개 넘기면 [2]는 렌더 안 됨.
@@ -175,7 +180,20 @@ export default function MyPageList({ type, onViewPost }: MyPageListProps) {
                 key={post.id}
                 post={post}
                 onClick={() => onViewPost(post)}
-                onDelete={() => {}}
+                onDelete={
+                  type === "my-posts"
+                    ? () => {
+                        void (async () => {
+                          try {
+                            await deleteMeeting(Number(post.id))
+                            setList((prev) => prev.filter((p) => p.id !== post.id))
+                          } catch (e) {
+                            showErrorToast(e instanceof Error ? e.message : undefined)
+                          }
+                        })()
+                      }
+                    : () => {}
+                }
               />
             ))
           )}

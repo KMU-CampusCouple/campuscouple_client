@@ -3,22 +3,36 @@
 import { useState } from "react"
 import { toast } from "@/hooks/use-toast"
 import { MainHeader } from "@/components/layout/MainHeader"
+import { createReport } from "@/lib/api"
+import { showErrorToast } from "@/lib/show-error-toast"
 
 export default function BugReportPage() {
   const [type, setType] = useState<"bug" | "idea">("bug")
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
+  const [sending, setSending] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!title.trim() || !content.trim()) return
-    // 실제 서비스에서는 서버로 전송하는 로직이 들어갑니다.
-    toast({
-      title: "소중한 의견 감사합니다!",
-      description: "확인 후 서비스 개선에 반영하겠습니다.",
-    })
-    setTitle("")
-    setContent("")
+    setSending(true)
+    try {
+      await createReport({
+        type: type === "bug" ? "BUG" : "SUGGESTION",
+        title: title.trim(),
+        content: content.trim(),
+      })
+      toast({
+        title: "소중한 의견 감사합니다!",
+        description: "확인 후 서비스 개선에 반영하겠습니다.",
+      })
+      setTitle("")
+      setContent("")
+    } catch (err) {
+      showErrorToast(err instanceof Error ? err.message : undefined)
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -86,10 +100,10 @@ export default function BugReportPage() {
 
             <button
               type="submit"
-              disabled={!title.trim() || !content.trim()}
+              disabled={!title.trim() || !content.trim() || sending}
               className="w-full h-10 rounded-xl bg-primary/80 text-primary-foreground text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              보내기
+              {sending ? "보내는 중…" : "보내기"}
             </button>
           </form>
 

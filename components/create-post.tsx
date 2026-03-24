@@ -17,14 +17,21 @@ import {
 } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 import UserAvatar from "@/components/user-avatar"
-import { friends, currentUser, formatMeetingType } from "@/lib/store"
+import { currentUser, formatMeetingType } from "@/lib/store"
 import type { UserProfile } from "@/lib/store"
+import { createMeeting, getFriends, getMyProfile } from "@/lib/api"
+import { friendProfileToUser } from "@/lib/friend-mapper"
+import { getStoredProfileId } from "@/lib/auth-tokens"
+import { showErrorToast } from "@/lib/show-error-toast"
 
 interface CreatePostProps {
   onSubmit: () => void
 }
 
 export default function CreatePost({ onSubmit }: CreatePostProps) {
+  const [me, setMe] = useState<UserProfile | null>(null)
+  const [friendList, setFriendList] = useState<UserProfile[]>([])
+  const [submitting, setSubmitting] = useState(false)
   const [title, setTitle] = useState("")
   const [perSide, setPerSide] = useState(3)
   const [location, setLocation] = useState("")
@@ -44,6 +51,41 @@ export default function CreatePost({ onSubmit }: CreatePostProps) {
 
   useEffect(() => {
     setIsMounted(true)
+  }, [])
+
+  useEffect(() => {
+    let cancelled = false
+    void getMyProfile()
+      .then((p) => {
+        if (cancelled) return
+        const pid = getStoredProfileId() ?? String(p.userId)
+        setMe({
+          id: pid,
+          name: p.name,
+          photos: p.profileImages ?? [],
+          university: p.univ,
+          department: "",
+          studentYear: "",
+          mbti: "",
+          bio: "",
+          snsId: "",
+          sns: p.snsAccounts ?? {},
+          contactInfo: "",
+          gender: "male",
+          specs: "",
+          idealType: "",
+        })
+      })
+      .catch(() => {})
+    void getFriends()
+      .then((fl) => {
+        if (cancelled) return
+        setFriendList(fl.profiles.map(friendProfileToUser))
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   useEffect(() => {
@@ -125,7 +167,39 @@ export default function CreatePost({ onSubmit }: CreatePostProps) {
 
   const canSubmit = title.trim() && description.trim()
 
-  const filteredFriends = friends.filter(
+  const self = me ?? currentUser
+
+  const handleSubmit = async () => {
+    if (!canSubmit) return
+    const pid = getStoredProfileId()
+    if (!pid) {
+      showErrorToast("프로필 정보를 불러오지 못했어요.")
+      return
+    }
+    const dateTime =
+      date && hour && minute
+        ? new Date(`${date}T${hour}:${minute}:00`).toISOString()
+        : new Date().toISOString()
+    setSubmitting(true)
+    try {
+      const participantIds = [pid, ...selectedFriends.map((f) => f.id)]
+      await createMeeting({
+        title: title.trim(),
+        capacity: perSide * 2,
+        participantIds,
+        description: description.trim(),
+        location: location.trim() || "미정",
+        dateTime,
+      })
+      onSubmit()
+    } catch (e) {
+      showErrorToast(e instanceof Error ? e.message : undefined)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  const filteredFriends = friendList.filter(
     (f) =>
       f.name.toLowerCase().includes(friendSearch.toLowerCase()) ||
       f.university.toLowerCase().includes(friendSearch.toLowerCase())
@@ -190,11 +264,11 @@ export default function CreatePost({ onSubmit }: CreatePostProps) {
           >
             {/* Me */}
             <div className="shrink-0 snap-start bg-muted/50 rounded-lg p-2 flex flex-col items-center gap-1.5 w-[72px] min-w-[72px]">
-              <UserAvatar user={currentUser} size="sm" />
+              <UserAvatar user={self} size="sm" />
               <div className="text-center w-full min-w-0">
                 <p className="text-[11px] font-semibold truncate">{"나"}</p>
-                <p className="text-[9px] text-muted-foreground mt-0.5 truncate">{currentUser.university}</p>
-                <p className="text-[9px] text-muted-foreground">{currentUser.studentYear}{"학번"}</p>
+                <p className="text-[9px] text-muted-foreground mt-0.5 truncate">{self.university}</p>
+                <p className="text-[9px] text-muted-foreground">{self.studentYear}{"학번"}</p>
               </div>
             </div>
             {/* Selected friends */}
@@ -381,11 +455,11 @@ export default function CreatePost({ onSubmit }: CreatePostProps) {
         </div>
 
         <Button
-          onClick={onSubmit}
-          disabled={!canSubmit}
+          onClick={() => void handleSubmit()}
+          disabled={!canSubmit || submitting}
           className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-semibold mt-2"
         >
-          {"게시하기"}
+          {submitting ? "등록 중…" : "게시하기"}
         </Button>
       </main>
 

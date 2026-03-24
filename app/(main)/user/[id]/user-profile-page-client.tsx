@@ -1,20 +1,70 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import UserProfile from "@/components/user-profile"
 import { MainHeader } from "@/components/layout/MainHeader"
 import { Button } from "@/components/ui/button"
-import { getUserById, mockPosts, isUserMatchedInPost, currentUser } from "@/lib/store"
+import { getUserById } from "@/lib/store"
+import type { UserProfile as UserProfileType } from "@/lib/store"
 import { useFriends } from "@/contexts/FriendsContext"
+import { useMyProfile } from "@/contexts/MyProfileContext"
 import { TossIcon } from "@/components/toss-icon"
+import { getProfileDetail } from "@/lib/api"
+import { profileDetailToUser } from "@/lib/profile-mapper"
 
 export default function UserProfilePageClient({ id, from }: { id: string; from?: string }) {
   const router = useRouter()
+  const { profileId: myProfileId } = useMyProfile()
   const [showRemoveFriendConfirm, setShowRemoveFriendConfirm] = useState(false)
-  const user = getUserById(id)
-  const { friendIds, sentRequestIds, receivedRequestIds, sendRequest, cancelSentRequest, removeFriend, acceptRequest, rejectRequest } = useFriends()
-  const isOwnProfile = user?.id === currentUser.id
+  const [user, setUser] = useState<UserProfileType | undefined>(undefined)
+  const [loading, setLoading] = useState(true)
+
+  const {
+    friendIds,
+    sentRequestIds,
+    receivedRequestIds,
+    sendRequest,
+    cancelSentRequest,
+    removeFriend,
+    acceptRequest,
+    rejectRequest,
+    refresh,
+  } = useFriends()
+
+  useEffect(() => {
+    const n = Number(id)
+    if (!Number.isFinite(n)) {
+      setUser(getUserById(id))
+      setLoading(false)
+      return
+    }
+    let cancelled = false
+    setLoading(true)
+    void getProfileDetail(n)
+      .then((arr) => {
+        if (cancelled) return
+        const d = arr[0]
+        setUser(d ? profileDetailToUser(d) : getUserById(id))
+      })
+      .catch(() => {
+        if (!cancelled) setUser(getUserById(id))
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [id])
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[40vh] text-muted-foreground text-sm">
+        불러오는 중…
+      </div>
+    )
+  }
 
   if (!user) {
     return (
@@ -30,13 +80,7 @@ export default function UserProfilePageClient({ id, from }: { id: string; from?:
     )
   }
 
-  const isMatched = mockPosts.some(
-    (p) =>
-      p.status === "matched" &&
-      p.matchedApplicationId &&
-      isUserMatchedInPost(p, "current") &&
-      isUserMatchedInPost(p, user.id)
-  )
+  const isOwnProfile = myProfileId != null && user.id === myProfileId
 
   const friendStatus = isOwnProfile
     ? undefined
@@ -48,12 +92,10 @@ export default function UserProfilePageClient({ id, from }: { id: string; from?:
           ? "received_request"
           : "none"
 
-  const showBack =
-    from === "notifications" ||
-    from === "friends"
+  const showBack = from === "notifications" || from === "friends"
 
   const confirmRemoveFriend = () => {
-    removeFriend(user.id)
+    void removeFriend(user.id).then(() => void refresh())
     setShowRemoveFriendConfirm(false)
   }
 
@@ -89,7 +131,7 @@ export default function UserProfilePageClient({ id, from }: { id: string; from?:
                 )}
                 {friendStatus === "none" && (
                   <button
-                    onClick={() => sendRequest(user.id)}
+                    onClick={() => void sendRequest(user.id).then(() => void refresh())}
                     className="ml-auto text-xs font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded-full shrink-0 py-1.5 px-3 transition-colors"
                   >
                     {"친구추가"}
@@ -98,7 +140,7 @@ export default function UserProfilePageClient({ id, from }: { id: string; from?:
                 {friendStatus === "pending" && (
                   <button
                     type="button"
-                    onClick={() => cancelSentRequest(user.id)}
+                    onClick={() => void cancelSentRequest(user.id).then(() => void refresh())}
                     className="ml-auto text-xs font-medium text-primary-foreground bg-primary-foreground/20 hover:bg-primary-foreground/30 rounded-full shrink-0 py-1.5 px-3 transition-colors"
                   >
                     {"신청 취소"}
@@ -107,13 +149,13 @@ export default function UserProfilePageClient({ id, from }: { id: string; from?:
                 {friendStatus === "received_request" && (
                   <div className="ml-auto flex items-center gap-1.5">
                     <button
-                      onClick={() => rejectRequest(user.id)}
+                      onClick={() => void rejectRequest(user.id).then(() => void refresh())}
                       className="text-sm font-medium text-primary-foreground bg-primary-foreground/20 rounded-lg px-3 py-1.5"
                     >
                       {"삭제"}
                     </button>
                     <button
-                      onClick={() => acceptRequest(user.id)}
+                      onClick={() => void acceptRequest(user.id).then(() => void refresh())}
                       className="text-sm font-semibold text-primary-foreground bg-primary-foreground/20 rounded-lg px-3 py-1.5"
                     >
                       {"수락"}
@@ -127,12 +169,16 @@ export default function UserProfilePageClient({ id, from }: { id: string; from?:
         <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
           <UserProfile
             user={user}
-            isMatched={isMatched}
+            isMatched={false}
             friendStatus={friendStatus}
-            onAddFriend={friendStatus === "none" ? () => sendRequest(user.id) : undefined}
+            onAddFriend={friendStatus === "none" ? () => void sendRequest(user.id).then(() => void refresh()) : undefined}
             onRemoveFriend={friendStatus === "friend" ? () => setShowRemoveFriendConfirm(true) : undefined}
-            onAcceptRequest={friendStatus === "received_request" ? () => acceptRequest(user.id) : undefined}
-            onRejectRequest={friendStatus === "received_request" ? () => rejectRequest(user.id) : undefined}
+            onAcceptRequest={
+              friendStatus === "received_request" ? () => void acceptRequest(user.id).then(() => void refresh()) : undefined
+            }
+            onRejectRequest={
+              friendStatus === "received_request" ? () => void rejectRequest(user.id).then(() => void refresh()) : undefined
+            }
           />
         </div>
       </div>
