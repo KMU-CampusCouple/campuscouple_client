@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useCallback } from "react"
+import { useState, useRef, useCallback, useEffect } from "react"
 import { TossIcon } from "@/components/toss-icon"
 import { Button } from "@/components/ui/button"
 import {
@@ -11,14 +11,27 @@ import {
 } from "@/components/ui/dropdown-menu"
 import UserAvatar from "@/components/user-avatar"
 import type { MeetingPost, MeetingApplication, UserProfile } from "@/lib/store"
-import { currentUser, friends, formatMeetingType } from "@/lib/store"
+import { currentUser, formatMeetingType } from "@/lib/store"
+import {
+  acceptMeetingGroup,
+  deleteMeetingParticipation,
+  getFriends,
+  getMyProfile,
+  postMeetingParticipation,
+} from "@/lib/api"
+import { friendProfileToUser } from "@/lib/friend-mapper"
+import { getStoredProfileId } from "@/lib/auth-tokens"
+import { showErrorToast } from "@/lib/show-error-toast"
 
 interface PostDetailProps {
   post: MeetingPost
+  /** API 연동 시 미팅 숫자 id */
+  meetingId?: number
   onBack: () => void
   onViewProfile: (user: UserProfile) => void
   onEditPost?: () => void
-  onDeletePost?: () => void
+  onDeletePost?: () => void | Promise<void>
+  onRefresh?: () => Promise<void>
 }
 
 function ParticipantCard({
@@ -275,12 +288,16 @@ function ParticipantSwiper({
 
 export default function PostDetail({
   post,
+  meetingId,
   onBack,
   onViewProfile,
   onEditPost,
   onDeletePost,
+  onRefresh,
 }: PostDetailProps) {
   const [applications, setApplications] = useState(post.applications)
+  const [meUser, setMeUser] = useState<UserProfile | null>(null)
+  const [friends, setFriendsList] = useState<UserProfile[]>([])
   const [showApplyForm, setShowApplyForm] = useState(false)
   const [applyMessage, setApplyMessage] = useState("")
   const [showFriendPicker, setShowFriendPicker] = useState(false)
@@ -289,8 +306,59 @@ export default function PostDetail({
   const [showAppDeleteConfirm, setShowAppDeleteConfirm] = useState<string | null>(null)
   const [showSlotRemoveConfirm, setShowSlotRemoveConfirm] = useState<number | null>(null)
 
-  const isAuthor = post.author.id === currentUser.id
-  const hasApplied = applications.some((app) => app.applicants.some((a) => a.id === currentUser.id))
+  useEffect(() => {
+    setApplications(post.applications)
+  }, [post.id, post.applications.length])
+
+  useEffect(() => {
+    let cancelled = false
+    void getMyProfile()
+      .then((me) => {
+        if (cancelled) return
+        const pid = getStoredProfileId() ?? String(me.userId)
+        setMeUser({
+          id: pid,
+          name: me.name,
+          photos: me.profileImages ?? [],
+          university: me.univ,
+          department: "",
+          studentYear: "",
+          mbti: "",
+          bio: "",
+          snsId: "",
+          sns: me.snsAccounts ?? {},
+          contactInfo: "",
+          gender: "male",
+          specs: "",
+          idealType: "",
+        })
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  useEffect(() => {
+    let cancelled = false
+    void getFriends()
+      .then((fl) => {
+        if (cancelled) return
+        setFriendsList(fl.profiles.map(friendProfileToUser))
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const self = meUser ?? currentUser
+
+  const isAuthor =
+    post.isOwner === true ||
+    (post.isOwner === undefined && post.author.id === self.id)
+
+  const hasApplied = applications.some((app) => app.applicants.some((a) => a.id === self.id))
 
   // 화면에 보여줄 참가자 목록은 "게시글 participants" + "수락된 신청자"를 합쳐서 계산합니다.
   const maxParticipants = post.perSide * 2
@@ -321,31 +389,64 @@ export default function PostDetail({
     return arr
   })
 
+  useEffect(() => {
+    setApplySlots((prev) => {
+      const next: (UserProfile | null)[] = [self]
+      for (let i = 1; i < openSlotsForUI; i++) next.push(prev[i] ?? null)
+      return next
+    })
+  }, [self.id, openSlotsForUI, post.id])
+
   const usedFriendIds = applySlots.filter(Boolean).map((u) => u!.id)
   const slotToRemove = showSlotRemoveConfirm !== null ? applySlots[showSlotRemoveConfirm] : null
 
-  const handleAccept = (appId: string) => {
+  const handleAccept = async (appId: string) => {
+    if (meetingId != null) {
+      try {
+        await acceptMeetingGroup(meetingId, { groupId: appId })
+        await onRefresh?.()
+      } catch (e) {
+        showErrorToast(e instanceof Error ? e.message : undefined)
+      }
+      return
+    }
     const target = applications.find((a) => a.id === appId)
     if (!target) return
     if (!canAcceptApplication(target)) return
     setApplications((prev) => prev.map((a) => (a.id === appId ? { ...a, status: "accepted" as const } : a)))
   }
 
-  const handleApply = () => {
+  const handleApply = async () => {
     if (!applyMessage.trim()) return
     const filledSlots = applySlots.filter(Boolean) as UserProfile[]
+    if (meetingId != null) {
+      try {
+        await postMeetingParticipation({
+          meetingId,
+          participantIds: filledSlots.map((u) => u.id),
+          description: applyMessage.trim(),
+        })
+        await onRefresh?.()
+        setShowApplyForm(false)
+        setApplyMessage("")
+        setApplySlots([self, ...Array(Math.max(0, openSlotsForUI - 1)).fill(null)])
+      } catch (e) {
+        showErrorToast(e instanceof Error ? e.message : undefined)
+      }
+      return
+    }
     const newApp: MeetingApplication = {
       id: `a-${Date.now()}`,
       applicants: filledSlots,
       message: applyMessage,
       status: "pending",
-      contactInfo: currentUser.contactInfo,
+      contactInfo: self.contactInfo,
       createdAt: new Date().toISOString(),
     }
     setApplications((prev) => [...prev, newApp])
     setShowApplyForm(false)
     setApplyMessage("")
-    setApplySlots([currentUser, ...Array(openSlotsForUI - 1).fill(null)])
+    setApplySlots([self, ...Array(openSlotsForUI - 1).fill(null)])
   }
 
   const handleAddSlot = (index: number) => {
@@ -491,10 +592,21 @@ export default function PostDetail({
                   application={app}
                   perSide={post.perSide}
                   isAuthor={isAuthor}
-                  isApplicant={app.applicants.some((a) => a.id === currentUser.id)}
+                  isApplicant={app.applicants.some((a) => a.id === self.id)}
                   canAccept={canAcceptApplication(app)}
-                  onAccept={() => handleAccept(app.id)}
-                  onCancel={() => setApplications((prev) => prev.filter((a) => a.id !== app.id))}
+                  onAccept={() => void handleAccept(app.id)}
+                  onCancel={() =>
+                    meetingId != null
+                      ? void (async () => {
+                          try {
+                            await deleteMeetingParticipation(app.id)
+                            await onRefresh?.()
+                          } catch (e) {
+                            showErrorToast(e instanceof Error ? e.message : undefined)
+                          }
+                        })()
+                      : setApplications((prev) => prev.filter((a) => a.id !== app.id))
+                  }
                   onDelete={() => setShowAppDeleteConfirm(app.id)}
                   onViewProfile={onViewProfile}
                 />
@@ -519,7 +631,7 @@ export default function PostDetail({
 
               {/* Show applicant's own applications with cancel */}
               {applications
-                .filter((app) => app.applicants.some((a) => a.id === currentUser.id))
+                .filter((app) => app.applicants.some((a) => a.id === self.id))
                 .map((app) => (
                   <ApplicationCard
                     key={app.id}
@@ -529,7 +641,18 @@ export default function PostDetail({
                     isApplicant={true}
                     canAccept={false}
                     onAccept={() => {}}
-                    onCancel={() => setApplications((prev) => prev.filter((a) => a.id !== app.id))}
+                    onCancel={() =>
+                      meetingId != null
+                        ? void (async () => {
+                            try {
+                              await deleteMeetingParticipation(app.id)
+                              await onRefresh?.()
+                            } catch (e) {
+                              showErrorToast(e instanceof Error ? e.message : undefined)
+                            }
+                          })()
+                        : setApplications((prev) => prev.filter((a) => a.id !== app.id))
+                    }
                     onDelete={() => {}}
                     onViewProfile={onViewProfile}
                   />
@@ -587,7 +710,7 @@ export default function PostDetail({
               <Button
                 onClick={() => {
                   setShowApplyForm(false)
-                  setApplySlots([currentUser, ...Array(openSlotsForUI - 1).fill(null)])
+                  setApplySlots([self, ...Array(openSlotsForUI - 1).fill(null)])
                 }}
                 variant="outline"
                 className="flex-1 h-10 rounded-xl"
@@ -657,8 +780,21 @@ export default function PostDetail({
               </Button>
               <Button
                 onClick={() => {
-                  setApplications((prev) => prev.filter((a) => a.id !== showAppDeleteConfirm))
+                  const aid = showAppDeleteConfirm
                   setShowAppDeleteConfirm(null)
+                  if (!aid) return
+                  if (meetingId != null) {
+                    void (async () => {
+                      try {
+                        await deleteMeetingParticipation(aid)
+                        await onRefresh?.()
+                      } catch (e) {
+                        showErrorToast(e instanceof Error ? e.message : undefined)
+                      }
+                    })()
+                  } else {
+                    setApplications((prev) => prev.filter((a) => a.id !== aid))
+                  }
                 }}
                 className="flex-1 h-10 rounded-xl bg-destructive text-destructive-foreground"
               >

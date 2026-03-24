@@ -49,6 +49,10 @@ export interface MeetingPost {
   status: "open" | "matched"
   matchedApplicationId?: string
   views: number
+  /** API 연동 시 서버 기준 방장 여부 */
+  isOwner?: boolean
+  /** 목록 API의 신청 팀 수 */
+  totalGroupCount?: number
 }
 
 export interface MeetingApplication {

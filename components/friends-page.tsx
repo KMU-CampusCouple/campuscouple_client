@@ -4,9 +4,11 @@ import { useState, useRef, useCallback, useEffect } from "react"
 import { TossIcon } from "@/components/toss-icon"
 import { Button } from "@/components/ui/button"
 import UserAvatar from "@/components/user-avatar"
-import { friends as initialFriends, allUsers, friendRequests as initialRequests } from "@/lib/store"
 import type { UserProfile, FriendRequest } from "@/lib/store"
 import { useRefresh } from "@/contexts/RefreshContext"
+import { useFriends } from "@/contexts/FriendsContext"
+import { getFriendRequests, getFriends, searchProfiles } from "@/lib/api"
+import { friendProfileToUser, friendRequestDtoToFriendRequest, searchProfileToUser } from "@/lib/friend-mapper"
 import { PullToRefresh } from "@/components/layout/PullToRefresh"
 import { MainHeader } from "@/components/layout/MainHeader"
 
@@ -137,13 +139,50 @@ function SwipeableFriendRow({
 export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
   const [tab, setTab] = useState<"friends" | "requests" | "search">("friends")
   const [searchQuery, setSearchQuery] = useState("")
-  const [friendsList, setFriendsList] = useState<UserProfile[]>(initialFriends)
-  const [requests, setRequests] = useState<FriendRequest[]>(initialRequests)
-  const [sentRequests, setSentRequests] = useState<string[]>([])
+  const [debouncedSearch, setDebouncedSearch] = useState("")
+  const [friendsList, setFriendsList] = useState<UserProfile[]>([])
+  const [requests, setRequests] = useState<FriendRequest[]>([])
+  const [searchResults, setSearchResults] = useState<UserProfile[]>([])
   const [blockedUsers, setBlockedUsers] = useState<string[]>([])
+  const { sentRequestIds, sendRequest, acceptRequest, rejectRequest, refresh } = useFriends()
   const [showConfirmDialog, setShowConfirmDialog] = useState<{ type: "delete" | "block"; userId: string; userName: string } | null>(null)
   const [friendsSearchQuery, setFriendsSearchQuery] = useState("")
   const [recentViewedFromSearch, setRecentViewedFromSearch] = useState<UserProfile[]>([])
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(searchQuery.trim()), 350)
+    return () => clearTimeout(t)
+  }, [searchQuery])
+
+  useEffect(() => {
+    if (!debouncedSearch) {
+      setSearchResults([])
+      return
+    }
+    let cancelled = false
+    void searchProfiles(debouncedSearch)
+      .then((res) => {
+        if (cancelled) return
+        setSearchResults(res.profiles.map(searchProfileToUser))
+      })
+      .catch(() => {
+        if (!cancelled) setSearchResults([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [debouncedSearch])
+
+  const { refreshKey, triggerRefresh } = useRefresh()
+
+  useEffect(() => {
+    void Promise.all([getFriends(), getFriendRequests()])
+      .then(([f, r]) => {
+        setFriendsList(f.profiles.map(friendProfileToUser))
+        setRequests(r.profiles.map(friendRequestDtoToFriendRequest))
+      })
+      .catch(() => {})
+  }, [refreshKey])
 
   // 친구 검색 히스토리: 로컬스토리지에 저장/복원
   useEffect(() => {
@@ -152,7 +191,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
       if (!raw) return
       const parsed = JSON.parse(raw) as { id: string }[]
       const users = parsed
-        .map((item) => allUsers.find((u) => u.id === item.id))
+        .map((item) => friendsList.find((u) => u.id === item.id))
         .filter((u): u is UserProfile => !!u)
       if (users.length > 0) {
         setRecentViewedFromSearch(users.slice(0, 5))
@@ -161,17 +200,6 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
       // 무시
     }
   }, [])
-
-  const searchResults =
-    !searchQuery.trim()
-      ? []
-      : allUsers.filter(
-          (u) =>
-            !friendsList.find((f) => f.id === u.id) &&
-            !blockedUsers.includes(u.id) &&
-            (u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              u.university.toLowerCase().includes(searchQuery.toLowerCase()))
-        )
 
   const handleViewProfileFromSearch = (user: UserProfile) => {
     setRecentViewedFromSearch((prev) => {
@@ -191,16 +219,24 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
   }
 
   const handleAccept = (request: FriendRequest) => {
-    setFriendsList((prev) => [...prev, request.from])
-    setRequests((prev) => prev.filter((r) => r.id !== request.id))
+    void acceptRequest(request.from.id).then(() => {
+      setFriendsList((prev) => [...prev, request.from])
+      setRequests((prev) => prev.filter((r) => r.id !== request.id))
+      void refresh()
+    })
   }
 
   const handleReject = (requestId: string) => {
-    setRequests((prev) => prev.filter((r) => r.id !== requestId))
+    const req = requests.find((r) => r.id === requestId)
+    if (!req) return
+    void rejectRequest(req.from.id).then(() => {
+      setRequests((prev) => prev.filter((r) => r.id !== requestId))
+      void refresh()
+    })
   }
 
   const handleSendRequest = (userId: string) => {
-    setSentRequests((prev) => [...prev, userId])
+    void sendRequest(userId).then(() => void refresh())
   }
 
   const handleDeleteFriend = (userId: string) => {
@@ -214,7 +250,9 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
     setShowConfirmDialog(null)
   }
 
-  const { triggerRefresh } = useRefresh()
+  const filteredSearchResults = searchResults.filter(
+    (u) => !friendsList.some((f) => f.id === u.id) && !blockedUsers.includes(u.id)
+  )
 
   return (
     <PullToRefresh onRefresh={triggerRefresh} enabled className="flex flex-col flex-1 min-h-0">
@@ -300,15 +338,15 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
                 )}
               </>
             )}
-            {searchQuery.trim() && searchResults.length === 0 && (
+            {searchQuery.trim() && filteredSearchResults.length === 0 && (
               <div className="flex-1 flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <TossIcon name="icon-users-mono" size={40} background="white" className="mb-4 opacity-30" />
                 <p className="text-sm text-muted-foreground/70">{"검색 결과가 없어요"}</p>
               </div>
             )}
-            {searchQuery.trim() && searchResults.length > 0 && (
+            {searchQuery.trim() && filteredSearchResults.length > 0 && (
               <div className="mt-3 flex flex-col gap-2">
-                {searchResults.map((user) => (
+                {filteredSearchResults.map((user) => (
                   <div key={user.id} className="flex items-center gap-3.5 bg-card rounded-xl border border-border/60 p-3.5">
                     <button onClick={() => handleViewProfileFromSearch(user)}>
                       <UserAvatar user={user} size="md" />
@@ -317,7 +355,7 @@ export default function FriendsPage({ onViewProfile }: FriendsPageProps) {
                       <p className="text-sm font-semibold truncate">{user.name}</p>
                       <p className="text-xs text-muted-foreground">{user.university} {user.department}</p>
                     </button>
-                    {sentRequests.includes(user.id) ? (
+                    {sentRequestIds.has(user.id) ? (
                       <span className="text-xs text-muted-foreground font-medium px-3 py-1.5 rounded-lg bg-muted">
                         {"신청됨"}
                       </span>

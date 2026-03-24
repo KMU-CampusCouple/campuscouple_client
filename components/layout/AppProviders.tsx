@@ -4,12 +4,14 @@ import { type ReactNode } from "react"
 import { Toaster } from "@/components/ui/toaster"
 import { RefreshProvider } from "@/contexts/RefreshContext"
 import { FriendsProvider } from "@/contexts/FriendsContext"
+import { MyProfileProvider } from "@/contexts/MyProfileContext"
 import { PwaRegister } from "@/components/pwa/PwaRegister"
 import { OverscrollGuard } from "@/components/layout/OverscrollGuard"
 
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <RefreshProvider>
+      <MyProfileProvider>
       <FriendsProvider>
       <Toaster />
       <PwaRegister />
@@ -17,6 +19,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
       {/* <OverscrollGuard /> */}
       {children}
       </FriendsProvider>
+      </MyProfileProvider>
     </RefreshProvider>
   )
 }
